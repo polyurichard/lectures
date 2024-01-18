@@ -1,8 +1,10 @@
 
 #  Introduction to Object-Oriented Design
+Object-Oriented Design (OOD) is a programming paradigm that uses "objects" to design applications and computer programs. This results in more efficient, maintainable, and scalable software
+
+In this lecture, we will learn about different Object-Oriented (OO) concepts using an RPG game as an example.
 
 ## Define the Player Class
-In this lecture, we will learn about different Object-Oriented (OO) concepts using an RPG game as an example.
 
 In OO Design, 
 - A **Class** is a blueprint for an object.
@@ -291,7 +293,8 @@ public class Mage extends Player {
 
 An interface in OO defines a contract that a class agrees to follow. 
 - This contract is a set of methods that the class must implement, providing the necessary behavior but not the specific implementation details. 
-- To ensure that different classes adhere to a certain protocol of methods, which is especially useful when different objects are used interchangeably.
+- The clients of the class will not be affected by implementation change
+
 
 ![Alt text](image-4.png)
 
@@ -518,7 +521,7 @@ Types of relationship:
 - Example: A line from *Player* to *Weapon* indicate aggregation or composition.
 
 
-3.	**Interface Implementation**:
+3.	**Behaves-like-a* (Interface Implementation):
 - This is depicted by a dashed line with a closed, unfilled arrowhead pointing from the implementing class to the interface.
 - In our example, Bow and Sword implement the Weapon interface.
 - UML Example: Dashed lines with arrowheads from Bow and Sword to Weapon.
