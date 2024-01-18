@@ -635,11 +635,11 @@ gameSaver.saveGame(gameState);
 
 ### Coupling
 
+**Cohesion** is used to indicate the degree to which a class has a single, well-focused purpose. 
+
 **Coupling** is the degree to which one class knows about another class.  
 - If a class has a high degree of knowledge about another class, we say that these classes are "tightly coupled". 
 - It makes the system harder to maintain and modify.
-
-**Cohesion** is used to indicate the degree to which a class has a single, well-focused purpose. 
 
 Good OO design should be loosely coupled and highly cohesive.
 - Easier to develop
@@ -648,8 +648,8 @@ Good OO design should be loosely coupled and highly cohesive.
 - Less fragile.
 
 In the previous `GameSaver` example, the `MySQLDatabase` instance represents a dependency of the `GameSaver` class.
-- The `GameSaver` class directly instantiates a MySQLDatabase object in its constructor and uses this object to save the game state. 
-- GameSaver class is tightly coupled with the `MySQLDatabase` class.
+- The `GameSaver` class directly instantiates a `MySQLDatabase`` object in its constructor and uses this object to save the game state. 
+- `GameSaver` class is tightly coupled with the `MySQLDatabase` class.
 
 The problem with this design is that if you want to change the type of database (for example, from MySQL to MongoDB), you would need to modify the `GameSaver` class. For instance, 
 
