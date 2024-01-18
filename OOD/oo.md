@@ -310,7 +310,7 @@ public interface Weapon {
 
 We will now implement the `Weapon` interface in two different classes: `Bow` and `Sword`. 
 - Each class will have its own attributes like `damage` and `name`, and by implementing the `Weapon` interface, they must provide the `upgrade()` method.
-- The `swing()` and `shoot()` methods are action methods specific to the Sword and Bow classes respectively. They simulate the actions of swinging a sword and shooting an arrow in the context of a game.
+- The `swing()` and `shoot()` methods are action methods specific to the `Sword` and `Bow` classes respectively. They simulate the actions of swinging a sword and shooting an arrow in the context of a game.
 
 ```java
 public class Bow implements Weapon {
@@ -521,7 +521,7 @@ Types of relationship:
 - Example: A line from *Player* to *Weapon* indicate aggregation or composition.
 
 
-3.	**Behaves-like-a* (Interface Implementation):
+3.	**Behaves-like-a** (Interface Implementation):
 - This is depicted by a dashed line with a closed, unfilled arrowhead pointing from the implementing class to the interface.
 - In our example, Bow and Sword implement the Weapon interface.
 - UML Example: Dashed lines with arrowheads from Bow and Sword to Weapon.
