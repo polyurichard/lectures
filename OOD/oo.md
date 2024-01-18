@@ -95,7 +95,7 @@ public class Game {
 
 ## UML Diagram
 
-![Alt text](image.png)
+![Alt text](image-8.png)
 
 The UML diagram visually represents the structure of the `Player` class, including its attributes, constructor, methods, and their signatures. The class is represented as a rectangle divided into three sections. 
 - The top section contains the name of the class (`Player` in this case). 
