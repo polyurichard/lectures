@@ -1,4 +1,31 @@
 
+- [Introduction to Object-Oriented Design](#introduction-to-object-oriented-design)
+  - [Define the Player Class](#define-the-player-class)
+  - [UML Diagram](#uml-diagram)
+- [Fundamental OO Concepts](#fundamental-oo-concepts)
+  - [Encapsulation](#encapsulation)
+  - [Inheritance](#inheritance)
+  - [Interface](#interface)
+  - [Abstraction](#abstraction)
+  - [Polymorphism](#polymorphism)
+  - [UML Class Diagrams](#uml-class-diagrams)
+  - [Interface for defining common behavior](#interface-for-defining-common-behavior)
+  - [Abstract class](#abstract-class)
+- [The SOLID Principle](#the-solid-principle)
+  - [Single Responsibility Principle (SRP)](#single-responsibility-principle-srp)
+  - [Open/Closed Principle (OCP)](#openclosed-principle-ocp)
+  - [Liskov Substitution Principle (LSP)](#liskov-substitution-principle-lsp)
+  - [Interface Segregation Principle (ISP)](#interface-segregation-principle-isp)
+  - [Dependency Inversion Principle (DIP)](#dependency-inversion-principle-dip)
+    - [Saving the game](#saving-the-game)
+    - [Cohesion vs. Coupling](#cohesion-vs-coupling)
+    - [Dependency Inversion Principle (DIP)](#dependency-inversion-principle-dip-1)
+      - [Dependency Injection](#dependency-injection)
+    - [Types of Dependency Injection](#types-of-dependency-injection)
+    - [Inversion of Control (IoC) container](#inversion-of-control-ioc-container)
+    - [Testing with Mock objects](#testing-with-mock-objects)
+
+
 #  Introduction to Object-Oriented Design
 Object-Oriented Design (OOD) is a programming paradigm that uses "objects" to design applications and computer programs. This results in more efficient, maintainable, and scalable software
 
@@ -82,7 +109,7 @@ Player player2 = new Player("Bob");
 
 Methods allow for the manipulation and interaction with an object's data. The `Player` class includes methods like `increaseScore` and getters/setters for managing the attributes.
 
-In Java, object methods are invoked using dot notation. For example, to increase a player's score and then get the updated score, we might do:
+In Java, object methods are invoked using the "dot" notation. For example, to increase a player's score and then get the updated score, we might :
 
 ```java
 public class Game {
@@ -115,7 +142,7 @@ The UML diagram visually represents the structure of the `Player` class, includi
 
 ## Encapsulation
 
-Encapsulation is a fundamental principle of object-oriented programming that restricts direct access to an object's attributes. It avoid  the data and code being tied together within an object from being randomly accessed by other code defined outside the object or class.
+Encapsulation is a fundamental principle of object-oriented programming that restricts direct access to an object's attributes. It avoids  the data and code being tied together within an object from being randomly accessed by other code defined outside the object or class.
 
 ![Alt text](image-2.png)
 
@@ -170,7 +197,7 @@ Inheritance is a mechanism in Java that allows one class to acquire the properti
 - The class which inherits the properties of another class is known as the **subclass** (or derived class, child class)
 - The class whose properties are inherited is known as the **superclass** (or base class, parent class).
 
-![Alt text](image-1.png)
+![Alt text](image-10.png)
 
 The `Player` class represents a player in the game. 
 
@@ -249,16 +276,14 @@ For instance, let's consider the `Warrior` class that extends the `Player` class
 ---
 
 **Exercise**: 
-Create other types of players, such as Mage or Archer.
-
-Mage Class
+Define the `Mage` Class.
 1.	The Mage class should extend the Player class.
 2.	Add a new attribute mana (int) to represent the mage's magic energy.
 3.	Add a constructor that takes name and mana as parameters and initializes these attributes along with the attributes from the Player class.
 4.	Add getter and setter methods for mana.
 5.	Add a method castSpell() that represents the mage casting a spell. The implementation can be simple, such as printing a message.
 
----
+<!--
 **Sample solution**:
 
 ```java
@@ -288,88 +313,111 @@ public class Mage extends Player {
     }
 }
 ```
+-->
 
-## Interface and Abstraction
+## Interface 
 
 An interface in OO defines a contract that a class agrees to follow. 
 - This contract is a set of methods that the class must implement, providing the necessary behavior but not the specific implementation details. 
 - The clients of the class will not be affected by implementation change
 
+The purpose of an interface is to specify a contract or behavior that classes can implement. There is no implementation provided in the interfac
+    - An interface can provide *no implementation* at all. 
+    - Interface does not include any attributes: Interfaces in Java are used to declare methods that a class must 
+    implement, not to define the state of an object.
 
-![Alt text](image-4.png)
+![Alt text](image-7.png)
 
 Let's begin by defining a simple `Weapon` interface with an `upgrade()` behavior. 
--  The purpose of an interface is to specify a contract or behavior that classes can implement. There is no implementation provided in the interfac
--  Interface does not include any attributes. This is because interfaces in Java are used to declare methods that a class must implement, not to define the state of an object.
 
 ```java
 public interface Weapon {
+    void use();
     void upgrade();
 }
 ```
 
-We will now implement the `Weapon` interface in two different classes: `Bow` and `Sword`. 
-- Each class will have its own attributes like `damage` and `name`, and by implementing the `Weapon` interface, they must provide the `upgrade()` method.
-- The `swing()` and `shoot()` methods are action methods specific to the `Sword` and `Bow` classes respectively. They simulate the actions of swinging a sword and shooting an arrow in the context of a game.
+We will implement the `Weapon` interface in two distinct classes: `Bow` and `Sword`. Both classes have unique attributes like `damage` and `name`. As part of implementing the `Weapon` interface, they are required to provide implementations for the `upgrade()` and `use()` methods.
+
+The `Bow` class includes methods `upgrade()`, `use()`, and `reload()`.
+- `upgrade()`: Increases the bow's damage and provides feedback.
+- `use()`: Simulates the action of shooting an arrow.
+- `reload()`: Restocks the bow with arrows.
 
 ```java
 public class Bow implements Weapon {
     private int damage;
+    private int arrows; // Assuming this attribute is also part of the class
     private String name;
 
-    // Constructor and other methods (getters, setters) would be here
+    // Constructor and other methods (e.g. getters, setters) would be here
 
     public void upgrade() {
         damage += 10; 
         System.out.println(name + " has been upgraded. New damage is " + damage);
     }
 
-    public void shoot() {
-        System.out.println(name + " shoots an arrow causing " + damage + " damage.");
-    }    
+    public void use() {
+        System.out.println("Shooting an arrow");
+    }
+
+    public void reload() {
+        arrows = 10; // Reloads the bow with 10 arrows
+    }
 }
 ```
+
+The `Sword` class includes methods `upgrade()` and `use()`.
+- `upgrade()`: Increases the sword's damage and provides feedback.
+- `use()`: Simulates the action of swinging the sword.
 
 ```java
 public class Sword implements Weapon {
     private int damage;
     private String name;
 
-    // Constructor and other methods (getters, setters) would be here
+    // Constructor and other methods (e.g. getters, setters) would be here
 
     public void upgrade() {
-        damage += 15; // Swords get a higher damage boost on upgrade
+        damage += 15; 
         System.out.println(name + " has been upgraded. New damage is " + damage);
     }
 
-    public void swing() {
-        System.out.println(name + " swings causing " + damage + " damage.");
+    public void use() {
+        System.out.println("Swinging the sword");
     }
 }
 ```
 
-Here's how you can instantiate Sword and Bow objects:
-```java
-// Create a new Sword object and use it
-Sword sword = new Sword();
-sword.setName("Blade of Destiny");
-sword.setDamage(50);
-sword.swing();
-sword.upgrade();
+In both classes, the `use()` method is an essential part of the `Weapon` interface's contract. This method provides a way to use the weapon, and its implementation varies between the `Bow` and `Sword`, reflecting their different functionalities in the game.
 
-// Create a new Bow object and use it
+
+Here's how we can instantiate the `Sword` and `Bow` objects:
+
+```java
+// Creating and using a Sword object
+Sword sword = new Sword();
+sword.setName("Excalibur");
+sword.setDamage(50);
+sword.use(); 
+
+
+// Creating and using a Bow object
 Bow bow = new Bow();
-bow.setName("Longbow");
-bow.setDamage(30);
-bow.shoot();
+bow.use();
+bow.reload(); // Reload the bow after use
 bow.upgrade();
 ```
 
-Suppose that the players' weapon can get an upgrade if their score reaches or exceeds 100. Here is the updated code.
+Suppose that players can use their weapon during gameplay. The `use` method in the `Weapon` class represents the action of using the weapon, such as swinging a sword or shooting an arrow with a bow. To incorporate this action into the `Player` class, we can add a method that allows the player to use their weapon. 
+
+Here is how the code might look:
 
 ```java
 public class Player {
     private Weapon weapon;
+    private String name;
+    private int health;
     private int score;
 
     public Player(Weapon weapon) {
@@ -379,73 +427,53 @@ public class Player {
 
     public void increaseScore(int points) {
         score += points;
-        if (score >= 100) {
-            weapon.upgrade();
-        }
+    }
+
+    public void useWeapon() {
+        weapon.use();
     }
 }
 ```
 
+In this updated code:
+- The `Player` class now has a method `useWeapon()`. This method calls the `use()` method on the `weapon` object, which is an instance of a class that implements the `Weapon` interface.
+- When a player decides to use their weapon, the `useWeapon()` method will invoke the specific `use()` method of the weapon they are holding, whether it's a sword, bow, or any other weapon type.
+- This design allows for flexibility in the types of weapons a player can use and ensures that the weapon's action is appropriately executed, depending on the type of weapon.
+
+## Abstraction
 **Abstraction** in object-oriented design is a process of hiding the implementation details and showing only the functionality to the user. It lets you focus on what the object does instead of how it does it.
 
-In the given `Player` class, the `weapon` attribute is of type `Weapon`, which is an interface. The `Weapon` interface defines a contract that includes an `upgrade` method. However, the interface does not provide any implementation details for this method. This is an example of abstraction - the `Weapon` interface provides a high-level understanding of what a weapon should be able to do (i.e., it should be upgradable), without getting into the specifics of how this is done.
+![Alt text](image-11.png)
 
-The `Player` class uses this abstraction in its `increaseScore` method. When the player's score reaches or exceeds 100, the weapon's `upgrade` method is called. The `Player` class doesn't need to know how the `upgrade` method works for each specific type of weapon. It only needs to know that the `upgrade` method exists and can be called on the weapon.
+In the `Player` class, the `weapon` attribute is of type `Weapon`, which is an interface. The `Weapon` interface defines a contract that includes a `use` method. However, the interface does not provide any implementation details for this method. This is an example of abstraction - the `Weapon` interface provides a high-level understanding of what a weapon should be able to do (i.e., it should be usable), without getting into the specifics of how this is done.
 
-This is the essence of abstraction - the specific implementation details of how each type of weapon is upgraded are hidden from the `Player` class. The `Player` class interacts with the `Weapon` interface, not the specific classes that implement this interface. This makes the code more flexible and easier to maintain and extend. The `Player` class can interact with any object that implements the `Weapon` interface, without needing to know the specific details of how each type of weapon is upgraded. This is a key aspect of abstraction known as polymorphism.
+The `Player` class uses this abstraction in its `useWeapon` method. When a player decides to use their weapon, the weapon's `use` method is called. The `Player` class doesn't need to know how the `use` method works for each specific type of weapon. It only needs to know that the `use` method exists and can be called on the weapon.
+
+This is the essence of abstraction
+- The specific implementation details of how each type of weapon is used are hidden from the `Player` class. The `Player` class interacts with the `Weapon` interface, not the specific classes that implement this interface. 
+- This makes the code more flexible and easier to maintain and extend. The `Player` class can interact with any object that implements the `Weapon` interface, without needing to know the specific details of how each type of weapon is used. 
 
 
 ## Polymorphism
+Polymorphism, a core principle in object-oriented programming (OOP), is derived from the Greek words meaning "many shapes."
+- In the context of OOP, it refers to the ability of a variable, function, or object to assume various forms. 
+- Polymorphism in Java is instrumental in enabling a single action to manifest in different ways. 
+- This technique allows for writing versatile code that does not have to be aware of the specific subtype of an object, as long as the object adheres to a defined interface.
 
-Polymorphism is another fundamental concept in object-oriented programming (OOP). 
-- The term "polymorphism" comes from Greek and means "many shapes". In the context of OOP, it refers to the ability of a variable, function, or object to take on multiple forms.
-- In Java, polymorphism allows us to perform a single action in different ways. 
-- The most common use of polymorphism in OOP occurs when a parent class reference is used to refer to a child class object. This allows us to write code that does not need to know what specific subtype of object it is working with, as long as the object adheres to the expected interface.
-
-With both `Bow` and `Sword` classes implementing the `Weapon` interface, we can now use them interchangeably where a `Weapon` type is expected, and we can be assured that both have an `upgrade()` method.
-
-```java
-Weapon bow = new Bow(20, "Longbow");
-Weapon sword = new Sword(30, "Sabre");
-
-// Upgrade both weapons
-bow.upgrade();
-sword.upgrade();
-```
-
-Let's modify our `Player` class as follows,
-- Add a `Weapon` attribute named `UsedWeapon``. This attribute represents the weapon currently being used by the player. 
-- Add a `setWeapon(Weapon weapon)` method. This method allows us to set the UsedWeapon attribute to a specific `Weapon` object. 
+In our case, with both `Bow` and `Sword` classes implementing the `Weapon` interface, they demonstrate polymorphism by being used interchangeably wherever a `Weapon` type is expected. Both classes possess a `use()` method, albeit with differing implementations:
 
 ```java
-public class Player {
-    private String name;
-    private int health;
-    private int score;
-    private Weapon UsedWeapon;
+Weapon bow = new Bow();
+Weapon sword = new Sword();
 
-    // Constructor 
-    public Player(String name) {
-        this.name = name;
-        this.health = 100; 
-        this.score = 0; 
-    }
-
-    public void increaseScore(int points) {
-        score += points;
-    }
-
-    public void setWeapon(Weapon weapon) {
-        this.UsedWeapon = weapon;
-    }
-}
+// Using the weapons
+bow.use();
+sword.use();
 ```
 
-This design allows for flexibility and extensibility in our code. 
-- We can easily add new types of weapons to our game by creating new classes that implement the Weapon interface
-- We can use these new weapons with the Player class without making any changes to the Player class itself.
+The benefit of this approach is the creation of flexible and extendable code. It allows for the introduction of varied behaviors (like different ways of using weapons) depending on the type of object at runtime, without the need for changing existing code. 
 
-Let's say we want to introduce a new weapon type to our game, e.g. a Hammer. To do this, we would create a new Hammer class that implements the Weapon interface. Here's a simple example:
+For example, introducing a new weapon type like a `Hammer` is straightforward. The `Hammer` class, implementing the `Weapon` interface, can define its unique version of the `use()` method:
 
 ```java
 public class Hammer implements Weapon {
@@ -454,13 +482,13 @@ public class Hammer implements Weapon {
 
     // Constructor and other methods ...
 
-    public void smash() {
+    public void use() {
         System.out.println(name + " smashes causing " + damage + " damage.");
     }
 }
 ```
 
-Now, we can use this new `Hammer` class with the *Player* class without making any changes to the `Player` class. We can create a `Hammer` object, and use the `setWeapon()`` method of the Player class to set the player's weapon to the new hammer.
+Now, the `Hammer` can be seamlessly integrated into the game and used by the `Player` class. A `Hammer` object can be created and set as the player's weapon, illustrating the power of polymorphism:
 
 ```java
 // Create a new Hammer object
@@ -469,49 +497,24 @@ Hammer hammer = new Hammer();
 player.setWeapon(hammer);
 ```
 
-## Interface for defining common behavior
+This example underlines the essence of polymorphism in OOP. 
+- It enables the `Player` class to interact with any object that implements the `Weapon` interface, regardless of the weapon's specific type or the details of its `use()` method. 
+- This leads to a more maintainable, scalable, and flexible codebase, where new functionalities can be added with minimal changes.
 
-In the context of our RPG game, we might have different types of characters and objects such as Monster, Player, and NPC.
--  Each of these can have some common behaviors, but they also have unique characteristics. 
-- Eg., both a `Player` and a `Monster` might have attack and `takeDamage` methods, but a Player/NPC may talk while a Monster does not.
+## UML Class Diagrams 
 
-To implement common behavior, you can define interfaces. For example, you might have:
-- `Attackable` interface with methods like attack and takeDamage.
-- `Talkable` interface with methods like talk. Then, your `Player` class can implement both `Attackable` and `Talkable`, while Monster implements only `Attackable`.
-
-Example:
-```java
-public interface Talkable {
-    void talk(Talkable partner);
-}
-
-public class Player implements Attackable, Talkable {
-    // Implement  methods from Attackable and Talkable
-}
-
-public class Monster implements Attackable {
-    // Implement all methods from Attackable
-}
-
-public class NPC implements Talkable {
-    // Implement all methods from Talkable
-}
-
-```
-## UML Class Diagram 
-
-In UML (Unified Modeling Language) class diagrams, the relationships and structures of classes in an object-oriented system are graphically represented.
+In UML (Unified Modeling Language) class diagrams, the relationships and structures of classes in an object-oriented system can be graphically represented.
 
 UML Class Diagram Components:
 - **Classes**: Represented by rectangles divided into three parts: the top part for the class name, the middle part for attributes, and the bottom part for methods.
 - **Relationships**: Different types of lines and arrows are used to depict various relationships like inheritance, association,  interface implementation (realization), and association.
 
-![Alt text](image-7.png)
+![Alt text](image-9.png)
 
 Types of relationship:
 1.	**Is-a Relationship** (Inheritance/Generalization):
 - This is depicted by a line with a closed, unfilled arrowhead pointing from the subclass to the superclass.
-- In our example, `Warrior` and `Mage` are subclasses of `Player`. This is an is-a relationship because a Warrior is-a Player, and a Mage is-a Player.
+- In our example, `Warrior` and `Mage` are subclasses of `Player`. This is an is-a relationship because a `Warrior` is-a `Player`, and a `Mage` is-a `Player`.
 - Example: A line with an arrowhead from Warrior to Player and from Mage to Player.
 
 
@@ -527,7 +530,80 @@ Types of relationship:
 - UML Example: Dashed lines with arrowheads from Bow and Sword to Weapon.
 
 
-# SOLID Principle
+## Interface for defining common behavior
+
+In the context of our RPG game, we might have different types of characters and objects such as Monster, Player, and NPC.
+-  Each of these can have some common behaviors, but they also have unique characteristics. 
+- Eg., both a `Player` and a `Monster` might have attack and `takeDamage` methods, but a Player or NPC may talk while a Monster does not.
+
+To implement common behavior, you can define interfaces. For example, you might have:
+- `Attackable` interface with methods like attack and takeDamage.
+- `Talkable` interface with methods like talk. Then, your `Player` class can implement both `Attackable` and `Talkable`, while Monster implements only `Attackable`.
+
+![Alt text](image-13.png)
+Example:
+```java
+public interface Talkable {
+    void talk(Talkable partner);
+}
+
+public interface Attackable {
+    void attack(Attackable target);
+    void takeDamage(int amount);
+}
+
+public class Player implements Attackable, Talkable {
+    // Implement  methods from Attackable and Talkable
+}
+
+public class Monster implements Attackable {
+    // Implement all methods from Attackable
+}
+
+public class NPC implements Talkable {
+    // Implement all methods from Talkable
+}
+
+```
+
+## Abstract class
+
+Abstract class vs. Interface
+- An interface is used to group related methods with empty bodies. It specifies "what" a class must do, but not "how." 
+- An abstract class, in contrast, can have a mix of methods with and without implementations. It can provide a common base of functionality for subclasses. It may also define attributes that a common to subclasses.
+- Both interfaces and abstract classes abstract the concept and provide polymorphism. 
+
+For instance, we can instead define the abstract class `Weapon` to define a concrete method `getDamage()`, while still requiring subclasses to implement the abstract `use()` method.
+
+  ```java
+  public abstract class Weapon {
+    int damage;
+    abstract void use();
+
+    public int getDamage() {
+        return this.damage;
+    }
+  }
+  ```
+
+Any subclass of `Weapon` needs to extend the abstract class rather than implementing it like an interface. For instance, a `Bow` class extending the `Weapon` abstract class would inherit the `getDamage()` method and must provide its own implementation of the `use()` method:
+
+```java
+public class Bow extends Weapon {
+    public Bow(int damage) {
+        super(damage);
+    }
+
+    public void use() {
+        // Shooting arrows
+    }
+}
+```
+
+Here is the UML diagram.
+![Alt text](image-14.png)
+
+# The SOLID Principle
 
 SOLID is an acronym representing five key design principles intended to make software designs more understandable, flexible, and maintainable.
 
@@ -633,7 +709,7 @@ GameSaver gameSaver = new GameSaver();
 gameSaver.saveGame(gameState);
 ```
 
-### Coupling
+### Cohesion vs. Coupling
 
 **Cohesion** is used to indicate the degree to which a class has a single, well-focused purpose. 
 
@@ -729,7 +805,7 @@ public class GameSaver {
 }
 ```
 
-By passing different *Database* instances to the `GameSaver` constructor, you can save the game state using different types of databases without modifying the `GameSaver` class.
+By passing different implementation of *Database* interface to the `GameSaver` constructor, you can save the game  using different types of databases without modifying the `GameSaver` class.
 
 For instance, for using the MySQL database,
 ```java
@@ -801,72 +877,13 @@ Database mySqlDatabase = new MySQLDatabase();
 GameSaver gameSaver = new GameSaver();
 gameSaver.setDatabase(mySqlDatabase);
 ```
-### Testing with Mock objects
-
-During Unit Testing, mock objects are used in testing to simulate the behavior of real, complex objects in a controlled way (E.g. when testing functions which interacts with files, database, or external systems). For instances, testing functions which integrate with database  directly can be complex, slow, and unreliable.
-
-Mocking databases allow us to isolate and test our application logic without involving the actual database operations. 
-- Faster as they operate in-memory, eliminating the time taken for actual database calls. 
--  Simplify testing by easily simulating any state of the database required for the test. 
-- Mock databases also provide reliable and consistent results, unaffected by external factors like network issues or database downtime. 
-
-
-The Dependency Inversion Principle (DIP) facilitates testing of the `GameSaver` class by making it possible to inject mock database objects during testing. 
-- When writing tests for the `GameSaver` class, you can create a mock `Database` object and inject this mock object into the `GameSaver` class. 
-- The mock `Database` object would mimic the behavior of a real `Database` object, but without any of the side effects (like actually saving data to a database). 
-- This allows you to test the `GameSaver` class in isolation, without needing to set up and tear down a real database for each test.
-
-Here's a simple example of what the `MockDatabase` class might look like:
-
-```java
-public class MockDatabase implements Database {
-    private boolean saveGameCalled = false;
-
-    @Override
-    public void saveGame(GameState gameState) {
-        saveGameCalled = true;
-    }
-
-    public boolean wasSaveGameCalled() {
-        return saveGameCalled;
-    }
-}
-```
-
-The `MockDatabase` is a mock object that simulates the behavior of a real `Database` object for testing purposes. 
-- It implements the `Database` interface, but instead of performing actual database operations, it simply records information about how its methods were called, which can then be checked in your tests. 
-- The `MockDatabase` might have a method `wasSaveGameCalled()` that returns `true` if its `saveGame` method was called, and `false` otherwise. This allows your tests to verify that the `GameSaver` class correctly calls the `Database`'s `saveGame` method when its own `saveGame` method is called.
-- The `MockDatabase`'s `saveGame` method simply sets a private `saveGameCalled` flag to `true` when it's called. The `wasSaveGameCalled` method then returns the value of this flag. This allows your tests to check whether the `saveGame` method was called by checking the value returned by `wasSaveGameCalled`.
-
-Here is a sample JUnit Test case using the `MockDatabase`.
-
-```java
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-public class GameSaverTest {
-    @Test
-    public void testSaveGame() {
-        // Create a mock Database object
-        MockDatabase mockDatabase = new MockDatabase();
-
-        // Inject the mock Database object into a GameSaver object
-        GameSaver gameSaver = new GameSaver(mockDatabase);
-
-        // Create a mock GameState object
-        GameState mockGameState = new MockGameState();
-
-        // Call the method under test
-        gameSaver.saveGame(mockGameState);
-
-        // Verify that the mock Database's saveGame method was called
-        assertTrue(mockDatabase.wasSaveGameCalled());
-    }
-}
-```
 
 ### Inversion of Control (IoC) container
-In frameworks such as Java spring, the creation and management of dependencies is outsourced to to an Inversion of Control (IoC) container responsible for instantiating, configuring, and assembling the objects in your application.
+Inversion of Control (IoC)  containers
+- In frameworks like Java Spring, the creation and management of dependencies are delegated to an Inversion of Control (IoC) container. 
+  - Responsible for instantiating, configuring, and assembling the objects in your application. 
+  - Simplifies the management of dependencies and promotes a coding style that leads to more modular, understandable, and testable code. 
+- By handling the lifecycle and configuration of application objects, it allows developers to focus on the core functionality of their application rather than the details of object creation and management.
 
 In Spring boot, you can define your configuration in `application.yaml` (or `application.yml`) files. For example, if you have different configurations for MySQL and MongoDB, you might define two files: `application-mysql.yml` and `application-mongodb.yml`.
 
@@ -903,3 +920,87 @@ To launch your app with MongoDB, you may execute
 ```
 
 The Inversion of Control (IoC) container in Spring Boot will instantiate the corresponding object and inject it into the application. This automatic creation, configuration, and injection of dependencies is handled by the Spring Framework's IoC container. By outsourcing the creation and management of dependencies to the IoC container, your application components can remain focused on their core responsibilities, leading to cleaner and more maintainable code.
+
+
+### Testing with Mock objects
+
+In unit testing scenarios, mock objects are instrumental for imitating the behavior of complex real objects in a controlled manner. This is particularly significant when testing functions that interact with files, databases, or external systems. Direct testing of functions that integrate with databases can be challenging, slow, and unreliable.
+
+Using mock databases, we can isolate and assess our application logic without involving real database operations. The advantages include:
+- Increased speed due to in-memory operations, avoiding the latency of actual database transactions.
+- Simplified testing by allowing the easy simulation of various database states.
+- Reliable and consistent outcomes, not influenced by external elements such as network interruptions or database downtimes.
+
+The Dependency Inversion Principle (DIP) enhances the testability of the `GameSaver` class by facilitating the injection of mock database objects during tests. This process includes:
+- Creating a mock `Database` object to test the `GameSaver` class.
+- This mock object replicates the functionality of a genuine `Database`, minus the side effects like real data storage.
+- As a result, the `GameSaver` class can be tested in isolation, removing the need to set up and dismantle a real database for each test.
+
+Let's consider this `MockDatabase` class design:
+
+```java
+public class MockDatabase implements Database {
+    private boolean saveGameCalled = false;
+    private boolean simulateFailure = false;
+
+    @Override
+    public void saveGame(GameState gameState) {
+        if (simulateFailure) {
+            throw new DatabaseConnectionException("Failed to connect to database.");
+        }
+        saveGameCalled = true;
+    }
+
+    public void setSimulateFailure(boolean simulateFailure) {
+        this.simulateFailure = simulateFailure;
+    }
+
+    public boolean wasSaveGameCalled() {
+        return saveGameCalled;
+    }
+}
+```
+
+The `MockDatabase` serves as a simulated `Database` object for testing. It:
+- Adheres to the `Database` interface, recording method calls rather than executing real database operations.
+- Includes a `simulateFailure` flag to mimic database connection failures.
+- Throws a `DatabaseConnectionException` when `simulateFailure` is true, emulating a failed database connection.
+
+Here are two key test cases using `MockDatabase`:
+
+1. **Testing Successful Database Operation:**
+   This test case confirms the proper functioning of the `GameSaver` class under normal conditions, where the database connection is successful. It checks if the `saveGame` method of the `MockDatabase` is invoked, thereby ensuring that the `GameSaver` behaves as expected when there are no database connection issues.
+   
+   ```java
+   @Test
+   public void testSaveGameSuccess() {
+       MockDatabase mockDatabase = new MockDatabase();
+       GameSaver gameSaver = new GameSaver(mockDatabase);
+       GameState mockGameState = new MockGameState();
+
+       gameSaver.saveGame(mockGameState);
+
+       assertTrue("The saveGame method should have been called", mockDatabase.wasSaveGameCalled());
+   }
+   ```
+
+2. **Testing Database Connection Failure:**
+   This test evaluates how the `GameSaver` class handles a scenario in which the database connection fails. By setting the `simulateFailure` flag to `true` in the `MockDatabase`, this test mimics a database connection failure. It ensures that the appropriate exception is thrown, verifying the error-handling abilities of the `GameSaver` class.
+   
+   ```java
+   @Test
+   public void testSaveGameFailure() {
+       MockDatabase mockDatabase = new MockDatabase();
+       mockDatabase.setSimulateFailure(true);
+       GameSaver gameSaver = new GameSaver(mockDatabase);
+       GameState mockGameState = new MockGameState();
+
+       try {
+           gameSaver.saveGame(mockGameState);
+           fail("DatabaseConnectionException was expected but not thrown");
+       } catch (DatabaseConnectionException e) {
+           // Test passes if DatabaseConnectionException is caught
+            System.out.println("DatabaseConnectionException successfully caught, indicating correct behavior under failure conditions.");
+       }
+   }
+   ```
