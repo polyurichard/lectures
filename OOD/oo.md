@@ -600,6 +600,7 @@ public class Bow extends Weapon {
 ```
 
 Here is the UML diagram.
+
 ![Alt text](image-14.png)
 
 # The SOLID Principle
