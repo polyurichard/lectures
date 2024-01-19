@@ -196,7 +196,6 @@ Monster orc = new Monster("Orc", 100);
 Inheritance is a mechanism in Java that allows one class to acquire the properties (fields) and behaviors (methods) of another class. 
 - The class which inherits the properties of another class is known as the **subclass** (or derived class, child class)
 - The class whose properties are inherited is known as the **superclass** (or base class, parent class).
-
 ![Alt text](image-10.png)
 
 The `Player` class represents a player in the game. 
