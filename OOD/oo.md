@@ -37,14 +37,14 @@ In this lecture, we will learn about different Object-Oriented (OO) concepts usi
 
 ## Define the Player Class
 
-In Object-Oriented (OO) design, a Class and an Object are fundamental concepts:
+In Object-Oriented (OO) design, Classs and  Objects are fundamental concepts:
 - A **Class** is a blueprint for an object.
 - An **Object** is an entity that contains both data and behavior.
 
 
-Let's consider the `Player` class in the RPG game.
+Let's consider the `Player` class in the RPG game. The Player class in the RPG game serves as a blueprint for creating player objects in the game. It encapsulates the properties and behaviors that are common to all players.
 
-**Attributes**: Attributes represent the properties/state of an object. In the case of the `Player` class, there are several attributes such as `name`, `health`, and `score` that define the state of a Player object.
+**Attributes** represent the properties/state of an object. In the case of the `Player` class, there are several attributes such as `name`, `health`, and `score` that define the properties or the state of a Player object.
 - `name`: A String representing the player's name.
 - `health`: An integer value representing the player's health.
 - `score`: An integer value representing the player's score.
@@ -57,8 +57,12 @@ public class Player {
 }
 ```
 
-**Methods**: Methods define the behavior of an object, detailing what the object can do. In the `Player` class, methods like `increaseScore` alter the object's state or interact with other objects.
-
+**Methods**: Methods define the behavior of an object, detailing what the object can do. 
+- In the `Player` class, methods like `increaseScore` alter the object's state or interact with other objects.
+- **Setter Methods**: These methods are used to modify the state of an object. E.g. The *setName(String name)* method in the Player class is a setter method that allows you to change the player's name.
+- **Getter Method**: The getter method is used to access the value of a private field. In this class, `getName()` is a getter method that returns the value of the name field. 
+- The `useWeapon` method is an example of a behavior that a Player object can perform (e.g. allow the Player object to use a weapon)
+  
 ```java
 public class Player {
     private String name;
@@ -76,13 +80,25 @@ public class Player {
         score += points;
     }
 
-    // Getter/Setter and other methods ...
-    
+  // Getter methods
+    public String getName() {
+        return name;
+    }
+
+    // Setter methods
+    public void setName(String name) {
+        this.name = name;
+    }
+
+   public void useWeapon() {
+        // Use the weapon ...
+    }
+
+    //other methods ...
 }
 ```
 
-A `constructor` is a special method that is invoked when an object of a class is instantiated. It is typically used to initialize the attributes of the class. The `Player` constructor, for example, initializes the player's name, health, and score.
-
+A `constructor` is a special method that is invoked when an object of a class is instantiated. It is used to initialize the attributes of the class. The `Player` constructor, for example, initializes the player's name, health, and score.
 
 An `object` is an instance of a class, containing the attributes and methods defined in the class. To create a `Player` object, we simply instantiate the class with the new keyword:
 
@@ -91,19 +107,14 @@ Player player1 = new Player("Alice");
 Player player2 = new Player("Bob");
 ```
 
-Methods allow for the manipulation and interaction with an object's data. The `Player` class includes methods like `increaseScore` and getters/setters for managing the attributes.
-
-In Java, object methods are invoked using the "dot" notation. For example, to increase a player's score and then get the updated score, we might :
+Methods allow for the manipulation and interaction with an object's data. In Java, object methods are invoked using the "dot" notation. Example
 
 ```java
-public class Game {
-    public static void main(String[] args) {
-        Player player = new Player("Charlie");
-        player.increaseScore(10);
-        System.out.println("Player Score: " + player.getScore());
-    }
-}
+String name = player1.getName() //get the player's name
+player1.increaseScore(10); //increases player1's score by 10
 ```
+
+
 
 
 ## UML Diagram
@@ -128,9 +139,8 @@ The UML diagram visually represents the structure of the `Player` class, includi
 
 Encapsulation is a fundamental principle of object-oriented programming that restricts direct access to an object's attributes. It avoids  the data and code being tied together within an object from being randomly accessed by other code defined outside the object or class.
 
-
 ![Alt text](image-9.png)
-The `Monster` class represents a monster in the game. It typically includes attributes like name and health, and methods to manage these attributes.
+The `Monster` class represents a monster in the game. It  includes attributes like name and health, and methods to manage these attributes.
 
 ```java
 public class Monster {
@@ -160,19 +170,40 @@ public class Monster {
     }
 }
 ```
-In the `Monster` class, the `name` and `health` variables are encapsulated. 
-- They are declared as private, which means they cannot be accessed directly from outside the class. 
-- Access is provided through the public methods `getName()`, `getHealth()`, and `takeDamage(int amount)`.
-- The `takeDamage(int amount)` method is a public method that allows external code to interact with the `health` attribute in a controlled way. It reduces the `health` by the amount specified, but also ensures that `health` cannot go below 0. If another class tries to directly change the health attribute like monster.health = -10;, it would result in a compile error, because health is private. 
-- By making `health` private, it cannot be directly accessed or modified from outside the class. This prevents the health from being set to an invalid value (like a negative number) accidentally. 
-- The `takeDamage(int amount)` method provides a controlled way to modify the health value, ensuring that it cannot go below 0.
 
-Let's instantiate two monsters. 
+Let's instantiate three monsters from the `Monster` class.
 
 ```java
-Monster goblin = new Monster("Goblin", 50);
-Monster orc = new Monster("Orc", 100);
+Monster goblin1 = new Monster("Goblin", 50);
+Monster goblin2 = new Monster("Goblin", 50);
+Monster orc1 = new Monster("Orc", 100);
 ```
+
+Here are the three types of visibility modifiers in Java:
+1. **Public**: The public modifier allows the attribute or method to be accessed from anywhere, even outside the class.
+2. **Private**: The private modifier restricts access to the attribute or method to within the class itself.
+3. **Protected**: The protected modifier allows access to the attribute or method within the class itself and any subclasses of the class.
+4. **Default**: If no visibility modifier is specified, the attribute or method is accessible within the class itself and any other class in the same package.
+
+
+In the `Monster` class, the `name` and `health` variables are declared as private, which means they cannot be accessed directly from outside the class. 
+
+For instance, the following statement will generate compilation errors. 
+
+```java
+class Main {
+    public static void main(String[] args) {
+        Monster goblin = new Monster("Goblin", 50);
+        goblin.health = -30; // Error: name has private access in Monster
+    }
+}
+```
+By making the visibility of the variable `health` private, it cannot be directly accessed or modified from outside the class. This prevents the health from being set to an invalid value (like a negative number) accidentally. 
+
+Public methods are provided to allow controlled access to the private attributes. 
+- For instance, the `getName()` and `getHealth()` methods allow external code to access the `name` and `health` attributes of a `Monster` object. 
+- The `takeDamage(int amount)` method is a public method that allows external code to interact with the `health` attribute in a controlled way. It reduces the `health` by the amount specified, but also ensures that `health` cannot go below 0.
+
 
 
 ##  Inheritance
@@ -183,41 +214,8 @@ Inheritance is a mechanism in Java that allows one class to acquire the properti
 
 ![Alt text](image-8.png)
 
-The `Player` class represents a player in the game. 
-
-```java
-public class Player {
-    private String name;
-    private int health;
-    private int score;
-
-    // Constructor 
-    public Player(String name) {
-        this.name = name;
-        this.health = 100; // Default health for a new player
-        this.score = 0; // Default score for a new player
-    }
-
-    public void increaseScore(int points) {
-        score += points;
-    }
-
-    // Getter and Setter for name
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    // getters and setter methods for other attributes...
-
-}
-```
-
-Create a new class named `Warrior` that extends `Player`. 
-- The `Warrior` class inherits all the public and protected members (fields and methods) of Player.
+Let's Create a new class named `Warrior` that extends `Player`. 
+- The `Warrior` class inherits all the public and protected members (fields and methods) of the `Player` class.
 
 
 ```java
@@ -231,7 +229,7 @@ public class Warrior extends Player {
 }
 ```
 
-We may add new methods that are specific to a Warrior. For example, a Warrior might have a method to attack with a sword.
+We may add new methods that are specific to a `Warrior`. For example, a Warrior might have a method to `attack` with a sword.
 
 ```java
 public class Warrior extends Player {
@@ -250,8 +248,7 @@ public class Warrior extends Player {
 }
 ```
 
-
-Inheritance promotes reusability and is a way to achieve runtime polymorphism. It can save you significant time and effort by allowing you to reuse code that's already been tested and debugged.
+Inheritance promotes reusability by allowing you to reuse code that's already been tested and debugged.
 
 For instance, let's consider the `Warrior` class that extends the `Player` class in our game. 
 - The `Player` class might have attributes like `name`, `health`, and `weapon`, and methods to manage these attributes and perform actions like `attack()`.
@@ -260,12 +257,13 @@ For instance, let's consider the `Warrior` class that extends the `Player` class
 ---
 
 **Exercise**: 
-Define the `Mage` Class.
-1.	The Mage class should extend the Player class.
-2.	Add a new attribute mana (int) to represent the mage's magic energy.
-3.	Add a constructor that takes name and mana as parameters and initializes these attributes along with the attributes from the Player class.
-4.	Add getter and setter methods for mana.
-5.	Add a method castSpell() that represents the mage casting a spell. The implementation can be simple, such as printing a message.
+Define the `Mage` Class:
+1. The `Mage` class should extend the `Player` class.
+2. Add a new attribute `mana` (int) to represent the mage's magic energy.
+3. Add a constructor that takes `name` and `mana` as parameters and initializes these attributes along with the attributes from the `Player` class.
+4. Add getter and setter methods for `mana`.
+5. Add a method `castSpell()` that represents the mage casting a spell. The implementation can be simple, such as printing a message.
+
 
 <!--
 **Sample solution**:
@@ -301,19 +299,15 @@ public class Mage extends Player {
 
 ## Interface 
 
-An interface in OO defines a contract that a class agrees to follow. 
-- This contract is a set of methods that the class must implement, providing the necessary behavior but not the specific implementation details. 
-- The clients of the class will not be affected by implementation change
-
-The purpose of an interface is to specify a contract or behavior that classes can implement. There is no implementation provided in the interfac
-- An interface can provide *no implementation* at all. 
-- Interface does not include any attributes: Interfaces in Java are used to declare methods that a class must 
-implement, not to define the state of an object.
+An interface in OO defines a contract that a class agrees to follow. The purpose of an interface is to specify a contract or behavior that classes can implement. 
+- An interface can provide *no implementation* at all.
+- Interface does not include any attributes
+  - Interfaces in Java are used to declare methods that a class must implement, not to define the state of an object.
 
 
 
 ![Alt text](image-11.png)
-Let's begin by defining a simple `Weapon` interface with an `upgrade()` behavior. 
+Let's begin by defining a  `Weapon` interface with `use` and `upgrade()` methods. 
 
 ```java
 public interface Weapon {
@@ -322,7 +316,7 @@ public interface Weapon {
 }
 ```
 
-We will implement the `Weapon` interface in two distinct classes: `Bow` and `Sword`. Both classes have unique attributes like `damage` and `name`. As part of implementing the `Weapon` interface, they are required to provide implementations for the `upgrade()` and `use()` methods.
+We will implement the `Weapon` interface in two distinct classes: `Bow` and `Sword`. 
 
 The `Bow` class includes methods `upgrade()`, `use()`, and `reload()`.
 - `upgrade()`: Increases the bow's damage and provides feedback.
@@ -332,14 +326,14 @@ The `Bow` class includes methods `upgrade()`, `use()`, and `reload()`.
 ```java
 public class Bow implements Weapon {
     private int damage;
-    private int arrows; // Assuming this attribute is also part of the class
+    private int arrows; 
     private String name;
 
-    // Constructor and other methods (e.g. getters, setters) would be here
+    // Constructor and other methods ...
 
     public void upgrade() {
         damage += 10; 
-        System.out.println(name + " has been upgraded. New damage is " + damage);
+        System.out.println(name + " has been upgraded");
     }
 
     public void use() {
@@ -361,11 +355,11 @@ public class Sword implements Weapon {
     private int damage;
     private String name;
 
-    // Constructor and other methods (e.g. getters, setters) would be here
+    // Constructor and other methods ...
 
     public void upgrade() {
         damage += 15; 
-        System.out.println(name + " has been upgraded. New damage is " + damage);
+        System.out.println(name + " has been upgraded.");
     }
 
     public void use() {
@@ -374,7 +368,7 @@ public class Sword implements Weapon {
 }
 ```
 
-In both classes, the `use()` method is an essential part of the `Weapon` interface's contract. This method provides a way to use the weapon, and its implementation varies between the `Bow` and `Sword`, reflecting their different functionalities in the game.
+In both classes, the `use()` method is an essential part of the `Weapon` interface's contract. This method provides a way to use the weapon, and its implementation varies between the `Bow` and `Sword`.
 
 
 Here's how we can instantiate the `Sword` and `Bow` objects:
@@ -382,7 +376,7 @@ Here's how we can instantiate the `Sword` and `Bow` objects:
 ```java
 // Creating and using a Sword object
 Sword sword = new Sword();
-sword.setName("Excalibur");
+sword.setName("Sword of Power");
 sword.setDamage(50);
 sword.use(); 
 
@@ -394,7 +388,9 @@ bow.reload(); // Reload the bow after use
 bow.upgrade();
 ```
 
-Suppose that players can use their weapon during gameplay. The `use` method in the `Weapon` class represents the action of using the weapon, such as swinging a sword or shooting an arrow with a bow. To incorporate this action into the `Player` class, we can add a method that allows the player to use their weapon. 
+Suppose that players can use their weapon during gameplay. 
+- The `use` method in the `Weapon` class represents the action of using the weapon, such as swinging a sword or shooting an arrow with a bow. 
+- To incorporate this action into the `Player` class, we can add a method that allows the player to use their weapon. 
 
 Here is how the code might look:
 
@@ -410,10 +406,6 @@ public class Player {
         this.score = 0;
     }
 
-    public void increaseScore(int points) {
-        score += points;
-    }
-
     public void useWeapon() {
         weapon.use();
     }
@@ -425,10 +417,10 @@ public class Player {
 In this updated code:
 - The `Player` class now has a method `useWeapon()`. This method calls the `use()` method on the `weapon` object, which is an instance of a class that implements the `Weapon` interface.
 - When a player decides to use their weapon, the `useWeapon()` method will invoke the specific `use()` method of the weapon they are holding, whether it's a sword, bow, or any other weapon type.
-- This design allows for flexibility in the types of weapons a player can use and ensures that the weapon's action is appropriately executed, depending on the type of weapon.
+
 
 ## Abstraction
-**Abstraction** in object-oriented design is a process of hiding the implementation details and showing only the functionality to the user. It lets you focus on what the object does instead of how it does it.
+**Abstraction** in object-oriented design is a process of hiding the implementation details and showing only the essential functionality to the user. It lets you focus on what the object does instead of how it does it.
 
 
 ![Alt text](image-18.png)
@@ -446,21 +438,19 @@ public class Player {
 }
 ```
 
-In the `Player` class, the `weapon` attribute is of type `Weapon`, which is an interface. The `Weapon` interface defines a contract that includes a `use` method. However, the interface does not provide any implementation details for this method. This is an example of abstraction - the `Weapon` interface provides a high-level understanding of what a weapon should be able to do (i.e., it should be usable), without getting into the specifics of how this is done.
-
-The `Player` class uses this abstraction in its `useWeapon` method. 
-- When a player decides to use their weapon, the weapon's `use` method is called. The `Player` class doesn't need to know how the `use` method works for each specific type of weapon. 
-- It only needs to know that the `use` method exists and can be called on the weapon. The specific implementation details of how each type of weapon is used are hidden from the `Player` class. 
+In our game,
 - The `Player` class interacts with the `Weapon` interface, not the specific classes that implement this interface. 
+- The `Weapon` interface provides a high-level understanding of what a weapon should be able to do (i.e., it should be usable), without getting into the specifics of how this is done. When a player decides to use their weapon, the weapon's `use` method is called. The `Player` class doesn't need to know how the `use` method works for each specific type of weapon. It only needs to know that the `use` method exists and can be called on the weapon. The specific implementation details of how each type of weapon is used are hidden from the `Player` class. 
 
 
 ## Composition and Delegation
 
 **Composition** involves composing a class using instances of other classes or interfaces to achieve the desired functionality. 
 
-**Delegation** is a core concept in composition, where an object handles a request by delegating it to a second helper object (the delegate). This principle allows for distributing responsibilities among different classes and promotes code reuse and flexibility.
+**Delegation** is a core concept in composition, where an object handles a request by delegating it to a second helper object (the delegate). This allows distributing responsibilities among different classes and promotes code reuse and flexibility.
 
-For the `Player` class, it stores a reference to a `Weapon` object and has a method `useWeapon()` that calls the `use()` method on the `Weapon` object. 
+For instanace, for the `Player` class,
+- It stores a reference to a `Weapon` object and has a method `useWeapon()` that calls the `use()` method on the `Weapon` object. 
 - Instead of the `Player` class implementing the `use()` method itself, it delegates this responsibility to the `weapon` object. 
 - This allows the `Player` class to use the behavior defined in the `Weapon` class without needing to know the details of how this behavior is implemented.
 
@@ -472,8 +462,7 @@ In the context of the `Player` and `Weapon` classes, if Weapon is an interface (
 
 ## Polymorphism
 Polymorphism, a core principle in object-oriented programming (OOP), is derived from the Greek words meaning "many shapes."
-- In the context of OOP, it refers to the ability of a variable, function, or object to assume various forms. 
-- Polymorphism in Java is instrumental in enabling a single action to manifest in different ways. 
+- It refers to the ability of a variable, function, or object to assume various forms. 
 - This technique allows for writing versatile code that does not have to be aware of the specific subtype of an object, as long as the object adheres to a defined interface.
 
 In our case, with both `Bow` and `Sword` classes implementing the `Weapon` interface, they demonstrate polymorphism by being used interchangeably wherever a `Weapon` type is expected. Both classes possess a `use()` method, albeit with differing implementations:
@@ -504,7 +493,7 @@ public class Hammer implements Weapon {
 }
 ```
 
-Now, the `Hammer` can be seamlessly integrated into the game and used by the `Player` class. A `Hammer` object can be created and set as the player's weapon, illustrating the power of polymorphism:
+Now, the `Hammer` can be seamlessly integrated into the game and used by the `Player` class. A `Hammer` object can be created and set as the player's weapon. There is no need to modify the `Player` class or any other existing code.
 
 ```java
 // Create a new Hammer object
@@ -513,49 +502,43 @@ Hammer hammer = new Hammer();
 player.setWeapon(hammer);
 ```
 
-This example underlines the essence of polymorphism in OOP. 
-- It enables the `Player` class to interact with any object that implements the `Weapon` interface, regardless of the weapon's specific type or the details of its `use()` method. 
-- This leads to a more maintainable, scalable, and flexible codebase, where new functionalities can be added with minimal changes.
+Polymorphism enables the `Player` class to interact with any object that implements the `Weapon` interface, regardless of the weapon's specific type or the details of its `use()` method. This leads to a more maintainable, scalable, and flexible codebase, where new functionalities can be added with minimal changes.
 
 ## UML Class Diagrams 
 
 In UML (Unified Modeling Language) class diagrams, the relationships and structures of classes in an object-oriented system can be graphically represented.
-
-UML Class Diagram Components:
 - **Classes**: Represented by rectangles divided into three parts: the top part for the class name, the middle part for attributes, and the bottom part for methods.
 - **Relationships**: Different types of lines and arrows are used to depict various relationships like inheritance, association,  interface implementation (realization), and association.
 
 ![Alt text](image-6.png)
 
 
-Types of relationship:
+Types of relationship in OO:
 1.	**Is-a Relationship** (Inheritance/Generalization):
 - This is depicted by a line with a closed, unfilled arrowhead pointing from the subclass to the superclass.
-- In our example, `Warrior` and `Mage` are subclasses of `Player`. This is an is-a relationship because a `Warrior` is-a `Player`, and a `Mage` is-a `Player`.
-- Example: A line with an arrowhead from Warrior to Player and from Mage to Player.
+- In our game, `Warrior` and `Mage` are subclasses of `Player`. This is an is-a relationship because a `Warrior` is-a `Player`, and a `Mage` is-a `Player`.
 
 
 2.	**Has-a Relationship** (Association/Aggregation/Composition):
 - This represents that an object of one class 'owns' or 'uses' objects of another class.
-- In your example, the *Player* class has a Weapon. This is a has-a relationship because a *Player* has-a *Weapon*.
-- Example: A line from *Player* to *Weapon* indicate aggregation or composition.
+- In our game, the *Player* class has a Weapon. This is a has-a relationship because a *Player* has-a *Weapon*.
 
 
 3.	**Behaves-like-a** (Interface Implementation):
 - This is depicted by a dashed line with a closed, unfilled arrowhead pointing from the implementing class to the interface.
-- In our example, Bow and Sword implement the Weapon interface.
-- UML Example: Dashed lines with arrowheads from Bow and Sword to Weapon.
+- In our game, Bow and Sword implement the Weapon interface.
+
 
 
 ## Interface for defining common behavior
 
-In the context of our RPG game, we might have different types of characters and objects such as Monster, Player, and NPC.
--  Each of these can have some common behaviors, but they also have unique characteristics. 
-- Eg., both a `Player` and a `Monster` might have attack and `takeDamage` methods, but a Player or NPC may talk while a Monster does not.
+In  our RPG game, we might have different types of characters such as Monster, Player, and NPC.  Each of these can have some common behaviors, but they also have unique characteristics. Both a `Player` and a `Monster` might attack others characters in the game. A `Player` or `NPC` may talk while a Monster does not.
 
-To implement common behavior, you can define interfaces. For example, you might have:
-- `Attackable` interface with methods like attack and takeDamage.
-- `Talkable` interface with methods like talk. Then, your `Player` class can implement both `Attackable` and `Talkable`, while Monster implements only `Attackable`.
+To implement behavior common to different classes, you can define the following interfaces.
+- `Attackable` interface: Defines methods like `attack`. 
+- `Talkable` interface with methods like `talk`. 
+
+`Player` class can implement both `Attackable` and `Talkable`, while Monster implements only `Attackable`.
 
 
 ![Alt text](image-19.png)
@@ -634,7 +617,7 @@ These principles serve as guidelines for designing software systems that are mod
 
 ## Single Responsibility Principle (SRP)
 
-The Single Responsibility Principle dictates that a class should have only one reason to change, meaning it should have only one job or responsibility.
+The Single Responsibility Principle requires that a class should have only one reason to change, meaning it should have only one job or responsibility.
 
 In our RPG game, we ensure each class has a single responsibility. 
 - The `Weapon` class is only responsible for weapon-related attributes and behaviors. It should not include logic for saving game state or managing player health.
@@ -675,7 +658,7 @@ player.setWeapon(my_weapon);
 ```
 
 ## Liskov Substitution Principle (LSP)
-According to LSP, objects of a superclass should be replaceable with objects of its subclasses without affecting the application. In the context of the Weapon class and its potential subclasses, to adhere to LSP, any subclass of `Weapon` should be able to be used wherever a Weapon object is expected, without causing any issues or changes in behavior.
+According to LSP, objects of a superclass should be replaceable with objects of its subclasses without affecting the application. In the context of the Weapon class and its potential subclasses, to adhere to LSP, any subclass of `Weapon` should be able to be used wherever a `Weapon` object is expected, without causing any issues or changes in behavior.
 
 For instance, suppose we add an method to attack a monster. We should be able to use any subclass of the `Weapon` interface to attack the `Monster`.
 
@@ -701,7 +684,8 @@ In our game,
 
 - **Segregate Interfaces**: Instead of having a single large interface for all actions a character can perform, break it down into smaller interfaces. For example, `Attackable` for attack actions, `Talkable` for talking actions, etc.
 - **Implement Only What Is Needed**: Each type of character (like Monster, Player, NPC) should only implement the interfaces that are relevant to it. For instance, a Monster might only implement `Attackable` and not `Talkable`.
-- **Flexibility and Maintainability**: This approach makes your code more flexible and maintainable. If you need to add a new type of action, you can create a new interface without modifying existing interfaces or classes that don’t need that action.
+
+This approach makes your code more flexible and maintainable. If you need to add a new type of action, you can create a new interface without modifying existing interfaces or classes that don’t need that action.
 
 
 ## Dependency Inversion Principle (DIP)
@@ -1070,10 +1054,7 @@ By using interfaces instead of inheritance provides enhanced flexibility, modula
 In unit testing , mock objects can be used to imitate the behavior of external dependency in a controlled manner. This is particularly significant when testing functions that interact with files, databases, or external systems. Direct testing of functions that integrate with databases can be slow and unreliable.
 
 
-The Dependency Inversion Principle (DIP) enhances the testability of the `GameSaver` class by facilitating the injection of mock database objects during tests. This process includes:
-- Creating a mock `Database` object to test the `GameSaver` class.
-- This mock object replicates the functionality of a genuine `Database`, minus the side effects like real data storage.
-- As a result, the `GameSaver` class can be tested in isolation, removing the need to set up and dismantle a real database for each test.
+The Dependency Inversion Principle (DIP) enhances the testability of the `GameSaver` class by facilitating the injection of mock database objects during tests. This mock object replicates the functionality of a genuine `Database`, minus the side effects like real data storage. As a result, the `GameSaver` class can be tested in isolation, removing the need to set up and dismantle a real database for each test.
 
 Let's consider the following `MockDatabase` class which simulates the error condition of failing to connect to the database.
 - The `MockDatabase` serves as a simulated `Database` object for testing. 
