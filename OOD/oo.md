@@ -30,18 +30,17 @@
 
 
 #  Introduction to Object-Oriented Design
-Object-Oriented Design (OOD) is a programming paradigm that uses "objects" to design applications and computer programs. This results in more efficient, maintainable, and scalable software.
+Object-Oriented Design (OOD) is a programming paradigm that uses "objects" to design applications and computer programs. This results in more flexible and maintainable software.
 
 In this lecture, we will learn about different Object-Oriented (OO) concepts using an RPG game as an example.
 
 ## Define the Player Class
 
-In Object-Oriented (OO) design, Classs and  Objects are fundamental concepts:
+Classs and  Objects are fundamental concepts in OO design.
 - A **Class** is a blueprint for an object.
 - An **Object** is an entity that contains both data and behavior.
 
-
-Let's consider the `Player` class in the RPG game. The Player class in the RPG game serves as a blueprint for creating player objects in the game. It encapsulates the properties and behaviors that are common to all players.
+Let's consider the `Player` class in the RPG game. The `Player` class in the RPG game serves as a blueprint for creating player objects in the game. It encapsulates the properties and behaviors that are common to all players.
 
 **Attributes** represent the properties/state of an object. In the case of the `Player` class, there are several attributes such as `name`, `health`, and `score` that define the properties or the state of a Player object.
 - `name`: A String representing the player's name.
@@ -58,7 +57,7 @@ public class Player {
 
 **Methods**: Methods define the behavior of an object, detailing what the object can do. 
 - In the `Player` class, methods like `increaseScore` alter the object's state or interact with other objects.
-- **Setter Methods**: These methods are used to modify the state of an object. E.g. The *setName(String name)* method in the Player class is a setter method that allows you to change the player's name.
+- **Setter Methods**: These methods are used to modify the state of an object. E.g. The `setName(String name)` method in the Player class is a setter method that allows you to change the player's name.
 - **Getter Method**: The getter method is used to access the value of a private field. In this class, `getName()` is a getter method that returns the value of the name field. 
 - The `useWeapon` method is an example of a behavior that a Player object can perform (e.g. allow the Player object to use a weapon)
   
@@ -87,10 +86,6 @@ public class Player {
     // Setter methods
     public void setName(String name) {
         this.name = name;
-    }
-
-   public void useWeapon() {
-        // Use the weapon ...
     }
 
     //other methods ...
@@ -139,7 +134,7 @@ The UML diagram visually represents the structure of the `Player` class, includi
 Encapsulation is a fundamental principle of object-oriented programming that restricts direct access to an object's attributes. It avoids  the data and code being tied together within an object from being randomly accessed by other code defined outside the object or class.
 
 ![Alt text](image-9.png)
-The `Monster` class represents a monster in the game. It  includes attributes like name and health, and methods to manage these attributes.
+The `Monster` class represents a monster in the game. It  includes attributes like `name` and `health`, and methods to manage these attributes.
 
 ```java
 public class Monster {
@@ -197,7 +192,7 @@ class Main {
     }
 }
 ```
-By making the visibility of the variable `health` private, it cannot be directly accessed or modified from outside the class. This prevents the health from being set to an invalid value (like a negative number) accidentally. 
+By making the visibility of the variable `health` private, it cannot be directly accessed or modified from outside the class. This prevents the `health` from being set to an invalid value (e.g. negative number) accidentally. 
 
 Public methods are provided to allow controlled access to the private attributes. 
 - For instance, the `getName()` and `getHealth()` methods allow external code to access the `name` and `health` attributes of a `Monster` object. 
@@ -409,6 +404,10 @@ public class Player {
         weapon.use();
     }
 
+   public void setWeapon(Weapon weapon) {
+        this.weapon = weapon;
+    }
+
     // other parts of the code
 }
 ```
@@ -439,7 +438,8 @@ public class Player {
 
 In our game,
 - The `Player` class interacts with the `Weapon` interface, not the specific classes that implement this interface. 
-- The `Weapon` interface provides a high-level understanding of what a weapon should be able to do (i.e., it should be usable), without getting into the specifics of how this is done. When a player decides to use their weapon, the weapon's `use` method is called. The `Player` class doesn't need to know how the `use` method works for each specific type of weapon. It only needs to know that the `use` method exists and can be called on the weapon. The specific implementation details of how each type of weapon is used are hidden from the `Player` class. 
+- The `Weapon` interface provides a high-level understanding of what a weapon should be able to do (i.e., it should be usable), without getting into the specifics of how this is done. 
+- When a player decides to use their weapon, the weapon's `use` method is called. The `Player` class doesn't need to know how the `use` method works for each specific type of weapon. It only needs to know that the `use` method exists and can be called on the weapon. The specific implementation details of how each type of weapon is used are hidden from the `Player` class. 
 
 
 ## Composition and Delegation
@@ -520,12 +520,12 @@ Types of relationship in OO:
 
 2.	**Has-a Relationship** (Association/Aggregation/Composition):
 - This represents that an object of one class 'owns' or 'uses' objects of another class.
-- In our game, the *Player* class has a Weapon. This is a has-a relationship because a *Player* has-a *Weapon*.
+- In our game, the `Player` class has a `Weapon`. This is a has-a relationship because a `Player` has-a `Weapon`.
 
 
 3.	**Behaves-like-a** (Interface Implementation):
 - This is depicted by a dashed line with a closed, unfilled arrowhead pointing from the implementing class to the interface.
-- In our game, Bow and Sword implement the Weapon interface.
+- In our game, `Bow` and `Sword` implement the `Weapon` interface.
 
 
 
@@ -566,7 +566,6 @@ public class Bow extends Weapon {
 
 Here is the UML diagram.
 
-
 ![Alt text](image-17.png)
 # The SOLID Principle
 
@@ -597,16 +596,22 @@ In our game,when introducing new weapon types like `MagicWand`, instead of modif
 
 ```java
 public class Player {
+    Weapon weapon;
     // Rest of the code...
 
     public void setWeapon(Weapon weapon) {
         this.weapon = weapon;
     }
+
+    public void useWeapon() {
+        weapon.use();
+    }
 }
 ```
 ```java
-public Interface Weapon {
-    // Existing weapon code...
+public interface Weapon {
+    void use();
+    void upgrade();
 }
 ```
 
@@ -615,11 +620,19 @@ public class MagicWand implement Weapon {
     private int magicPower;
 
     // Magic wand specific methods...
+    void use (){
+        System.out.println("Casting a spell");
+    }
+
+    void upgrade() {
+        magicPower += 10;
+    }
 }
 ```
 ```java
-MagicWand my_weapon = new MagicWand();
+Weapon my_weapon = new MagicWand();
 player.setWeapon(my_weapon);
+player.useWeapon();
 ```
 
 ## Liskov Substitution Principle (LSP)
@@ -636,22 +649,18 @@ public class Monster {
         int damage = weapon.getDamage();
         takeDamage(damage);
     }
-
+    
     //other codes ...
 }
 ```
 
 ## Interface Segregation Principle (ISP)
 
-The Interface Segregation Principle, one of the SOLID principles, states that no client should be forced to depend on methods it does not use. In simpler terms, instead of having one large interface, you should have smaller, more specific interfaces.
-
-In our game,
-
+The Interface Segregation Principle states that no client should be forced to depend on methods it does not use. 
 - **Segregate Interfaces**: Instead of having a single large interface for all actions a character can perform, break it down into smaller interfaces. For example, `Attackable` for attack actions, `Talkable` for talking actions, etc.
 - **Implement Only What Is Needed**: Each type of character (like Monster, Player, NPC) should only implement the interfaces that are relevant to it. For instance, a Monster might only implement `Attackable` and not `Talkable`.
 
 This approach makes your code more flexible and maintainable. If you need to add a new type of action, you can create a new interface without modifying existing interfaces or classes that don’t need that action.
-
 
 ## Dependency Inversion Principle (DIP)
 
@@ -940,13 +949,12 @@ While inheritance is a commonly used mechanism in object-oriented programming fo
 
 2. **Lack of Flexibility**: Subclasses inherit all properties and methods of the base class, including potentially irrelevant or unnecessary ones. This can lead to a bloated and less optimal design, reducing the flexibility of the subclass to operate independently of its parent.
 
-3. **Violation of the Liskov Substitution Principle (LSP)**: When subclasses cannot use all the methods inherited from the parent class without modification or when they need to throw exceptions for certain methods (as seen in the `Monster` and `NPC` classes in the RPG example), it violates LSP. LSP states that objects of a superclass should be replaceable with objects of its subclasses without altering the correctness of the program. In the given example, replacing a `Character` object with a `Monster` or `NPC` object could lead to runtime errors, as these subclasses do not fully support all behaviors of the base class.
+3. **Violation of the Liskov Substitution Principle (LSP)**: 
+- LSP states that objects of a superclass should be replaceable with objects of its subclasses without altering the correctness of the program. 
+- When subclasses cannot use all the methods inherited from the parent class without modification or when they need to throw exceptions for certain methods (as seen in the `Monster` and `NPC` classes in the RPG example), it violates LSP. 
+- In the given example, replacing a `Character` object with a `Monster` or `NPC` object could lead to runtime errors, as these subclasses do not fully support all behaviors of the base class.
 
 4. **Reusability Issues**: The need to inherit from a base class to reuse behavior can limit the reusability of code. Subclasses are forced to inherit all behaviors, even if they only need a subset, which can lead to inefficient and unnecessary code duplication.
-
-In summary, while inheritance can be useful for sharing behaviors, its drawbacks, especially the violation of principles like LSP and the Single Responsibility Principle, need careful consideration to avoid creating tightly coupled and inflexible designs.
-
-
 
 ![Alt text](image-19.png)
 
