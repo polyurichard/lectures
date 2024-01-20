@@ -7,6 +7,8 @@
   - [Service Layer](#service-layer)
   - [Integrating a Repository for Persistent Data Storage](#integrating-a-repository-for-persistent-data-storage)
   - [Database Configuration](#database-configuration)
+  - [Introduction to ORM in Spring Boot with JPA](#introduction-to-orm-in-spring-boot-with-jpa)
+    - [Summary](#summary)
   - [Extending the REST API for Book Service](#extending-the-rest-api-for-book-service)
     - [Overview](#overview-1)
     - [Create a New Book](#create-a-new-book)
@@ -14,21 +16,51 @@
     - [Update a Book](#update-a-book)
       - [Overview](#overview-2)
     - [Delete a Book](#delete-a-book)
-- [Dependency Injeciton in Spring](#dependency-injeciton-in-spring)
+- [Dependency Injection in Spring](#dependency-injection-in-spring)
+  - [Types of Dependency Injection in Spring](#types-of-dependency-injection-in-spring)
+    - [Overview](#overview-3)
+    - [Field Injection](#field-injection)
+    - [Constructor Injection](#constructor-injection)
+    - [Setter Injection](#setter-injection)
+  - [Case Study: MessageService](#case-study-messageservice)
+- [References](#references)
 
 # Overview
 
 ## What is Spring Boot?
 Spring Boot is a Java framework for building web applications and microservices. It is built on top of the Spring framework and provides a simplified way to create Spring-powered applications.
 
-Use cases of Spring Boot:
-1. REST APIs: A REST API is an application programming interface (API) that uses HTTP requests to perform CRUD (Create, Read, Update, Delete) operations. Applications can use REST APIs to communicate with each other over the internet using the HTTP protocol (e.g., GET, POST, PUT, DELETE).
-2. Microservices: A microservice is a small, independently deployable service that performs a specific task. Microservices are typically used to build large applications using a collection of small services.
-3. Web Applications: A web application is a client-server application that runs in a web browser. Spring Boot provides a rich framework for building web applications using the MVC (Model-View-Controller) pattern.
+![Alt text](image.png)
+Reference: https://www.jetbrains.com/lp/devecosystem-2023/java/
+
+**Use cases of Spring Boot**
+   
+1. Web Applications: A web application is a client-server application that runs in a web browser. Spring Boot provides a rich framework for building web applications using the MVC (Model-View-Controller) pattern.
+
+We can implement web applications using different approaches:
+- Apps where the backend provides the fully prepared view in response to a client’s request. The browser directly interprets the data received from the backend and displays this information to the user in these apps. 
+  ![Alt text](image-3.png)
+  
+- Apps using frontend-backend separation: The backend only serves raw data. The browser runs a separate frontend app that gets the backend responses, processes the data, and instructs the browser what to display.
+ ![Alt text](image-2.png)
+
+2. REST APIs: 
+- A REST API is an application programming interface (API) that uses HTTP requests to perform CRUD (Create, Read, Update, Delete) operations. 
+- Applications can use REST APIs to communicate with each other over the internet using the HTTP protocol (e.g., GET, POST, PUT, DELETE).
+
+    ![Alt text](image-4.png)
+
+3. Microservices: A microservice is a small, independently deployable service that performs a specific task. Microservices are typically used to build large applications using a collection of small services.
+
+    ![Alt text](image-5.png)
 
 ## Creating a Spring Boot Project
 
 **Spring Initializr** is a web-based tool for generating Spring Boot projects. It allows us to select the dependencies and build tools for our project. It also allows us to download the project as a zip file or generate a Maven project.
+
+![Alt text](image-1.png)
+Reference: https://start.spring.io
+
 
 The Tree Structure of a Spring Boot Project for a BookStore REST API project:
 
@@ -277,7 +309,7 @@ In Spring Boot, the service layer is used to encapsulate the business logic of t
 Let's define the class `BookService` to encapsulate the business logic of the Book Service.
 - The `BookService` class acts as the intermediary between the controller (`BookController`) and the data source (in this case, a collection of books). It handles the business logic, such as creating, retrieving, updating, and deleting books.
 
-Sample Code: `BookService` Implementation
+Sample Code:
 
 ```java
 @Service
@@ -326,6 +358,12 @@ public class BookController {
 
 In our previous example, we used a collection of books as the data source. However, in real-world applications, we need a persistent data storage solution.  
 
+The following diagram illustrate the architecture of a typical Spring Boot application with a persistent data storage solution. 
+
+![Alt text](image-7.png)
+
+*Remark: In Java Spring, the Application Context is a container that contains all the beans (objects) in the application.*
+
 In Spring Boot,
 -  A **repository** is responsible for data access and manipulation, typically interacting with a relational database. In this section, we will integrate a repository into our Book Service example.
 - An **entity** is a model class that represents a database table. 
@@ -367,16 +405,20 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
 }
 ```
 
+Remark: 
+- JPA stands for Java Persistence API. It is a specification for accessing, persisting, and managing data between Java objects and relational databases. 
+- Spring Framework can use Hibernate as its JPA implementation to perform database operations.  Hibernate is a Java-based ORM (Object-Relational Mapping) framework that maps Java objects to database tables.
+
 Here is the sample code for the `BookService` class after integrating the `BookRepository`:
 
 ```java
 @Service
 public class BookService {
     @Autowired
-    private final BookRepository bookRepository;
+    private final BookRepository repo;
 
     public Set<Book> findAllBooks() {
-        return new HashSet<>(bookRepository.findAll());
+        return new HashSet<>(repo.findAll());
     }
 }
 ```
@@ -409,10 +451,102 @@ Explanation:
 - The `spring.jpa.hibernate.ddl-auto` property specifies the Hibernate DDL auto (e.g., update, create, none). This is used to automatically create the database tables based on the entity classes (e.g., `Book`) in the application when the application starts.
 - The `spring.datasource.driver-class-name` property specifies the MySQL JDBC driver class.- 
 
+## Introduction to ORM in Spring Boot with JPA
+
+Object-Relational Mapping (ORM) in Spring Boot, facilitated by JPA (Java Persistence API), allows seamless mapping of Java objects to relational database tables. This approach bridges the gap between the object-oriented domain model and the relational database.
+
+Let's consider the scenario where we have two entities: `Book` and `Author`. Suppose that a book can only be written by one author, but an author can write multiple books. In this case, we have a one-to-many relationship between `Book` and `Author`.
+
+The following code define the `Book` entity class to respesent a book in the database:
+- Represents the `Book` table in the database.
+- Maintain a many-to-one relationship with `Author`.
+```java
+@Entity
+public class Book {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String title;
+    @ManyToOne
+    @JoinColumn(name = "author_id", nullable = false)
+    private Author author;
+    // Getters and setters...
+}
+```
+
+The following code define the `Author` entity class to respesent an author in the database:
+- Represents the `Author` table in the database.
+- Maintains a one-to-many relationship with `Book`.
+
+```java
+@Entity
+public class Author {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String name;
+    @OneToMany(mappedBy = "author")
+    private Set<Book> books;
+    // Getters and setters...
+}
+```
+
+When the Spring App is started, the Hibernate ORM framework will automatically create the `Book` and `Author` tables in the database based on the entity classes. 
+- **Book Table**:
+   - Columns: `id`, `title`, `author_id`
+   - The `author_id` column is a foreign key referencing the `Author` table.
+
+-  **Author Table**:
+   - Columns: `id`, `name`
+
+It will also automatically create the foreign key constraints to maintain the relationship between the two tables.
+
+Here is an example of Database Tables with sample data
+
+
+**Author Table Sample Data**
+
+| id | name        |
+|----|-------------|
+|  1 | John Doe    |
+|  2 | Jane Smith  |
+
+**Book Table Sample Data**
+
+| id | title             | author_id |
+|----|-------------------|-----------|
+|  1 | Spring in Action  |  1        |
+|  2 | JPA for Beginners |  1        |
+|  3 | Hibernate Basics  |  2        |
+
+
+The following `BookService` class  illustrates how to create a new book and link up with an author from the database.
+- The `createBook()` method takes the ID of the author and the book to be created as parameters.
+- It first retrieves the author by its ID using the `findById()` method provided by `AuthorRepository`. If the author exists, it sets the author of the book using the `setAuthor()` method provided by `Book`. The `setAuthor()` method is created by the `@ManyToOne` annotation in the `Book` class.
+- The `createBook()` method then saves the book to the database using the `save()` method provided by `BookRepository`.
+
+```java
+@Service
+public class BookService {
+    // Autowired repositories...
+    public Book createBook(Long authorId, Book book) {
+        Author author = authorRepository.findById(authorId).orElseThrow();
+        book.setAuthor(author);
+        return bookRepository.save(book);
+    }
+    // Additional methods...
+}
+```
+
+### Summary
+
+ORM with JPA in Spring Boot simplifies managing relational data in an object-oriented manner. By defining entities and their relationships, developers can interact with the database using Java objects, abstracting away complex SQL queries. The ER diagram and sample data illustrate the relational model managed by the ORM, showcasing the powerful capabilities of Spring Boot in handling database operations.
+
+
 ## Extending the REST API for Book Service 
 
 ### Overview
-The current implementation of our Book Service successfully retrieves all books from the database. However, to enhance its functionality and make it a comprehensive tool for managing books, we need to extend the REST API to support full CRUD (Create, Read, Update, Delete) operations.
+The current implementation of our `Book` Service can retrieve all books from the database. However, to enhance its functionality and make it a comprehensive tool for managing books, we may  extend the REST API to support full CRUD (Create, Read, Update, Delete) operations.
 
 The following table summarizes the REST API endpoints for the Book Service:
 
@@ -434,13 +568,13 @@ To support the creation of a new book, we may extend our `BookService` class wit
 @Service
 public class BookService {
     @Autowired
-    private final BookRepository bookRepository;
+    private final BookRepository repo;
 
     // existing code ...
 
     // Create a new book
     public Book createBook(Book book) {
-        return bookRepository.save(book);
+        return repo.save(book);
     }
 }
 ```
@@ -503,18 +637,19 @@ Our Book API currently supports retrieving all books from the database. However,
 We may extend our `BookService` class with a `getBookById()` method. 
 - In the code below, the `getBookById()` method takes the ID of the book to be retrieved as a parameter. 
 - It first checks if the book exists in the database using the `existsById()` method provided by `BookRepository`. If the book exists, it retrieves the book using the `getBookById()` method provided by `BookService`.
+- The findBookById() method returns the book if the book exists. Otherwise, it returns null.
 
 ```java
 @Service
 public class BookService {
     @Autowired
-    private final BookRepository bookRepository;
+    private final BookRepository repo;
 
     // existing code ...
 
     // Get a book by ID
     public Book getBookById(Long id) {
-        return bookRepository.findById(id).orElse(null);
+        return repo.findById(id).orElse(null);
     }
 }
 ```
@@ -586,20 +721,20 @@ We should extend our `BookService` class with an `updateBook()` method. In the c
 @Service
 public class BookService {
     @Autowired
-    private final BookRepository bookRepository;
+    private final BookRepository repo;
 
     // existing code ...
 
     // Update a book
     public Book updateBook(Long id, Book bookDetails) {
         // Get the book by ID from the database
-        Book book = bookRepository.findById(id).orElse(null);
+        Book book = repo.findById(id).orElse(null);
 
         // If the book exists, update the book details and save the changes
         if (book != null) {
             book.setTitle(bookDetails.getTitle());
             book.setAuthor(bookDetails.getAuthor());
-            return bookRepository.save(book);
+            return repo.save(book);
         }
         return null;
     }
@@ -612,7 +747,9 @@ Explanation:
 - The `updateBook()` method is called by the `updateBook()` method in `BookController`.
   
 
-We should also update the `BookController` class to handle the `PUT /api/books/{id}`. In the code below, the `updateBook()` method takes the ID of the book to be updated as a parameter. It first checks if the book exists in the database using the `existsById()` method provided by `BookRepository`. If the book exists, it updates the book using the `updateBook()` method provided by `BookService`.
+We should also update the `BookController` class to handle the `PUT /api/books/{id}`. 
+- In the code below, the `updateBook()` method takes the ID of the book to be updated as a parameter. 
+- It first checks if the book exists in the database using the `existsById()` method provided by `BookRepository`. If the book exists, it updates the book using the `updateBook()` method provided by `BookService`.
 
 ```java
 @RestController
@@ -669,14 +806,14 @@ To delete a book, we can extend our `BookService` class with a `deleteBook()` me
 @Service
 public class BookService {
     @Autowired
-    private final BookRepository bookRepository;
+    private final BookRepository repo;
 
     // existing code ...
 
     // Delete a book
     public boolean deleteBook(Long id) {
-        if (bookRepository.existsById(id)) {
-            bookRepository.deleteById(id);
+        if (repo.existsById(id)) {
+            repo.deleteById(id);
             return true;
         }
         return false;
@@ -769,7 +906,7 @@ public class BookController {
 }
 ```
 
-## Example: MessageService 
+## Case Study: MessageService 
 In this section, we will demonstrate how to use Dependency Injection in a Spring Boot application. We will use the `MessageService` interface as an example of implementing flexible messaging functionality, such as sending emails or SMS. 
 
 The `MessageService` interface defines the contract for sending messages. It includes a method to send messages to a specified recipient.
@@ -809,7 +946,7 @@ public class SMSMessageService implements MessageService {
 }
 ```
 
-We will now define the `NotificationService`, which uses the `MessageService` to send messages. 
+We will now define the client class  `NotificationService`, which uses the `MessageService` to send messages. 
 - The `NotificationService` class is also annotated with `@Component`, which marks it as a Spring-managed bean.
 - In the code below, the `sendNotification()` method takes the message and recipient as parameters. It calls the `sendMessage()` method provided by `MessageService` to send the message to the recipient.
 
@@ -824,6 +961,8 @@ public class NotificationService {
     }
 }
 ```
+
+![Alt text](image-6.png)
 
 When the Spring app is started, Spring will automatically create an instance of `NotificationService` and inject an implementation of `MessageService` into it. 
 - In our example, there are two implementations of `MessageService`: `EmailMessageService` and `SMSMessageService`. 
@@ -909,7 +1048,7 @@ We can also configure the application to select the implementation of `MessageSe
 
 ** Advantage: ** Easily switch implementations in different environments (e.g. development, production, testing) by changing the property value in the configuration file without chaning the code.
 
-### Summary
+
 In this section, we demonstrated how to use Dependency Injection in a Spring Boot application. Dependency injection is a powerful technique for managing dependencies in an application. It allows us to decouple the creation of objects from the objects themselves, making the code more flexible and maintainable. 
 - By using DI, there is no need for developer to create the dependencies manually. The dependencies are automatically injected into the object by the IoC container.
 - Loose coupling: DI allows us to easily change the dependencies of an object. This reduces the coupling between objects, making the code more maintainable and testable.
@@ -917,4 +1056,7 @@ In this section, we demonstrated how to use Dependency Injection in a Spring Boo
 - More Testable code: DI allows us to easily test the object in isolation by injecting mock dependencies. For instance, during unit testing, spring can inject mock dependencies for the interface `MessageService`. This allows us to test the `NotificationService` class in isolation.
 
 
+# References
+- [Spring Guide](https://spring.io/guides)
+- Laurentiu Spilca, Spring Start Here, Manning Publications, 2021.
 
