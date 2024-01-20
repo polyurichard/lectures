@@ -1,4 +1,5 @@
-- [Overview](#overview)
+
+- [Java Spring](#java-spring)
   - [What is Spring Boot?](#what-is-spring-boot)
   - [Creating a Spring Boot Project](#creating-a-spring-boot-project)
 - ["Hello World" for Java Spring Boot](#hello-world-for-java-spring-boot)
@@ -11,20 +12,20 @@
     - [Summary](#summary)
 - [Dependency Injection in Spring](#dependency-injection-in-spring)
   - [Types of Dependency Injection in Spring](#types-of-dependency-injection-in-spring)
-    - [Overview](#overview-1)
+    - [Overview](#overview)
     - [Field Injection](#field-injection)
     - [Constructor Injection](#constructor-injection)
     - [Setter Injection](#setter-injection)
   - [Case Study: MessageService](#case-study-messageservice)
 - [Extending the REST API for Book Service](#extending-the-rest-api-for-book-service)
-  - [Overview](#overview-2)
+  - [Overview](#overview-1)
   - [Create a New Book](#create-a-new-book)
   - [Get a Single Book](#get-a-single-book)
   - [Update a Book](#update-a-book)
   - [Delete a Book](#delete-a-book)
 - [References](#references)
 
-# Overview
+# Java Spring
 
 ## What is Spring Boot?
 Spring Boot is a Java framework for building web applications and microservices. It is built on top of the Spring framework and provides a simplified way to create Spring-powered applications.
