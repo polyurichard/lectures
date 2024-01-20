@@ -31,7 +31,7 @@
 Spring Boot is a Java framework for building web applications and microservices. It is built on top of the Spring framework and provides a simplified way to create Spring-powered applications.
 
 ![Alt text](image.png)
-Reference: https://www.jetbrains.com/lp/devecosystem-2023/java/
+Reference: [](https://www.jetbrains.com/lp/devecosystem-2023/java/)
 
 **Use cases of Spring Boot**
    
