@@ -1088,7 +1088,7 @@ By using mock databases, we can isolate and assess our application logic without
 In frameworks like Java Spring, the creation and management of dependencies are delegated to an Inversion of Control (IoC) container. 
   - Responsible for instantiating, configuring, and assembling the objects in your application. 
   - Simplifies the management of dependencies and promotes a coding style that leads to more modular, understandable, and testable code. 
-- By handling the lifecycle and configuration of application objects, it allows developers to focus on the core functionality of their application rather than the details of object creation and management.
+
 
 In Spring boot, you can define your configuration in `application.yaml` (or `application.yml`) files. For example, if you have different configurations for MySQL and MongoDB, you might define two files: `application-mysql.yml` and `application-mongodb.yml`.
 
@@ -1124,4 +1124,5 @@ You can choose which profile (and thus which configuration file) to use when lau
 ./mvnw spring-boot:run -Dspring-boot.run.profiles=mongodb
 ```
 
-The Inversion of Control (IoC) container in Spring Boot will instantiate the corresponding object and inject it into the application. This automatic creation, configuration, and injection of dependencies is handled by the Spring Framework's IoC container. By outsourcing the creation and management of dependencies to the IoC container, your application components can remain focused on their core responsibilities, leading to cleaner and more maintainable code.
+The Inversion of Control (IoC) container in Spring Boot will instantiate the corresponding object and inject it into the application. This automatic creation, configuration, and injection of dependencies is handled by the Spring Framework's IoC container. By outsourcing the creation and management of dependencies to the IoC container,it allows developers to focus on the core functionality of their application rather than the details of object creation and management.Your application components can remain focused on their core responsibilities, leading to cleaner and more maintainable code.
+
