@@ -11,7 +11,6 @@
   - [Program to an interface](#program-to-an-interface)
   - [Polymorphism](#polymorphism)
   - [UML Class Diagrams](#uml-class-diagrams)
-  - [Interface for defining common behavior](#interface-for-defining-common-behavior)
   - [Abstract class](#abstract-class)
 - [The SOLID Principle](#the-solid-principle)
   - [Single Responsibility Principle (SRP)](#single-responsibility-principle-srp)
@@ -530,40 +529,6 @@ Types of relationship in OO:
 
 
 
-## Interface for defining common behavior
-
-In  our RPG game, we might have different types of characters such as Monster, Player, and NPC.  Each of these can have some common behaviors, but they also have unique characteristics. Both a `Player` and a `Monster` might attack others characters in the game. A `Player` or `NPC` may talk while a Monster does not.
-
-To implement behavior common to different classes, you can define the following interfaces.
-- `Attackable` interface: Defines methods like `attack`. 
-- `Talkable` interface with methods like `talk`. 
-
-`Player` class can implement both `Attackable` and `Talkable`, while Monster implements only `Attackable`.
-
-
-![Alt text](image-19.png)
-Example:
-```java
-public interface Talkable {
-    void talk(Talkable partner);
-}
-
-public interface Attackable {
-    void attack(Attackable target);
-}
-
-public class Player implements Attackable, Talkable {
-    // Implement  methods from Attackable and Talkable
-}
-
-public class Monster implements Attackable {
-    // Implement all methods from Attackable
-}
-
-public class NPC implements Talkable {
-    // Implement all methods from Talkable
-}
-```
 
 ## Abstract class
 
@@ -981,11 +946,15 @@ While inheritance is a commonly used mechanism in object-oriented programming fo
 
 In summary, while inheritance can be useful for sharing behaviors, its drawbacks, especially the violation of principles like LSP and the Single Responsibility Principle, need careful consideration to avoid creating tightly coupled and inflexible designs.
 
+
+
+![Alt text](image-19.png)
+
 ## Using Interface to model behaviors
 
-To address the limitations of inheritance, utilizing interfaces is an effective strategy in object-oriented design.
+We can define interface classes o address the limitations of inheritance
 - An interface in Java is a contract that defines a set of methods without implementing them. Implementing an interface allows a class to become more formal about the behavior it promises to provide. 
-- In our RPG example, we can define interfaces like `Attackable` and `Talkable` instead of using a base `Character` class. This ensures that classes implement only the behaviors pertinent to them, leading to a more modular and clean design.
+- In our RPG example, we can define interfaces like `Attackable` and `Talkable` instead of using a base `Character` class. 
 
 ![Alt text](image-16.png)
 
@@ -1056,7 +1025,10 @@ public class Game {
 ```
 
 
-By using interfaces instead of inheritance provides enhanced flexibility, modularity, and maintainability. Classes like `Player`, `Monster`, and `NPC` can implement multiple interfaces, allowing for a mix-and-match approach to functionality. This design enables classes to implement only the behaviors they need, avoiding the constraints and potential complexity of a rigid inheritance hierarchy. It leads to a system that is easier to extend and adapt, with loosely coupled, interchangeable components.
+By using interfaces instead of inheritance provides enhanced flexibility, modularity, and maintainability. 
+- Classes like `Player`, `Monster`, and `NPC` can implement multiple interfaces, allowing for a mix-and-match approach to functionality. 
+- This design enables classes to implement only the behaviors they need, avoiding the constraints and potential complexity of a rigid inheritance hierarchy. 
+- It leads to a system that is easier to extend and adapt, with loosely coupled, interchangeable components.
 
 
 
@@ -1122,7 +1094,7 @@ spring:
     password: mypassword
 ```
 
-And `application-mongodb.yml`:
+Here is an example of `application-mongodb.yml`:
 ```yaml
 spring:
   data:
@@ -1130,15 +1102,15 @@ spring:
       uri: mongodb://localhost:27017/mydatabase
 ```
 
-You can choose which profile (and thus which configuration file) to use when launching the application  by setting the `spring.profiles.active` property. 
+You can choose which profile (and thus which configuration file) to use when launching the application  by setting the `spring.profiles.active` property. For intsance, 
 
-To launch your app with MySQL, you may execute
+1. To launch your app with MySQL, you may execute
 
 ```bash
 ./mvnw spring-boot:run -Dspring-boot.run.profiles=mysql
 ```
 
-To launch your app with MongoDB, you may execute
+2. To launch your app with MongoDB, you may execute
 
 ```bash
 ./mvnw spring-boot:run -Dspring-boot.run.profiles=mongodb
