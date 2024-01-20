@@ -34,6 +34,7 @@ Spring Boot is a Java framework for building web applications and microservices.
 Reference: [Java Dev Ecosystem 2023](https://www.jetbrains.com/lp/devecosystem-2023/java/)
 
 **Use cases of Spring Boot**
+
 **Web Applications**: A web application is a client-server application that runs in a web browser. Spring Boot provides a rich framework for building web applications using the MVC (Model-View-Controller) pattern.
 
 We can implement web applications using different approaches:
