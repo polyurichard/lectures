@@ -59,6 +59,7 @@ We can implement web applications using different approaches:
 **Spring Initializr** is a web-based tool for generating Spring Boot projects. It allows us to select the dependencies and build tools for our project. It also allows us to download the project as a zip file or generate a Maven project.
 
 ![Alt text](image-1.png)
+
 Reference: https://start.spring.io
 
 
