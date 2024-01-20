@@ -9,20 +9,19 @@
   - [Database Configuration](#database-configuration)
   - [Introduction to ORM in Spring Boot with JPA](#introduction-to-orm-in-spring-boot-with-jpa)
     - [Summary](#summary)
-  - [Extending the REST API for Book Service](#extending-the-rest-api-for-book-service)
-    - [Overview](#overview-1)
-    - [Create a New Book](#create-a-new-book)
-    - [Get a Single Book](#get-a-single-book)
-    - [Update a Book](#update-a-book)
-      - [Overview](#overview-2)
-    - [Delete a Book](#delete-a-book)
 - [Dependency Injection in Spring](#dependency-injection-in-spring)
   - [Types of Dependency Injection in Spring](#types-of-dependency-injection-in-spring)
-    - [Overview](#overview-3)
+    - [Overview](#overview-1)
     - [Field Injection](#field-injection)
     - [Constructor Injection](#constructor-injection)
     - [Setter Injection](#setter-injection)
   - [Case Study: MessageService](#case-study-messageservice)
+- [Extending the REST API for Book Service](#extending-the-rest-api-for-book-service)
+  - [Overview](#overview-2)
+  - [Create a New Book](#create-a-new-book)
+  - [Get a Single Book](#get-a-single-book)
+  - [Update a Book](#update-a-book)
+  - [Delete a Book](#delete-a-book)
 - [References](#references)
 
 # Overview
@@ -461,6 +460,7 @@ Let's consider the scenario where we have two entities: `Book` and `Author`. Sup
 The following code define the `Book` entity class to respesent a book in the database:
 - Represents the `Book` table in the database.
 - Maintain a many-to-one relationship with `Author`.
+
 ```java
 @Entity
 public class Book {
@@ -543,307 +543,6 @@ public class BookService {
 
 ORM with JPA in Spring Boot simplifies managing relational data in an object-oriented manner. By defining entities and their relationships, developers can interact with the database using Java objects, abstracting away complex SQL queries. The ER diagram and sample data illustrate the relational model managed by the ORM, showcasing the powerful capabilities of Spring Boot in handling database operations.
 
-
-## Extending the REST API for Book Service 
-
-### Overview
-The current implementation of our `Book` Service can retrieve all books from the database. However, to enhance its functionality and make it a comprehensive tool for managing books, we may  extend the REST API to support full CRUD (Create, Read, Update, Delete) operations.
-
-The following table summarizes the REST API endpoints for the Book Service:
-
-| Operation         | HTTP Method | Endpoint          | Request Body                                  | Success Response        | Failure Response       |
-|-------------------|-------------|-------------------|-----------------------------------------------|-------------------------|------------------------|
-| Create a new book | POST        | `/api/books`      | JSON object with book details                 | 201 (Created) with book details | 400 (Bad Request) if input is invalid |
-| Read all books    | GET         | `/api/books`      | N/A                                           | 200 (OK) with list of books | 500 (Internal Server Error) |
-| Read a single book| GET         | `/api/books/{id}` | N/A                                           | 200 (OK) with book details | 404 (Not Found) if book ID doesn't exist |
-| Update a book     | PUT         | `/api/books/{id}` | JSON object with updated book details        | 200 (OK) with updated book details | 404 (Not Found) if book ID doesn't exist |
-| Delete a book     | DELETE      | `/api/books/{id}` | N/A                                           | 204 (No Content) | 404 (Not Found) if book ID doesn't exist |
-
-
-
-### Create a New Book
-To support the creation of a new book, we may extend our `BookService` class with a `createBook()` method. In the code below, 
-- the `createBook()` method takes the book to be created as a parameter. It calls the `save()` method provided by `BookRepository` to create a new book.
-
-```java
-@Service
-public class BookService {
-    @Autowired
-    private final BookRepository repo;
-
-    // existing code ...
-
-    // Create a new book
-    public Book createBook(Book book) {
-        return repo.save(book);
-    }
-}
-```
-
-We should also update the `BookController` class to handle the `POST /api/books` request. - In the code below, the `createBook()` method takes the book to be created as a parameter. It calls the `createBook()` method in `BookService` to create a new book. 
-- If the book is created successfully, it returns the newly created book with the HTTP status code `201 (Created)`. 
-
-```java
-@RestController
-public class BookController {
-    @Autowired
-    private BookService bookService;
-
-    // existing code ...
-
-    // Create a new book
-    @PostMapping("/api/books")
-    public ResponseEntity<Book> createBook(@RequestBody Book book) {
-        Book newBook = bookService.createBook(book);
-        return new ResponseEntity<>(newBook, HttpStatus.CREATED);
-    }
-}
-```
-In the sample code:
-- The `@PostMapping("/api/books")` annotation indicates that the `createBook()` method should handle the `POST /api/books` request.
-- The `@RequestBody` annotation indicates that the `book` parameter should be retrieved from the request body.
-- The `createBook()` method calls the `createBook()` method in `BookService` to create a new book.
-- The `ResponseEntity` class is a generic class that represents an HTTP response. It allows us to set the HTTP status code and the response body. The `createBook()` method returns a `ResponseEntity` object with the newly created book and the HTTP status code `201 (Created)`.
-
-Here is a sample HTTP request to create a new book:
-
-```http
-POST /api/books HTTP/1.1
-Content-Type: application/json
-
-{
-    "title": "The Alchemist",
-    "author": "Paulo Coelho"
-}
-```
-
-Here is the sample HTTP response:
-
-```http
-HTTP/1.1 201
-Content-Type: application/json
-
-{
-    "bookid": 4,
-    "title": "The Alchemist",
-    "author": "Paulo Coelho"
-}
-```
-
-
-### Get a Single Book
-
-Our Book API currently supports retrieving all books from the database. However, we may also want to retrieve a specific book by its ID. In this section, we will extend the Book API to support retrieving a single book by its ID.
-
-We may extend our `BookService` class with a `getBookById()` method. 
-- In the code below, the `getBookById()` method takes the ID of the book to be retrieved as a parameter. 
-- It first checks if the book exists in the database using the `existsById()` method provided by `BookRepository`. If the book exists, it retrieves the book using the `getBookById()` method provided by `BookService`.
-- The findBookById() method returns the book if the book exists. Otherwise, it returns null.
-
-```java
-@Service
-public class BookService {
-    @Autowired
-    private final BookRepository repo;
-
-    // existing code ...
-
-    // Get a book by ID
-    public Book getBookById(Long id) {
-        return repo.findById(id).orElse(null);
-    }
-}
-```
-
-We should also update the `BookController` class to handle the `GET /api/books/{id}` request. 
-- In the code below, the `getBookById()` method takes the ID of the book to be retrieved as a parameter. 
-- It first checks if the book exists in the database using the `existsById()` method provided by `BookRepository`. If the book exists, it retrieves the book using the `getBookById()` method provided by `BookService`.
-
-```java
-@RestController
-public class BookController {
-    @Autowired
-    private BookService bookService;
-
-    // existing code ...
-
-    // Get a book by ID
-    @GetMapping("/api/books/{id}")
-    public ResponseEntity<Book> getBookById(@PathVariable Long id) {
-        // Call the getBookById() method in the bookService and return the book
-        Book book = bookService.getBookById(id);
-
-        // If the book exists, return the book
-        if (book != null) {
-            return new ResponseEntity<>(book, HttpStatus.OK); // 200 (OK)
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404 (Not Found)
-        }
-    }
-}
-```
-
-In the sample code, 
-- The `@GetMapping("/api/books/{id}")` annotation indicates that the `getBookById()` method should handle the `GET /api/books/{id}` request.
-- The `@PathVariable` annotation indicates that the `id` parameter should be retrieved from the path variable.
-- The `getBookById()` method calls the `getBookById()` method in `BookService` to retrieve a book by its ID.
-- The `ResponseEntity` class is a generic class that represents an HTTP response. It allows us to set the HTTP status code and the response body. The `getBookById()` method returns a `ResponseEntity` object with the retrieved book and the HTTP status code `200 (OK)` if the book exists. Otherwise, it returns a `ResponseEntity` object with the HTTP status code `404 (Not Found)`.
-  
-
-Retrieving the details of a specific book is done via the `GET /api/books/{id}` endpoint. For instance, to retrieve the details of the book with ID 1, we can send a `GET /api/books/1` request to the Book API.
-
-Here is a sample HTTP request to retrieve the details of a book with ID 1:
-    
-```http
-GET /api/books/1 HTTP/1.1
-```
-
-Here is the sample HTTP response:
-
-```http
-HTTP/1.1 200 OK
-Content-Type: application/json
-
-{
-    "bookid": 1,
-    "title": "1984",
-    "author": "George Orwell"
-}
-```
-
-### Update a Book
-
-#### Overview
-Updating a book involves modifying its details like title or author. This is achieved through the `PUT /api/books/{id}` endpoint.
-
-We should extend our `BookService` class with an `updateBook()` method. In the code below, the `updateBook()` method takes two parameters: `id` and `bookDetails`. The `id` parameter is the ID of the book to be updated, and the `bookDetails` parameter is the updated book details.
-
-```java
-@Service
-public class BookService {
-    @Autowired
-    private final BookRepository repo;
-
-    // existing code ...
-
-    // Update a book
-    public Book updateBook(Long id, Book bookDetails) {
-        // Get the book by ID from the database
-        Book book = repo.findById(id).orElse(null);
-
-        // If the book exists, update the book details and save the changes
-        if (book != null) {
-            book.setTitle(bookDetails.getTitle());
-            book.setAuthor(bookDetails.getAuthor());
-            return repo.save(book);
-        }
-        return null;
-    }
-}
-```
-Explanation:
-- The `updateBook()` method takes two parameters: `id` and `bookDetails`. The `id` parameter is the ID of the book to be updated, and the `bookDetails` parameter is the updated book details.
-- The `updateBook()` method first retrieves the book by its ID using the `findById()` method provided by `BookRepository`. If the book exists, it updates the book details and saves the changes to the database using the `save()` method provided by `BookRepository`.
-- The `updateBook()` method returns the updated book if the book exists. Otherwise, it returns `null`.
-- The `updateBook()` method is called by the `updateBook()` method in `BookController`.
-  
-
-We should also update the `BookController` class to handle the `PUT /api/books/{id}`. 
-- In the code below, the `updateBook()` method takes the ID of the book to be updated as a parameter. 
-- It first checks if the book exists in the database using the `existsById()` method provided by `BookRepository`. If the book exists, it updates the book using the `updateBook()` method provided by `BookService`.
-
-```java
-@RestController
-public class BookController {
-    @Autowired
-    private BookService bookService;
-
-    // existing code ...
-
-    // Update a book
-    @PutMapping("/api/books/{id}")
-    public ResponseEntity<Book> updateBook(@PathVariable Long id, @RequestBody Book bookDetails) {
-        // Call the updateBook() method in the bookService and return the updated book
-        Book updatedBook = bookService.updateBook(id, bookDetails);
-
-        // If the book exists, return the book
-        if (updatedBook != null) {
-            return new ResponseEntity<>(updatedBook, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-}
-```
-
-Here is the sample HTTP request and response to update the details of a book with ID 1:
-
-```http
-PUT /api/books/1 HTTP/1.1
-Content-Type: application/json
-
-{
-    "title": "1984",
-    "author": "George Orwell"
-}
-```
-
-```http
-HTTP/1.1 200 OK
-Content-Type: application/json
-
-{
-    "bookid": 1,
-    "title": "1984",
-    "author": "George Orwell"
-}
-```
-
-### Delete a Book
-
-To delete a book, we can extend our `BookService` class with a `deleteBook()` method. In the code below, the `deleteBook()` method takes the ID of the book to be deleted as a parameter. It first checks if the book exists in the database using the `existsById()` method provided by `BookRepository`. If the book exists, it deletes the book using the `deleteById()` method provided by `BookRepository`.
-
-```java
-@Service
-public class BookService {
-    @Autowired
-    private final BookRepository repo;
-
-    // existing code ...
-
-    // Delete a book
-    public boolean deleteBook(Long id) {
-        if (repo.existsById(id)) {
-            repo.deleteById(id);
-            return true;
-        }
-        return false;
-    }
-}
-```
-
-We should also update the `BookController` class to handle the `DELETE /api/books/{id}` request. In the code below, the `deleteBook()` method takes the ID of the book to be deleted as a parameter. It first checks if the book exists in the database using the `existsById()` method provided by `BookRepository`. If the book exists, it deletes the book using the `deleteBook()` method provided by `BookService`.
-
-```java
-@RestController
-public class BookController {
-    @Autowired
-    private BookService bookService;
-
-    // existing code ...
-
-    // Delete a book
-    @DeleteMapping("/api/books/{id}")
-    public ResponseEntity<HttpStatus> deleteBook(@PathVariable Long id) {
-        // Call the deleteBook() method in the bookService and return the HTTP status code
-        if (bookService.deleteBook(id)) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT); // 204 (No Content)
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404 (Not Found)
-        }
-    }
-}
-```
 
 # Dependency Injection in Spring
 
@@ -1055,6 +754,307 @@ In this section, we demonstrated how to use Dependency Injection in a Spring Boo
 - Loose coupling: DI allows us to easily change the dependencies of an object. This reduces the coupling between objects, making the code more maintainable and testable.
 - Flexible code: DI allows us to easily switch the dependencies of an object (e.g. by changing the configuration file). This makes the code more flexible.
 - More Testable code: DI allows us to easily test the object in isolation by injecting mock dependencies. For instance, during unit testing, spring can inject mock dependencies for the interface `MessageService`. This allows us to test the `NotificationService` class in isolation.
+
+# Extending the REST API for Book Service 
+
+## Overview
+The current implementation of our `Book` Service can retrieve all books from the database. However, to enhance its functionality and make it a comprehensive tool for managing books, we may  extend the REST API to support full CRUD (Create, Read, Update, Delete) operations.
+
+The following table summarizes the REST API endpoints for the Book Service:
+
+| Operation         | HTTP Method | Endpoint          | Request Body                                  | Success Response        | Failure Response       |
+|-------------------|-------------|-------------------|-----------------------------------------------|-------------------------|------------------------|
+| Create a new book | POST        | `/api/books`      | JSON object with book details                 | 201 (Created) with book details | 400 (Bad Request) if input is invalid |
+| Read all books    | GET         | `/api/books`      | N/A                                           | 200 (OK) with list of books | 500 (Internal Server Error) |
+| Read a single book| GET         | `/api/books/{id}` | N/A                                           | 200 (OK) with book details | 404 (Not Found) if book ID doesn't exist |
+| Update a book     | PUT         | `/api/books/{id}` | JSON object with updated book details        | 200 (OK) with updated book details | 404 (Not Found) if book ID doesn't exist |
+| Delete a book     | DELETE      | `/api/books/{id}` | N/A                                           | 204 (No Content) | 404 (Not Found) if book ID doesn't exist |
+
+
+
+## Create a New Book
+To support the creation of a new book, we may extend our `BookService` class with a `createBook()` method. In the code below, 
+- the `createBook()` method takes the book to be created as a parameter. It calls the `save()` method provided by `BookRepository` to create a new book.
+
+```java
+@Service
+public class BookService {
+    @Autowired
+    private final BookRepository repo;
+
+    // existing code ...
+
+    // Create a new book
+    public Book createBook(Book book) {
+        return repo.save(book);
+    }
+}
+```
+
+We should also update the `BookController` class to handle the `POST /api/books` request. - In the code below, the `createBook()` method takes the book to be created as a parameter. It calls the `createBook()` method in `BookService` to create a new book. 
+- If the book is created successfully, it returns the newly created book with the HTTP status code `201 (Created)`. 
+
+```java
+@RestController
+public class BookController {
+    @Autowired
+    private BookService bookService;
+
+    // existing code ...
+
+    // Create a new book
+    @PostMapping("/api/books")
+    public ResponseEntity<Book> createBook(@RequestBody Book book) {
+        Book newBook = bookService.createBook(book);
+        return new ResponseEntity<>(newBook, HttpStatus.CREATED);
+    }
+}
+```
+In the sample code:
+- The `@PostMapping("/api/books")` annotation indicates that the `createBook()` method should handle the `POST /api/books` request.
+- The `@RequestBody` annotation indicates that the `book` parameter should be retrieved from the request body.
+- The `createBook()` method calls the `createBook()` method in `BookService` to create a new book.
+- The `ResponseEntity` class is a generic class that represents an HTTP response. It allows us to set the HTTP status code and the response body. The `createBook()` method returns a `ResponseEntity` object with the newly created book and the HTTP status code `201 (Created)`.
+
+Here is a sample HTTP request to create a new book:
+
+```http
+POST /api/books HTTP/1.1
+Content-Type: application/json
+
+{
+    "title": "The Alchemist",
+    "author": "Paulo Coelho"
+}
+```
+
+Here is the sample HTTP response:
+
+```http
+HTTP/1.1 201
+Content-Type: application/json
+
+{
+    "bookid": 4,
+    "title": "The Alchemist",
+    "author": "Paulo Coelho"
+}
+```
+
+
+## Get a Single Book
+
+Our Book API currently supports retrieving all books from the database. However, we may also want to retrieve a specific book by its ID. In this section, we will extend the Book API to support retrieving a single book by its ID.
+
+We may extend our `BookService` class with a `getBookById()` method. 
+- In the code below, the `getBookById()` method takes the ID of the book to be retrieved as a parameter. 
+- It first checks if the book exists in the database using the `existsById()` method provided by `BookRepository`. If the book exists, it retrieves the book using the `getBookById()` method provided by `BookService`.
+- The findBookById() method returns the book if the book exists. Otherwise, it returns null.
+
+```java
+@Service
+public class BookService {
+    @Autowired
+    private final BookRepository repo;
+
+    // existing code ...
+
+    // Get a book by ID
+    public Book getBookById(Long id) {
+        return repo.findById(id).orElse(null);
+    }
+}
+```
+
+We should also update the `BookController` class to handle the `GET /api/books/{id}` request. 
+- In the code below, the `getBookById()` method takes the ID of the book to be retrieved as a parameter. 
+- It first checks if the book exists in the database using the `existsById()` method provided by `BookRepository`. If the book exists, it retrieves the book using the `getBookById()` method provided by `BookService`.
+
+```java
+@RestController
+public class BookController {
+    @Autowired
+    private BookService bookService;
+
+    // existing code ...
+
+    // Get a book by ID
+    @GetMapping("/api/books/{id}")
+    public ResponseEntity<Book> getBookById(@PathVariable Long id) {
+        // Call the getBookById() method in the bookService and return the book
+        Book book = bookService.getBookById(id);
+
+        // If the book exists, return the book
+        if (book != null) {
+            return new ResponseEntity<>(book, HttpStatus.OK); // 200 (OK)
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404 (Not Found)
+        }
+    }
+}
+```
+
+In the sample code, 
+- The `@GetMapping("/api/books/{id}")` annotation indicates that the `getBookById()` method should handle the `GET /api/books/{id}` request.
+- The `@PathVariable` annotation indicates that the `id` parameter should be retrieved from the path variable.
+- The `getBookById()` method calls the `getBookById()` method in `BookService` to retrieve a book by its ID.
+- The `ResponseEntity` class is a generic class that represents an HTTP response. It allows us to set the HTTP status code and the response body. The `getBookById()` method returns a `ResponseEntity` object with the retrieved book and the HTTP status code `200 (OK)` if the book exists. Otherwise, it returns a `ResponseEntity` object with the HTTP status code `404 (Not Found)`.
+  
+
+Retrieving the details of a specific book is done via the `GET /api/books/{id}` endpoint. For instance, to retrieve the details of the book with ID 1, we can send a `GET /api/books/1` request to the Book API.
+
+Here is a sample HTTP request to retrieve the details of a book with ID 1:
+    
+```http
+GET /api/books/1 HTTP/1.1
+```
+
+Here is the sample HTTP response:
+
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+    "bookid": 1,
+    "title": "1984",
+    "author": "George Orwell"
+}
+```
+
+## Update a Book
+
+
+Updating a book involves modifying its details like title or author. This is achieved through the `PUT /api/books/{id}` endpoint.
+
+We should extend our `BookService` class with an `updateBook()` method. In the code below, the `updateBook()` method takes two parameters: `id` and `bookDetails`. The `id` parameter is the ID of the book to be updated, and the `bookDetails` parameter is the updated book details.
+
+```java
+@Service
+public class BookService {
+    @Autowired
+    private final BookRepository repo;
+
+    // existing code ...
+
+    // Update a book
+    public Book updateBook(Long id, Book bookDetails) {
+        // Get the book by ID from the database
+        Book book = repo.findById(id).orElse(null);
+
+        // If the book exists, update the book details and save the changes
+        if (book != null) {
+            book.setTitle(bookDetails.getTitle());
+            book.setAuthor(bookDetails.getAuthor());
+            return repo.save(book);
+        }
+        return null;
+    }
+}
+```
+Explanation:
+- The `updateBook()` method takes two parameters: `id` and `bookDetails`. The `id` parameter is the ID of the book to be updated, and the `bookDetails` parameter is the updated book details.
+- The `updateBook()` method first retrieves the book by its ID using the `findById()` method provided by `BookRepository`. If the book exists, it updates the book details and saves the changes to the database using the `save()` method provided by `BookRepository`.
+- The `updateBook()` method returns the updated book if the book exists. Otherwise, it returns `null`.
+- The `updateBook()` method is called by the `updateBook()` method in `BookController`.
+  
+
+We should also update the `BookController` class to handle the `PUT /api/books/{id}`. 
+- In the code below, the `updateBook()` method takes the ID of the book to be updated as a parameter. 
+- It first checks if the book exists in the database using the `existsById()` method provided by `BookRepository`. If the book exists, it updates the book using the `updateBook()` method provided by `BookService`.
+
+```java
+@RestController
+public class BookController {
+    @Autowired
+    private BookService bookService;
+
+    // existing code ...
+
+    // Update a book
+    @PutMapping("/api/books/{id}")
+    public ResponseEntity<Book> updateBook(@PathVariable Long id, @RequestBody Book bookDetails) {
+        // Call the updateBook() method in the bookService and return the updated book
+        Book updatedBook = bookService.updateBook(id, bookDetails);
+
+        // If the book exists, return the book
+        if (updatedBook != null) {
+            return new ResponseEntity<>(updatedBook, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+}
+```
+
+Here is the sample HTTP request and response to update the details of a book with ID 1:
+
+```http
+PUT /api/books/1 HTTP/1.1
+Content-Type: application/json
+
+{
+    "title": "1984",
+    "author": "George Orwell"
+}
+```
+
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+    "bookid": 1,
+    "title": "1984",
+    "author": "George Orwell"
+}
+```
+
+## Delete a Book
+
+To delete a book, we can extend our `BookService` class with a `deleteBook()` method. In the code below, the `deleteBook()` method takes the ID of the book to be deleted as a parameter. It first checks if the book exists in the database using the `existsById()` method provided by `BookRepository`. If the book exists, it deletes the book using the `deleteById()` method provided by `BookRepository`.
+
+```java
+@Service
+public class BookService {
+    @Autowired
+    private final BookRepository repo;
+
+    // existing code ...
+
+    // Delete a book
+    public boolean deleteBook(Long id) {
+        if (repo.existsById(id)) {
+            repo.deleteById(id);
+            return true;
+        }
+        return false;
+    }
+}
+```
+
+We should also update the `BookController` class to handle the `DELETE /api/books/{id}` request. In the code below, the `deleteBook()` method takes the ID of the book to be deleted as a parameter. It first checks if the book exists in the database using the `existsById()` method provided by `BookRepository`. If the book exists, it deletes the book using the `deleteBook()` method provided by `BookService`.
+
+```java
+@RestController
+public class BookController {
+    @Autowired
+    private BookService bookService;
+
+    // existing code ...
+
+    // Delete a book
+    @DeleteMapping("/api/books/{id}")
+    public ResponseEntity<HttpStatus> deleteBook(@PathVariable Long id) {
+        // Call the deleteBook() method in the bookService and return the HTTP status code
+        if (bookService.deleteBook(id)) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT); // 204 (No Content)
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404 (Not Found)
+        }
+    }
+}
+```
 
 
 # References
