@@ -360,7 +360,7 @@ In our previous example, we used a collection of books as the data source. Howev
 
 The following diagram illustrate the architecture of a typical Spring Boot application with a persistent data storage solution. 
 
-![Alt text](image-7.png)
+![Alt text](image-8.png)
 
 *Remark: In Java Spring, the Application Context is a container that contains all the beans (objects) in the application.*
 
