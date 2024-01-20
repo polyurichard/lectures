@@ -893,11 +893,10 @@ Java does not support multiple inheritance. Multiple inheritance is a language f
 ![Alt text](image-15.png)
 
 The Diamond Problem occurs when a class inherits from two or more classes that have a common base class
-- In the example above, the `WarriorWizard` class inherits from both the `Warrior` and `Wizard` classes, which themselves inherit from the `Character` class. This creates a diamond-shaped inheritance hierarchy.
-- The issue arises when both the `Warrior` and `Wizard` classes define their own implementation of the `attack` method, which overrides the default implementation in the `Character` class. In the `WarriorWizard` class, there is ambiguity about which `attack` method should be used. Should it use the `attack` implementation from `Warrior` or `Wizard`?
+- In the example above, the `MagicKnight` class inherits from both the `Warrior` and `Mage` classes, which themselves inherit from the `Character` class. This creates a diamond-shaped inheritance hierarchy.
+- The issue arises when both the `Warrior` and `Mage` classes define their own implementation of the `attack` method, which overrides the default implementation in the `Character` class. In the `MagicKnight` class, there is ambiguity about which `attack` method should be used. Should it use the `attack` implementation from `Warrior` or `Mage`?
 
-
-The Diamond Problem leads to code ambiguity and potential conflicts. It becomes challenging for the compiler or runtime environment to determine the correct behavior when invoking the `attack` method on an instance of the `WarriorWizard` class. To avoid such issues, languages such as Java often promote alternative approaches like interfaces or composition, which provide a more flexible and manageable way to achieve code reuse and extensibility without the problems associated with multiple inheritance.
+The Diamond Problem leads to code ambiguity and potential conflicts. To avoid such issues, languages such as Java often promote alternative approaches like interfaces or composition, which provide a more flexible and manageable way to achieve code reuse and extensibility without the problems associated with multiple inheritance.
 
 ## Inheritance and Its Problems
 
@@ -978,9 +977,7 @@ While inheritance is a commonly used mechanism in object-oriented programming fo
 
 3. **Violation of the Liskov Substitution Principle (LSP)**: When subclasses cannot use all the methods inherited from the parent class without modification or when they need to throw exceptions for certain methods (as seen in the `Monster` and `NPC` classes in the RPG example), it violates LSP. LSP states that objects of a superclass should be replaceable with objects of its subclasses without altering the correctness of the program. In the given example, replacing a `Character` object with a `Monster` or `NPC` object could lead to runtime errors, as these subclasses do not fully support all behaviors of the base class.
 
-4. **Single Responsibility Violation**: Base classes, especially in a complex inheritance hierarchy, can grow too complex, taking on multiple responsibilities. This violates the Single Responsibility Principle, which states that a class should only have one reason to change. The base class might become difficult to understand and maintain as it tries to cater to the diverse needs of its subclasses.
-
-5. **Reusability Issues**: The need to inherit from a base class to reuse behavior can limit the reusability of code. Subclasses are forced to inherit all behaviors, even if they only need a subset, which can lead to inefficient and unnecessary code duplication.
+4. **Reusability Issues**: The need to inherit from a base class to reuse behavior can limit the reusability of code. Subclasses are forced to inherit all behaviors, even if they only need a subset, which can lead to inefficient and unnecessary code duplication.
 
 In summary, while inheritance can be useful for sharing behaviors, its drawbacks, especially the violation of principles like LSP and the Single Responsibility Principle, need careful consideration to avoid creating tightly coupled and inflexible designs.
 
@@ -993,8 +990,8 @@ To address the limitations of inheritance, utilizing interfaces is an effective 
 ![Alt text](image-16.png)
 
 We first define the interface to model the behavior of different types of characters.
-- `Attackable` is an interface with two methods, `attack`, which define the behavior to attack other entities amd talk.
-- `Talkable` is another interface that represents the ability to talk.
+- `Attackable` is an interface with the method `attack(Character target)`, which define the behavior to attack other characters.
+- `Talkable` is another interface with the method `talk()` that represents the ability to talk.
   
 ```java
 public interface Attackable {
@@ -1045,13 +1042,27 @@ public class NPC implements Talkable {
     }
 }
 ```
+
+Here is an example of using the interface.
+```java
+public class Game {
+    public static void main(String[] args) {
+        Talkable player = new Player();
+        Talkble npc = new NPC();
+        npc.talk();
+        player.talk();
+    }
+}
+```
+
+
 By using interfaces instead of inheritance provides enhanced flexibility, modularity, and maintainability. Classes like `Player`, `Monster`, and `NPC` can implement multiple interfaces, allowing for a mix-and-match approach to functionality. This design enables classes to implement only the behaviors they need, avoiding the constraints and potential complexity of a rigid inheritance hierarchy. It leads to a system that is easier to extend and adapt, with loosely coupled, interchangeable components.
 
 
 
 ## Testing with Mock objects
 
-In unit testing , mock objects can be used to imitate the behavior of external dependency in a controlled manner. This is particularly significant when testing functions that interact with files, databases, or external systems. Direct testing of functions that integrate with databases can be slow and unreliable.
+In unit testing , mock objects can be used to imitate the behavior of external dependency in a controlled manner. This is useful when testing functions that interact with files, databases, or external systems. Direct testing of functions that integrate with databases can be slow and unreliable.
 
 
 The Dependency Inversion Principle (DIP) enhances the testability of the `GameSaver` class by facilitating the injection of mock database objects during tests. This mock object replicates the functionality of a genuine `Database`, minus the side effects like real data storage. As a result, the `GameSaver` class can be tested in isolation, removing the need to set up and dismantle a real database for each test.
@@ -1087,7 +1098,7 @@ public void testSaveGameFailure() {
 ```
 
 By using mock databases, we can isolate and assess our application logic without involving real database operations. The advantages include:
-- Increased speed by avoiding the latency of actual database transactions.
+- Increased speed of the unit test by avoiding the latency of actual database transactions.
 - Simplified testing by allowing the easy simulation of various database states.
 - Reliable and consistent outcomes, not influenced by external elements such as network interruptions or database downtimes.
 
