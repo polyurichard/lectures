@@ -6,10 +6,9 @@
 - [Defining a REST API for Book Service](#defining-a-rest-api-for-book-service)
   - [Defining the Book Model](#defining-the-book-model)
   - [Service Layer](#service-layer)
-  - [Integrating a Repository for Persistent Data Storage](#integrating-a-repository-for-persistent-data-storage)
+  - [Repository for Persistent Data Storage](#repository-for-persistent-data-storage)
   - [Database Configuration](#database-configuration)
   - [Introduction to ORM in Spring Boot with JPA](#introduction-to-orm-in-spring-boot-with-jpa)
-    - [Summary](#summary)
 - [Dependency Injection in Spring](#dependency-injection-in-spring)
   - [Types of Dependency Injection in Spring](#types-of-dependency-injection-in-spring)
     - [Overview](#overview)
@@ -28,22 +27,24 @@
 # Java Spring
 
 ## What is Spring Boot?
-Spring Boot is a Java framework for building web applications and microservices. - It is built on top of the Java Spring framework and provides a simplified way to create Spring-powered applications.
-- Dependency injetion: Spring Boot provides a powerful dependency injection mechanism that allows us to easily manage dependencies in our application.
-- In Spring, beans are objects that are instantiated, assembled, and managed by the Spring IoC (Inversion of Control) container .
-- Application Context: In Spring, the Application Context is the IoC container
+Spring Boot is a Java framework for building web applications and microservices. 
+- It is built on top of the Java Spring framework and provides a simplified way to create Spring-powered applications.
+- Dependency injetion: Spring Boot provides a powerful dependency injection mechanism that allows us to easily manage dependencies in our application. It allows us to decouple the creation of objects from the objects themselves, making the code more flexible and maintainable. 
+- In Java Spring, beans are objects that are instantiated, assembled, and managed by the Spring IoC (Inversion of Control) container .
+- The Application Context is the IoC container that contains all the beans (objects) in the application.
 
-Which web frameworks developer  you use?
-<img src="image.png" alt="Alt text" width="70%"><br/>
-*Reference: [Java Dev Ecosystem 2023](https://www.jetbrains.com/lp/devecosystem-2023/java/)*
 
 **Use cases of Spring Boot**
 
-**Web Applications**: 
-- A web application is a client-server application that runs in a web browser. Spring Boot provides a rich framework for building web applications using the MVC (Model-View-Controller) pattern.
+Which web frameworks developer  you use?
+<img src="image.png" alt="Alt text" width="80%"><br/>
+*Reference: [Java Dev Ecosystem 2023](https://www.jetbrains.com/lp/devecosystem-2023/java/)*
 
-- We can implement web applications using different approaches:
-  - Apps where the backend provides the fully prepared view in response to a client’s request. The browser directly interprets the data received from the backend and displays this information to the user in these apps. 
+- **Web Applications**: 
+  - A web application is a client-server application that runs in a web browser. Spring Boot provides a rich framework for building web applications using the MVC (Model-View-Controller) pattern.
+
+  - We can implement web applications using different approaches:
+    - Apps where the backend provides the fully prepared view in response to a client’s request. The browser directly interprets the data received from the backend and displays this information to the user in these apps. 
   
   <img src="image-3.png" alt="Alt text" width="90%">
   
@@ -51,28 +52,27 @@ Which web frameworks developer  you use?
   
   <img src="image-2.png" alt="Alt text" width="90%">
 
-**REST APIs**: 
-- A REST API is an application programming interface (API) that uses HTTP requests to perform CRUD (Create, Read, Update, Delete) operations. 
-- Applications can use REST APIs to communicate with each other over the internet using the HTTP protocol (e.g., GET, POST, PUT, DELETE).
+- **REST APIs**: 
+  - A REST API is an application programming interface (API) that uses HTTP requests to perform CRUD (Create, Read, Update, Delete) operations. 
+  - Applications can use REST APIs to communicate with each other over the internet using the HTTP protocol (e.g., GET, POST, PUT, DELETE).
 
   <img src="image-4.png" alt="Alt text" width="90%">
 
-**Microservices**: 
-- A microservice is a small, independently deployable service that performs a specific task. 
-- Microservices are typically used to build large applications using a collection of small services.
+- **Microservices**: 
+  - A microservice is a small, independently deployable service that performs a specific task. 
+  - Microservices are typically used to build large applications using a collection of small services.
 
   <img src="image-5.png" alt="Alt text" width="90%">
 
 ## Creating a Spring Boot Project
 
 **Spring Initializr** 
+
 -  A web-based tool for generating Spring Boot projects. It allows us to select the dependencies and build tools for our project. 
 -  Allows us to download the project as a zip file or generate a Maven project.
 
-  <img src="image-1.png" alt="Alt text" width="80%">
-
-Reference: 
-- [Spring Initializr](https://start.spring.io)
+<img src="image-1.png" alt="Alt text" width="80%"> <br/>
+*Reference: [Spring Initializr](https://start.spring.io)*
 
 
 
@@ -130,9 +130,9 @@ Description of Key Components:
 - **`pom.xml`**: Maven Project Object Model file for project configurations and dependencies.
 - **`README.md`**: Project documentation in markdown format.
 
-The Main Application Class is located in the `src/main/java` directory.
+In Java Spring, the Main Application Class is located in the `src/main/java` directory.
 - It contains the `main()` method, which is the starting point of the application.
-- The main application class is annotated with `@SpringBootApplication`. This annotation is used to mark the class as a Spring Boot application.
+- The `BookstoreApplication`  class is annotated with `@SpringBootApplication`. This annotation is used to mark the class as a Spring Boot application.
 
 ```java
 @SpringBootApplication
@@ -183,7 +183,7 @@ In this section, we will define a REST API for a simple Book Service. The Book S
 
 ## Defining the Book Model
 
- In Spring Boot , model classes represent the data in the application.
+In Spring Boot , model classes represent the data in the application.
 
 Here is the sample code for a simple model class for a book:
 
@@ -321,7 +321,8 @@ The JSON response is a list of books, where each book is represented as a JSON o
 In Spring Boot, the service layer is used to encapsulate the business logic of the application and is typically used to interact with the data source. In this section, we will introduce the service layer by refining the Book Service example from the previous section.
 
 Let's define the class `BookService` to encapsulate the business logic of the Book Service.
-- The `BookService` class acts as the intermediary between the controller (`BookController`) and the data source (in this case, a collection of books). It handles the business logic, such as creating, retrieving, updating, and deleting books.
+- The `BookService` class acts as the intermediary between the controller (`BookController`) and the data source (in this case, a collection of books). 
+- It handles the business logic, such as creating, retrieving, updating, and deleting books.
 
 Sample Code:
 
@@ -368,7 +369,8 @@ public class BookController {
     }
 }
 ```
-## Integrating a Repository for Persistent Data Storage
+
+##  Repository for Persistent Data Storage
 
 In our previous example, we used a collection of books as the data source. However, in real-world applications, we need a persistent data storage solution.  
 
@@ -473,8 +475,9 @@ Let's consider the scenario where we have two entities: `Book` and `Author`. Sup
 
 The following code define the `Book` entity class to respesent a book in the database:
 - Represents the `Book` table in the database.
-- Maintain a many-to-one relationship with `Author`.
-
+- The @GeneratedValue annotation indicates that the primary key is automatically generated.
+- The `@ManyToOne` annotation indicates that the relationship is many-to-one. The `@JoinColumn` annotation indicates that the `author_id` column in the `Book` table is a foreign key referencing the `Author` table.
+- 
 ```java
 @Entity
 public class Book {
@@ -482,16 +485,19 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
-    @ManyToOne
+
+    @ManyToOne // Many books can be written by one author
     @JoinColumn(name = "author_id", nullable = false)
     private Author author;
+
     // Getters and setters...
 }
 ```
 
 The following code define the `Author` entity class to respesent an author in the database:
 - Represents the `Author` table in the database.
-- Maintains a one-to-many relationship with `Book`.
+- The `@OneToMany` annotation indicates that the relationship is one-to-many. The `mappedBy` attribute indicates that the relationship is mapped by the `author` field in the `Book` class.
+
 
 ```java
 @Entity
@@ -500,8 +506,10 @@ public class Author {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    @OneToMany(mappedBy = "author")
+
+    @OneToMany(mappedBy = "author") // One author can write many books
     private Set<Book> books;
+
     // Getters and setters...
 }
 ```
@@ -553,7 +561,6 @@ public class BookService {
 }
 ```
 
-### Summary
 
 ORM with JPA in Spring Boot simplifies managing relational data in an object-oriented manner. By defining entities and their relationships, developers can interact with the database using Java objects, abstracting away complex SQL queries. The ER diagram and sample data illustrate the relational model managed by the ORM, showcasing the powerful capabilities of Spring Boot in handling database operations.
 
@@ -564,7 +571,7 @@ ORM with JPA in Spring Boot simplifies managing relational data in an object-ori
 
 ### Overview
 
-Spring Framework supports three primary methods of dependency injection to manage and inject dependencies into classes: Constructor Injection, Setter Injection, and Field Injection. These approaches provide flexibility in how dependencies are provided to an object. We'll illustrate these methods using the `BookController` class in a Spring Boot application context.
+Spring Framework supports three primary methods of dependency injection to manage and inject dependencies into classes: Constructor Injection, Setter Injection, and Field Injection. These approaches provide flexibility in how dependencies are provided to an object. 
 
 
 ### Field Injection
@@ -590,7 +597,8 @@ Constructor Injection involves injecting dependencies through the class construc
 - The `@Autowired` annotation on the constructor is optional.
 - When Spring creates `BookController`, it injects an instance of `BookService`.
 - **Advantages**: Ensures that required dependencies are not null, allowing for immutability of dependencies (i.e. the dependencies cannot be changed after the object is instantiated).
-  ```java
+  
+```java
   @RestController
   public class BookController {
       private final BookService bookService;
@@ -604,6 +612,7 @@ Constructor Injection involves injecting dependencies through the class construc
 
 
 ### Setter Injection
+
 Setter Injection involves injecting dependencies through setter methods.
 - The `setBookService` method is annotated with `@Autowired`, telling Spring to inject `BookService` when creating `BookController`.
 - Dependencies can be set at any time before the actual usage. This is useful when a class has optional dependencies that can be injected after the object is instantiated.
@@ -621,7 +630,13 @@ public class BookController {
 ```
 
 ## Case Study: MessageService 
-In this section, we will demonstrate how to use Dependency Injection in a Spring Boot application. We will use the `MessageService` interface as an example of implementing flexible messaging functionality, such as sending emails or SMS. 
+In this section, we will demonstrate how to use Dependency Injection in a Spring Boot application.
+
+We will define the followin classes:
+- `EmailMessageService`: Sends messages via email
+- `SMSMessageService`: Sends messages via SMS
+- The MessageService interface is implemented by both `EmailMessageService` and `SMSMessageService`. 
+- The `NotificationService` class uses the `MessageService` interface to send messages.
 
 The `MessageService` interface defines the contract for sending messages. It includes a method to send messages to a specified recipient.
 
@@ -632,8 +647,9 @@ public interface MessageService {
 ```
 
 We now create the following implementation classes for the `MessageService` interface:
-- `EmailMessageService`: Sends messages via email
-- `SMSMessageService`: Sends messages via SMS
+
+
+<img src="image-6.png" alt="Alt text" width="80%">
 
 Here is the sample code for the `EmailMessageService` class:
 - The @Component annotation marks the class as a Spring-managed bean (In Java Spring, a bean is an object that is instantiated, assembled, and managed by the Spring IoC container).
@@ -676,18 +692,19 @@ public class NotificationService {
 }
 ```
 
-![Alt text](image-6.png)
+
 
 When the Spring app is started, Spring will automatically create an instance of `NotificationService` and inject an implementation of `MessageService` into it. 
 - In our example, there are two implementations of `MessageService`: `EmailMessageService` and `SMSMessageService`. 
 - There is an ambiguity in selecting the implementation of `MessageService` to be injected into `NotificationService`. The IoC container has no idea which implementation to inject into `NotificationService`. 
 
+---
 Here are the possible ways to resolve this ambiguity:
 1. Use of `@Qualifier` Annotation
 2. Marking a Bean as `@Primary`
 3. Configurations in `application.properties`
 
-** Option 1: Use of `@Qualifier` Annotation **
+**Option 1**: Use of `@Qualifier` Annotation 
 
 We can explicitly specify the bean to be used for autowiring using the `@Qualifier` annotation. In the code below, the `NotificationService` class is annotated with `@Qualifier("emailMessageService")`, which tells Spring to inject the `EmailMessageService` implementation.
 
@@ -704,7 +721,8 @@ public class NotificationService {
 }
 ```
 
-** Option 2: Marking a Bean as `@Primary` **
+**Option 2**: Marking a Bean as `@Primary`
+
 We can designate one of the implementations as the primary bean. In the code below, the `EmailMessageService` class is annotated with `@Primary`, which tells Spring to give preference to the primary bean when resolving the dependency.
 
 ```java
@@ -718,56 +736,60 @@ public class EmailMessageService implements MessageService {
 }
 ```
 
-** Option 3: Configurations in `application.properties` **
+**Option 3**: Configurations in `application.properties` 
+
 We can also configure the application to select the implementation of `MessageService` to be injected into `NotificationService`. In the code below, the `application.properties` file is configured to inject the `EmailMessageService` implementation.
 1. **Define a Property in `application.properties`**:
    - Set a property in `application.properties` that determines which implementation to use. For example:
-     ```
-     messaging.service.type=email
-     ```
+    ```
+    messaging.service.type=email
+    ```
 2. **Conditional Bean Creation in Configuration Class**:
    - Use the `@ConditionalOnProperty` annotation in your Java configuration class to create beans conditionally based on the property value.
    - Example:
-     ```java
-     @Configuration
-     public class MessagingConfig {
+    ```java
+    @Configuration
+    public class MessagingConfig {
 
-         @Bean
-         @ConditionalOnProperty(name = "messaging.service.type", havingValue = "email")
-         public MessageService emailMessageService() {
-             return new EmailMessageService();
-         }
+        @Bean
+        @ConditionalOnProperty(name = "messaging.service.type", havingValue = "email")
+        public MessageService emailMessageService() {
+            return new EmailMessageService();
+        }
 
-         @Bean
-         @ConditionalOnProperty(name = "messaging.service.type", havingValue = "sms")
-         public MessageService smsMessageService() {
-             return new SMSMessageService();
-         }
-     }
-     ```
+        @Bean
+        @ConditionalOnProperty(name = "messaging.service.type", havingValue = "sms")
+        public MessageService smsMessageService() {
+            return new SMSMessageService();
+        }
+    }
+    ```
 3. **Injecting the Selected Implementation**:
    - In your service or controller where `MessageService` is required, simply autowire the `MessageService`. Spring will automatically inject the correct implementation based on the configuration.
-   - Example:
-     ```java
-     @Service
-     public class NotificationService {
-         private final MessageService messageService;
 
-         @Autowired
-         public NotificationService(MessageService messageService) {
-             this.messageService = messageService;
-         }
-     }
-     ```
+   ```java
+   @Service
+   public class NotificationService {
+       private final MessageService messageService;
+
+       @Autowired
+       public NotificationService(MessageService messageService) {
+           this.messageService = messageService;
+       }
+   }
+   ```
 
 ** Advantage: ** Easily switch implementations in different environments (e.g. development, production, testing) by changing the property value in the configuration file without chaning the code.
 
 
-In this section, we demonstrated how to use Dependency Injection in a Spring Boot application. Dependency injection is a powerful technique for managing dependencies in an application. It allows us to decouple the creation of objects from the objects themselves, making the code more flexible and maintainable. 
+In this section, we demonstrated how to use Dependency Injection in a Spring Boot application.
 - By using DI, there is no need for developer to create the dependencies manually. The dependencies are automatically injected into the object by the IoC container.
 - Loose coupling: DI allows us to easily change the dependencies of an object. This reduces the coupling between objects, making the code more maintainable and testable.
 - Flexible code: DI allows us to easily switch the dependencies of an object (e.g. by changing the configuration file). This makes the code more flexible.
-- More Testable code: DI allows us to easily test the object in isolation by injecting mock dependencies. For instance, during unit testing, spring can inject mock dependencies for the interface `MessageService`. This allows us to test the `NotificationService` class in isolation.
+- More Testable code: 
+  - DI allows us to easily test the object in isolation by injecting mock dependencies. 
+    - E.g., during unit testing, spring can inject mock dependencies for the interface `MessageService`. 
+  - This allows us to test the `NotificationService` class in isolation.
 
 # Extending the REST API for Book Service 
 
