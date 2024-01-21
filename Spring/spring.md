@@ -30,7 +30,8 @@
 ## What is Spring Boot?
 Spring Boot is a Java framework for building web applications and microservices. It is built on top of the Spring framework and provides a simplified way to create Spring-powered applications.
 
-![Alt text](image.png){: width="60%"}
+![Alt text](image.png)
+
 Reference: 
 - [Java Dev Ecosystem 2023](https://www.jetbrains.com/lp/devecosystem-2023/java/)
 
@@ -43,17 +44,18 @@ Reference:
     ![Alt text](image-3.png)
     
     - Apps using frontend-backend separation: The backend only serves raw data. The browser runs a separate frontend app that gets the backend responses, processes the data, and instructs the browser what to display.
-    ![Alt text](image-2.png)
+
+<img src="image-2.png" alt="Alt text" width="70%">
 
 **REST APIs**: 
 - A REST API is an application programming interface (API) that uses HTTP requests to perform CRUD (Create, Read, Update, Delete) operations. 
 - Applications can use REST APIs to communicate with each other over the internet using the HTTP protocol (e.g., GET, POST, PUT, DELETE).
 
-    ![Alt text](image-4.png)
+<img src="image-4.png" alt="Alt text" width="70%">
 
 **Microservices**: A microservice is a small, independently deployable service that performs a specific task. Microservices are typically used to build large applications using a collection of small services.
 
-    ![Alt text](image-5.png){: width="60%"}
+<img src="image-5.png" alt="Alt text" width="70%">
 
 ## Creating a Spring Boot Project
 
@@ -61,7 +63,7 @@ Reference:
 -  A web-based tool for generating Spring Boot projects. It allows us to select the dependencies and build tools for our project. 
 -  Allows us to download the project as a zip file or generate a Maven project.
 
-    ![Alt text](image-1.png){: width="60%"}
+<img src="image-1.png" alt="Alt text" width="70%">
 
 Reference: 
 - [Spring Initializr](https://start.spring.io)
