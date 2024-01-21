@@ -29,7 +29,7 @@
 ## What is Spring Boot?
 Spring Boot is a Java framework for building web applications and microservices. 
 - It is built on top of the Java Spring framework and provides a simplified way to create Spring-powered applications.
-- Dependency injetion: Spring Boot provides a powerful dependency injection mechanism that allows us to easily manage dependencies in our application. It allows us to decouple the creation of objects from the objects themselves, making the code more flexible and maintainable. 
+- Dependency injection: Spring Boot provides a powerful dependency injection mechanism that allows us to easily manage dependencies in our application. It allows us to decouple the creation of objects from the objects themselves, making the code more flexible and maintainable. 
 - In Java Spring, beans are objects that are instantiated, assembled, and managed by the Spring IoC (Inversion of Control) container .
 - The Application Context is the IoC container that contains all the beans (objects) in the application.
 
