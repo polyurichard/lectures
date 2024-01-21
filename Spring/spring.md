@@ -2,7 +2,7 @@
 - [Java Spring](#java-spring)
   - [What is Spring Boot?](#what-is-spring-boot)
   - [Creating a Spring Boot Project](#creating-a-spring-boot-project)
-- ["Hello World" for Java Spring Boot](#hello-world-for-java-spring-boot)
+- ["Hello World" program](#hello-world-program)
 - [Defining a REST API for Book Service](#defining-a-rest-api-for-book-service)
   - [Defining the Book Model](#defining-the-book-model)
   - [Service Layer](#service-layer)
@@ -28,12 +28,14 @@
 # Java Spring
 
 ## What is Spring Boot?
-Spring Boot is a Java framework for building web applications and microservices. It is built on top of the Spring framework and provides a simplified way to create Spring-powered applications.
+Spring Boot is a Java framework for building web applications and microservices. - It is built on top of the Java Spring framework and provides a simplified way to create Spring-powered applications.
+- Dependency injetion: Spring Boot provides a powerful dependency injection mechanism that allows us to easily manage dependencies in our application.
+- In Spring, beans are objects that are instantiated, assembled, and managed by the Spring IoC (Inversion of Control) container .
+- Application Context: In Spring, the Application Context is the IoC container
 
-![Alt text](image.png)
-
-Reference: 
-- [Java Dev Ecosystem 2023](https://www.jetbrains.com/lp/devecosystem-2023/java/)
+Which web frameworks developer  you use?
+<img src="image.png" alt="Alt text" width="70%"><br/>
+*Reference: [Java Dev Ecosystem 2023](https://www.jetbrains.com/lp/devecosystem-2023/java/)*
 
 **Use cases of Spring Boot**
 
@@ -43,21 +45,23 @@ Reference:
 - We can implement web applications using different approaches:
   - Apps where the backend provides the fully prepared view in response to a client’s request. The browser directly interprets the data received from the backend and displays this information to the user in these apps. 
   
+  <img src="image-3.png" alt="Alt text" width="90%">
   
   - Apps using frontend-backend separation: The backend only serves raw data. The browser runs a separate frontend app that gets the backend responses, processes the data, and instructs the browser what to display.
-
-<img src="image-3.png" alt="Alt text" width="70%">
-<img src="image-2.png" alt="Alt text" width="70%">
+  
+  <img src="image-2.png" alt="Alt text" width="90%">
 
 **REST APIs**: 
 - A REST API is an application programming interface (API) that uses HTTP requests to perform CRUD (Create, Read, Update, Delete) operations. 
 - Applications can use REST APIs to communicate with each other over the internet using the HTTP protocol (e.g., GET, POST, PUT, DELETE).
 
-<img src="image-4.png" alt="Alt text" width="70%">
+  <img src="image-4.png" alt="Alt text" width="90%">
 
-**Microservices**: A microservice is a small, independently deployable service that performs a specific task. Microservices are typically used to build large applications using a collection of small services.
+**Microservices**: 
+- A microservice is a small, independently deployable service that performs a specific task. 
+- Microservices are typically used to build large applications using a collection of small services.
 
-<img src="image-5.png" alt="Alt text" width="70%">
+  <img src="image-5.png" alt="Alt text" width="90%">
 
 ## Creating a Spring Boot Project
 
@@ -65,7 +69,7 @@ Reference:
 -  A web-based tool for generating Spring Boot projects. It allows us to select the dependencies and build tools for our project. 
 -  Allows us to download the project as a zip file or generate a Maven project.
 
-<img src="image-1.png" alt="Alt text" width="70%">
+  <img src="image-1.png" alt="Alt text" width="80%">
 
 Reference: 
 - [Spring Initializr](https://start.spring.io)
@@ -140,7 +144,7 @@ public class BookstoreApplication {
 }
 ```
 
-# "Hello World" for Java Spring Boot
+# "Hello World" program
 
 In this section, we will create a simple Spring Boot application that prints "Hello World!" when we send a `GET /` request to the application.
 
@@ -370,9 +374,9 @@ In our previous example, we used a collection of books as the data source. Howev
 
 The following diagram illustrate the architecture of a typical Spring Boot application with a persistent data storage solution. 
 
-![Alt text](image-8.png)
+<img src="image-8.png" alt="Alt text" width="80%">
 
-*Remark: In Java Spring, the Application Context is a container that contains all the beans (objects) in the application.*
+*Remark: In Java Spring, the *Application Context* is a container that contains all the beans (objects) in the application.*
 
 In Spring Boot,
 -  A **repository** is responsible for data access and manipulation, typically interacting with a relational database. In this section, we will integrate a repository into our Book Service example.
