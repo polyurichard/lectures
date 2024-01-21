@@ -30,8 +30,9 @@
 ## What is Spring Boot?
 Spring Boot is a Java framework for building web applications and microservices. It is built on top of the Spring framework and provides a simplified way to create Spring-powered applications.
 
-![Alt text](image.png)
-Reference: [Java Dev Ecosystem 2023](https://www.jetbrains.com/lp/devecosystem-2023/java/)
+![Alt text](image.png){: width="60%"}
+Reference: 
+- [Java Dev Ecosystem 2023](https://www.jetbrains.com/lp/devecosystem-2023/java/)
 
 **Use cases of Spring Boot**
 
@@ -52,7 +53,7 @@ Reference: [Java Dev Ecosystem 2023](https://www.jetbrains.com/lp/devecosystem-2
 
 **Microservices**: A microservice is a small, independently deployable service that performs a specific task. Microservices are typically used to build large applications using a collection of small services.
 
-    ![Alt text](image-5.png)
+    ![Alt text](image-5.png){: width="60%"}
 
 ## Creating a Spring Boot Project
 
@@ -60,10 +61,11 @@ Reference: [Java Dev Ecosystem 2023](https://www.jetbrains.com/lp/devecosystem-2
 -  A web-based tool for generating Spring Boot projects. It allows us to select the dependencies and build tools for our project. 
 -  Allows us to download the project as a zip file or generate a Maven project.
 
-    ![Alt text](image-1.png){: width="60%"}.
+    ![Alt text](image-1.png){: width="60%"}
 
 Reference: 
-https://start.spring.io
+- [Spring Initializr](https://start.spring.io)
+
 
 
 The Tree Structure of a Spring Boot Project for a BookStore REST API project:
