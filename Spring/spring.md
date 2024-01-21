@@ -31,11 +31,11 @@
 Spring Boot is a Java framework for building web applications and microservices. It is built on top of the Spring framework and provides a simplified way to create Spring-powered applications.
 
 ![Alt text](image.png)
-Reference: https://www.jetbrains.com/lp/devecosystem-2023/java/
+Reference: [Java Dev Ecosystem 2023](https://www.jetbrains.com/lp/devecosystem-2023/java/)
 
 **Use cases of Spring Boot**
-   
-1. Web Applications: A web application is a client-server application that runs in a web browser. Spring Boot provides a rich framework for building web applications using the MVC (Model-View-Controller) pattern.
+
+**Web Applications**: A web application is a client-server application that runs in a web browser. Spring Boot provides a rich framework for building web applications using the MVC (Model-View-Controller) pattern.
 
     We can implement web applications using different approaches:
     - Apps where the backend provides the fully prepared view in response to a client’s request. The browser directly interprets the data received from the backend and displays this information to the user in these apps. 
@@ -44,13 +44,13 @@ Reference: https://www.jetbrains.com/lp/devecosystem-2023/java/
     - Apps using frontend-backend separation: The backend only serves raw data. The browser runs a separate frontend app that gets the backend responses, processes the data, and instructs the browser what to display.
     ![Alt text](image-2.png)
 
-2. REST APIs: 
-   - A REST API is an application programming interface (API) that uses HTTP requests to perform CRUD (Create, Read, Update, Delete) operations. 
-   - Applications can use REST APIs to communicate with each other over the internet using the HTTP protocol (e.g., GET, POST, PUT, DELETE).
+**REST APIs**: 
+- A REST API is an application programming interface (API) that uses HTTP requests to perform CRUD (Create, Read, Update, Delete) operations. 
+- Applications can use REST APIs to communicate with each other over the internet using the HTTP protocol (e.g., GET, POST, PUT, DELETE).
 
     ![Alt text](image-4.png)
 
-3. Microservices: A microservice is a small, independently deployable service that performs a specific task. Microservices are typically used to build large applications using a collection of small services.
+**Microservices**: A microservice is a small, independently deployable service that performs a specific task. Microservices are typically used to build large applications using a collection of small services.
 
     ![Alt text](image-5.png)
 
@@ -62,8 +62,8 @@ Reference: https://www.jetbrains.com/lp/devecosystem-2023/java/
 
     ![Alt text](image-1.png){: width="60%"}.
 
-Reference: https://start.spring.io
-
+Reference: 
+https://start.spring.io
 
 
 The Tree Structure of a Spring Boot Project for a BookStore REST API project:
