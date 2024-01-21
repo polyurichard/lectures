@@ -37,16 +37,16 @@ Reference: https://www.jetbrains.com/lp/devecosystem-2023/java/
    
 1. Web Applications: A web application is a client-server application that runs in a web browser. Spring Boot provides a rich framework for building web applications using the MVC (Model-View-Controller) pattern.
 
-We can implement web applications using different approaches:
-- Apps where the backend provides the fully prepared view in response to a client’s request. The browser directly interprets the data received from the backend and displays this information to the user in these apps. 
-  ![Alt text](image-3.png)
-  
-- Apps using frontend-backend separation: The backend only serves raw data. The browser runs a separate frontend app that gets the backend responses, processes the data, and instructs the browser what to display.
- ![Alt text](image-2.png)
+    We can implement web applications using different approaches:
+    - Apps where the backend provides the fully prepared view in response to a client’s request. The browser directly interprets the data received from the backend and displays this information to the user in these apps. 
+    ![Alt text](image-3.png)
+    
+    - Apps using frontend-backend separation: The backend only serves raw data. The browser runs a separate frontend app that gets the backend responses, processes the data, and instructs the browser what to display.
+    ![Alt text](image-2.png)
 
 2. REST APIs: 
-- A REST API is an application programming interface (API) that uses HTTP requests to perform CRUD (Create, Read, Update, Delete) operations. 
-- Applications can use REST APIs to communicate with each other over the internet using the HTTP protocol (e.g., GET, POST, PUT, DELETE).
+   - A REST API is an application programming interface (API) that uses HTTP requests to perform CRUD (Create, Read, Update, Delete) operations. 
+   - Applications can use REST APIs to communicate with each other over the internet using the HTTP protocol (e.g., GET, POST, PUT, DELETE).
 
     ![Alt text](image-4.png)
 
@@ -56,11 +56,14 @@ We can implement web applications using different approaches:
 
 ## Creating a Spring Boot Project
 
-**Spring Initializr** is a web-based tool for generating Spring Boot projects. It allows us to select the dependencies and build tools for our project. It also allows us to download the project as a zip file or generate a Maven project.
+**Spring Initializr** 
+-  A web-based tool for generating Spring Boot projects. It allows us to select the dependencies and build tools for our project. 
+-  Allows us to download the project as a zip file or generate a Maven project.
 
-![Alt text](image-1.png)
+    ![Alt text](image-1.png){: width="60%"}.
 
 Reference: https://start.spring.io
+
 
 
 The Tree Structure of a Spring Boot Project for a BookStore REST API project:
