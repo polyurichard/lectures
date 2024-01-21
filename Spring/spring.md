@@ -477,7 +477,7 @@ The following code define the `Book` entity class to respesent a book in the dat
 - Represents the `Book` table in the database.
 - The @GeneratedValue annotation indicates that the primary key is automatically generated.
 - The `@ManyToOne` annotation indicates that the relationship is many-to-one. The `@JoinColumn` annotation indicates that the `author_id` column in the `Book` table is a foreign key referencing the `Author` table.
-- 
+
 ```java
 @Entity
 public class Book {
@@ -635,8 +635,12 @@ In this section, we will demonstrate how to use Dependency Injection in a Spring
 We will define the followin classes:
 - `EmailMessageService`: Sends messages via email
 - `SMSMessageService`: Sends messages via SMS
-- The MessageService interface is implemented by both `EmailMessageService` and `SMSMessageService`. 
-- The `NotificationService` class uses the `MessageService` interface to send messages.
+- The `MessageService` interface is implemented by both `EmailMessageService` and `SMSMessageService`. 
+- The client class `NotificationService`  uses the `MessageService` interface to send messages.
+
+
+<img src="image-6.png" alt="Alt text" width="80%">
+
 
 The `MessageService` interface defines the contract for sending messages. It includes a method to send messages to a specified recipient.
 
@@ -649,10 +653,8 @@ public interface MessageService {
 We now create the following implementation classes for the `MessageService` interface:
 
 
-<img src="image-6.png" alt="Alt text" width="80%">
-
 Here is the sample code for the `EmailMessageService` class:
-- The @Component annotation marks the class as a Spring-managed bean (In Java Spring, a bean is an object that is instantiated, assembled, and managed by the Spring IoC container).
+- The `@Component` annotation marks the class as a Spring-managed bean (In Java Spring, a bean is an object that is instantiated, assembled, and managed by the Spring IoC container).
 
 ```java
 @Component
@@ -737,8 +739,10 @@ public class EmailMessageService implements MessageService {
 ```
 
 **Option 3**: Configurations in `application.properties` 
+- We can also configure the application to select the implementation of `MessageService` to be injected into `NotificationService`. 
+- **Advantage:** Easily switch implementations in different environments (e.g. development, production, testing) by changing the property value in the configuration file without chaning the code.
 
-We can also configure the application to select the implementation of `MessageService` to be injected into `NotificationService`. In the code below, the `application.properties` file is configured to inject the `EmailMessageService` implementation.
+In the code below, the `application.properties` file is configured to inject the `EmailMessageService` implementation.
 1. **Define a Property in `application.properties`**:
    - Set a property in `application.properties` that determines which implementation to use. For example:
     ```
@@ -770,23 +774,18 @@ We can also configure the application to select the implementation of `MessageSe
    ```java
    @Service
    public class NotificationService {
-       private final MessageService messageService;
-
-       @Autowired
-       public NotificationService(MessageService messageService) {
-           this.messageService = messageService;
-       }
+        @Autowired
+        private final MessageService messageService;
    }
    ```
 
-** Advantage: ** Easily switch implementations in different environments (e.g. development, production, testing) by changing the property value in the configuration file without chaning the code.
 
 
-In this section, we demonstrated how to use Dependency Injection in a Spring Boot application.
+In this section, we demonstrated how to use Dependency Injection in Spring Boot applications.
 - By using DI, there is no need for developer to create the dependencies manually. The dependencies are automatically injected into the object by the IoC container.
-- Loose coupling: DI allows us to easily change the dependencies of an object. This reduces the coupling between objects, making the code more maintainable and testable.
-- Flexible code: DI allows us to easily switch the dependencies of an object (e.g. by changing the configuration file). This makes the code more flexible.
-- More Testable code: 
+- **Loose coupling:** DI allows us to easily change the dependencies of an object. This reduces the coupling between objects, making the code more maintainable and testable.
+- **Flexible code: **DI allows us to easily switch the dependencies of an object (e.g. by changing the configuration file). This makes the code more flexible.
+- **Testable code**: 
   - DI allows us to easily test the object in isolation by injecting mock dependencies. 
     - E.g., during unit testing, spring can inject mock dependencies for the interface `MessageService`. 
   - This allows us to test the `NotificationService` class in isolation.
