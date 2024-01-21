@@ -414,6 +414,10 @@ Next, we will define the `BookRepository` interface, which extends `JpaRepositor
 The following is the sample code for the `BookRepository` interface:
 - The `BookRepository` interface extends `JpaRepository` and provides CRUD (Create, Read, Update, and Delete) methods for `Book` entities in relational databases.
 - The `BookRepository `class  provide an abstraction layer to perform database operations without writing explicit SQL queries.
+- JpaRepository<Book,Integer> is a generic interface that takes two parameters: 
+  - The first parameter is the entity class (`Book`), and the second parameter is the type of the primary key (`Integer`) for the Book entity.
+
+```java
 
 ```java
 public interface BookRepository extends JpaRepository<Book, Integer> {
