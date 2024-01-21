@@ -37,14 +37,16 @@ Reference:
 
 **Use cases of Spring Boot**
 
-**Web Applications**: A web application is a client-server application that runs in a web browser. Spring Boot provides a rich framework for building web applications using the MVC (Model-View-Controller) pattern.
+**Web Applications**: 
+- A web application is a client-server application that runs in a web browser. Spring Boot provides a rich framework for building web applications using the MVC (Model-View-Controller) pattern.
 
-    We can implement web applications using different approaches:
-    - Apps where the backend provides the fully prepared view in response to a client’s request. The browser directly interprets the data received from the backend and displays this information to the user in these apps. 
-    ![Alt text](image-3.png)
-    
-    - Apps using frontend-backend separation: The backend only serves raw data. The browser runs a separate frontend app that gets the backend responses, processes the data, and instructs the browser what to display.
+- We can implement web applications using different approaches:
+  - Apps where the backend provides the fully prepared view in response to a client’s request. The browser directly interprets the data received from the backend and displays this information to the user in these apps. 
+  
+  
+  - Apps using frontend-backend separation: The backend only serves raw data. The browser runs a separate frontend app that gets the backend responses, processes the data, and instructs the browser what to display.
 
+<img src="image-3.png" alt="Alt text" width="70%">
 <img src="image-2.png" alt="Alt text" width="70%">
 
 **REST APIs**: 
