@@ -7,7 +7,6 @@ A Github page is a static website hosted on Github. In this lab, you will create
 2. A GitHub repository will be created for you under our Github Organization.
 3. Inside your repository, create a new page "index.md" in the root folder of your `main` branch. Give an introduction about yourself. Commit th changes.
    ![Alt text](image-1.png)
-   ![Alt text](image-2.png)
 4. Setup the Github page under the `Settings` tab. 
    ![Alt text](image.png)
 5. Whenever there are changes in the `main` branch, the Github page will be updated automatically. Github actions will be triggered to build and deploy the page. You can see the status of the Github actions under the `Actions` tab.
