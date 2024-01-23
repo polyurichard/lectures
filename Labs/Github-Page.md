@@ -3,7 +3,7 @@
 
 A Github page is a static website hosted on Github. In this lab, you will create a Github page for yourself. You can use this page to introduce yourself to the world. 
 
-1. Visit the [invite link](https://classroom.github.com/a/bZ5sYH2F). Complete the steps and visit your repository.
+1. Visit the [invite link](https://classroom.github.com/a/2zJyUoyQ). Complete the steps and visit your repository.
 2. A GitHub repository will be created for you under our Github Organization (https://github.com/polyulabs)
 3. Inside your repository, create a new page "index.md" in the root folder of your `main` branch. Give an introduction about yourself. Commit th changes.
    ![Alt text](image-1.png)
