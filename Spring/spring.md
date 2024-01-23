@@ -10,8 +10,8 @@
   - [Database Configuration](#database-configuration)
   - [Introduction to ORM in Spring Boot with JPA](#introduction-to-orm-in-spring-boot-with-jpa)
 - [Dependency Injection in Spring](#dependency-injection-in-spring)
+  - [Overview](#overview)
   - [Types of Dependency Injection in Spring](#types-of-dependency-injection-in-spring)
-    - [Overview](#overview)
     - [Field Injection](#field-injection)
     - [Constructor Injection](#constructor-injection)
     - [Setter Injection](#setter-injection)
@@ -53,16 +53,26 @@ Which web frameworks developer  you use?
   <img src="image-2.png" alt="Alt text" width="90%">
 
 - **REST APIs**: 
-  - A REST API is an application programming interface (API) that uses HTTP requests to perform CRUD (Create, Read, Update, Delete) operations. 
-  - Applications can use REST APIs to communicate with each other over the internet using the HTTP protocol (e.g., GET, POST, PUT, DELETE).
+    In Software Engineering, an API (Application Programming Interface) is a set of functions and procedures that allow the creation of applications that access the features of an application, or other service. 
 
-  <img src="image-4.png" alt="Alt text" width="90%">
+    API allows programs to communicate with each other:
+    ![Alt text](image-7.png)
+
+    REST API is a popular type of API 
+    - Uses HTTP requests to perform CRUD (Create, Read, Update, Delete) operations. 
+    - Applications can communicate with each other over the internet using the HTTP protocol (e.g., GET, POST, PUT, DELETE methods).
+    - It often returns data in format like JSON or XML. 
+      - JSON is a lightweight data-interchange format that is easy for humans to read and write and easy for machines to parse and generate.
+    - REST API should return the appropriate HTTP status codes to indicate the status of the request.
+      - 200 (OK), 201 (Created), 400 (Bad Request), 404 (Not Found), 500 (Internal Server Error)...
+
+    <img src="image-4.png" alt="Alt text" width="80%">
 
 - **Microservices**: 
   - A microservice is a small, independently deployable service that performs a specific task. 
   - Microservices are typically used to build large applications using a collection of small services.
 
-  <img src="image-5.png" alt="Alt text" width="90%">
+  <img src="image-5.png" alt="Alt text" width="80%">
 
 ## Creating a Spring Boot Project
 
@@ -71,8 +81,8 @@ Which web frameworks developer  you use?
 -  A web-based tool for generating Spring Boot projects. It allows us to select the dependencies and build tools for our project. 
 -  Allows us to download the project as a zip file or generate a Maven project.
 
-<img src="image-1.png" alt="Alt text" width="80%"> <br/>
-*Reference: [Spring Initializr](https://start.spring.io)*
+<img src="image-1.png" alt="Alt text" width="70%"> <br/>
+*URL: [Spring Initializr](https://start.spring.io)*
 
 
 
@@ -415,19 +425,35 @@ The following is the sample code for the `BookRepository` interface:
 - The `BookRepository` interface extends `JpaRepository` and provides CRUD (Create, Read, Update, and Delete) methods for `Book` entities in relational databases.
 - The `BookRepository `class  provide an abstraction layer to perform database operations without writing explicit SQL queries.
 - JpaRepository<Book,Integer> is a generic interface that takes two parameters: 
-  - The first parameter is the entity class (`Book`), and the second parameter is the type of the primary key (`Integer`) for the Book entity.
+  - The first parameter is the entity class (`Book`), and 
+  - The second parameter is the type of the primary key (`Integer`) for the Book entity.
 
 ```java
 
 ```java
 public interface BookRepository extends JpaRepository<Book, Integer> {
-    // Additional custom queries can be defined here
 }
 ```
 
-Remark: 
-- JPA stands for Java Persistence API. It is a specification for accessing, persisting, and managing data between Java objects and relational databases. 
-- Spring Framework can use Hibernate as its JPA implementation to perform database operations.  Hibernate is a Java-based ORM (Object-Relational Mapping) framework that maps Java objects to database tables.
+The Spring Framework will create the following table in relationship databases based on the `Book` entity class:
+| Column | Type    | Key       |
+|--------|---------|-----------|
+| id     | Integer | Primary   |
+| title  | String  |           |
+| author | String  |           |
+
+> *Remark:*
+> - JPA stands for Java Persistence API. It is a specification for accessing, persisting, and managing data between Java objects and relational databases. 
+> - Spring Framework can use Hibernate as its JPA implementation to perform database operations.  Hibernate is a Java-based ORM (Object-Relational Mapping) framework that maps Java objects to database tables.
+
+You can customize the `BookRepository` interface to support additional custom queries. For example, to support the operation find books by author, we can define the following method in the `BookRepository` interface:
+
+```java
+public interface BookRepository extends JpaRepository<Book, Integer> {
+    List<Book> findByAuthor(String author); // Find books by author
+}
+```
+
 
 Here is the sample code for the `BookService` class after integrating the `BookRepository`:
 
@@ -531,14 +557,14 @@ It will also automatically create the foreign key constraints to maintain the re
 Here is an example of Database Tables with sample data
 
 
-**Author Table Sample Data**
+**Author Table**
 
 | id | name        |
 |----|-------------|
 |  1 | John Doe    |
 |  2 | Jane Smith  |
 
-**Book Table Sample Data**
+**Book Table**
 
 | id | title             | author_id |
 |----|-------------------|-----------|
@@ -565,22 +591,22 @@ public class BookService {
 }
 ```
 
-
-ORM with JPA in Spring Boot simplifies managing relational data in an object-oriented manner. By defining entities and their relationships, developers can interact with the database using Java objects, abstracting away complex SQL queries. The ER diagram and sample data illustrate the relational model managed by the ORM, showcasing the powerful capabilities of Spring Boot in handling database operations.
+ORM with JPA in Spring Boot simplifies managing relational data in an object-oriented manner. 
+- By defining entities and their relationships, developers can interact with the database using Java objects, abstracting away complex SQL queries. 
+- There is no need to write SQL queries to perform CRUD operations.
 
 
 # Dependency Injection in Spring
 
-##  Types of Dependency Injection in Spring
-
-### Overview
+## Overview
 
 Spring Framework supports three primary methods of dependency injection to manage and inject dependencies into classes: Constructor Injection, Setter Injection, and Field Injection. These approaches provide flexibility in how dependencies are provided to an object. 
 
+##  Types of Dependency Injection in Spring
 
 ### Field Injection
 
-Field Injection involves injecting dependencies directly into fields.
+**Field Injection **involves injecting dependencies directly into fields.
 - The `bookService` field is annotated with `@Autowired`.
 - **Advantages**: Reduces boilerplate code, simpler to write.
 
@@ -597,7 +623,7 @@ Field Injection involves injecting dependencies directly into fields.
 
 ### Constructor Injection
 
-Constructor Injection involves injecting dependencies through the class constructor. 
+**Constructor Injection** involves injecting dependencies through the class constructor. 
 - The `@Autowired` annotation on the constructor is optional.
 - When Spring creates `BookController`, it injects an instance of `BookService`.
 - **Advantages**: Ensures that required dependencies are not null, allowing for immutability of dependencies (i.e. the dependencies cannot be changed after the object is instantiated).
@@ -617,7 +643,7 @@ Constructor Injection involves injecting dependencies through the class construc
 
 ### Setter Injection
 
-Setter Injection involves injecting dependencies through setter methods.
+**Setter Injection** involves injecting dependencies through setter methods.
 - The `setBookService` method is annotated with `@Autowired`, telling Spring to inject `BookService` when creating `BookController`.
 - Dependencies can be set at any time before the actual usage. This is useful when a class has optional dependencies that can be injected after the object is instantiated.
 
