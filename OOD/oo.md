@@ -1,7 +1,7 @@
 
 - [Introduction to Object-Oriented Design](#introduction-to-object-oriented-design)
   - [Define the Player Class](#define-the-player-class)
-  - [UML Diagram](#uml-diagram)
+  - [UML Class Diagram](#uml-class-diagram)
 - [Fundamental OO Concepts](#fundamental-oo-concepts)
   - [Encapsulation](#encapsulation)
   - [Inheritance](#inheritance)
@@ -39,6 +39,7 @@ In this lecture, we will learn about different Object-Oriented (OO) concepts usi
 Classs and  Objects are fundamental concepts in OO design.
 - A **Class** is a blueprint for an object.
 - An **Object** is an entity that contains both data and behavior.
+
 
 Let's consider the `Player` class in the RPG game. The `Player` class in the RPG game serves as a blueprint for creating player objects in the game. It encapsulates the properties and behaviors that are common to all players.
 
@@ -111,10 +112,10 @@ player1.increaseScore(10); //increases player1's score by 10
 
 
 
-## UML Diagram
+## UML Class Diagram
 
 ![Alt text](image-20.png)
-The UML diagram visually represents the structure of the `Player` class, including its attributes, constructor, methods, and their signatures. The class is represented as a rectangle divided into three sections. 
+The UML class diagram visually represents the structure of the `Player` class, including its attributes, constructor, methods, and their signatures. The class is represented as a rectangle divided into three sections. 
 - The top section contains the name of the class (`Player` in this case). 
 - The middle section contains the attributes (`name`, `health`, and `score`) with their corresponding types. 
   - The `-` symbol before the attribute names (`name`, `health`, and `score`) indicates that they are private, meaning they can only be accessed within the class itself.
