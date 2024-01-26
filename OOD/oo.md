@@ -449,6 +449,8 @@ In our game,
 
 **Delegation** is a core concept in composition, where an object handles a request by delegating it to a second helper object (the delegate). This allows distributing responsibilities among different classes and promotes code reuse and flexibility.
 
+![Alt text](image-5.png)
+
 For instanace, for the `Player` class,
 - It stores a reference to a `Weapon` object and has a method `useWeapon()` that calls the `use()` method on the `Weapon` object. 
 - Instead of the `Player` class implementing the `use()` method itself, it delegates this responsibility to the `weapon` object. 
