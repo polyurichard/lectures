@@ -135,9 +135,10 @@ player1.increaseScore(10); //increases player1's score by 10
 
 ## Encapsulation
 
-Encapsulation is a fundamental principle of object-oriented programming that restricts direct access to an object's attributes. It avoids  the data and code being tied together within an object from being randomly accessed by other code defined outside the object or class.
+Encapsulation is a fundamental principle of object-oriented programming that restricts direct access to an object's attributes. It avoids the data and code within an object from being randomly accessed by other code defined outside the object or class.
 
 ![Alt text](image-9.png)
+
 The `Monster` class represents a monster in the game. It includes attributes like `name` and `health`, and methods to manage these attributes.
 
 ```java
@@ -337,6 +338,7 @@ An interface in OO defines a contract that a class agrees to follow. The purpose
 
 
 ![Alt text](image-11.png)
+
 Let's begin by defining a `Weapon` interface with `use` and `upgrade()` methods.
 
 ```java
