@@ -2,18 +2,17 @@
 
 - [Table of Contents](#table-of-contents)
 - [Introduction to Object-Oriented Design](#introduction-to-object-oriented-design)
-  - [Define the Player Class](#define-the-player-class)
-  - [UML Class Diagram](#uml-class-diagram)
 - [Fundamental OO Concepts](#fundamental-oo-concepts)
   - [Encapsulation](#encapsulation)
   - [Inheritance](#inheritance)
+  - [Multiple Inheritance](#multiple-inheritance)
   - [Interface](#interface)
   - [Abstract class](#abstract-class)
   - [Abstraction](#abstraction)
   - [Composition and Delegation](#composition-and-delegation)
   - [Program to an interface](#program-to-an-interface)
   - [Polymorphism](#polymorphism)
-  - [Relationship between Class](#relationship-between-class)
+  - [Relationship between Classes](#relationship-between-classes)
 - [The SOLID Principle](#the-solid-principle)
   - [Single Responsibility Principle (SRP)](#single-responsibility-principle-srp)
   - [Open/Closed Principle (OCP)](#openclosed-principle-ocp)
@@ -25,48 +24,48 @@
     - [Saving the game](#saving-the-game)
     - [Cohesion vs. Coupling](#cohesion-vs-coupling)
     - [Dependency Inversion Principle (DIP)](#dependency-inversion-principle-dip-1)
-- [Additional topics related to OO](#additional-topics-related-to-oo)
-  - [Multiple Inheritance](#multiple-inheritance)
     - [Inversion of Control (IoC) container](#inversion-of-control-ioc-container)
-  - [Testing with Mock objects](#testing-with-mock-objects)
+    - [Testing with Mock objects](#testing-with-mock-objects)
 
 <div style="page-break-before: always;" />
 
 #  Introduction to Object-Oriented Design
-Object-Oriented Design (OOD) is a programming paradigm that uses "objects" to design applications and computer programs. By using OOD, we can make our software more modular, flexible, and extensible.
-
-In this lecture, we will learn about different Object-Oriented (OO) concepts using an RPG game as an example.
-
-## Define the Player Class
+Object-Oriented Design (OOD) is a programming paradigm that uses "objects" to design applications and computer programs. By using OOD, we can make our software more modular, flexible, and extensible. In this lecture, we will learn about different Object-Oriented (OO) concepts using an RPG game as an example.
 
 Classs and  Objects are fundamental concepts in OO design.
 - A **Class** is a blueprint for an object.
 - An **Object** is an entity that contains both data and behavior.
 
-
-Let's consider the `Player` class in the RPG game. The `Player` class in the RPG game serves as a blueprint for creating player objects in the game. It encapsulates the properties and behaviors that are common to all players.
-
-**Attributes** represent the properties or state of an object (The state of an object means the values of its attributes at a given point in time). For the `Player` class, there are several attributes such as `name`, `health`, and `score` that define the properties or the state of a Player object:
-- `name`: A String representing the player's name.
-- `health`: An integer value representing the player's health.
-- `score`: An integer value representing the player's score.
-
-```java
-public class Player {
-    private String name;
-    private int health;
-    private int score;
-}
-```
+Our RPG game may support multiple players to play in the game. We can model each player as an object. The `Player` class in the RPG game serves as a blueprint for creating player objects. It encapsulates the attributes and behaviors that are common to all players.
+- **Attributes** represent the properties or state of an object (The state of an object means the values of its attributes at a given point in time). For the `Player` class, there are several attributes such as `name`, `health`, and `score` that define the properties or the state of a Player object:
+  - `name`: A String representing the player's name.
+  - `health`: An integer value representing the player's health.
+  - `score`: An integer value representing the player's score.
+- **Methods**: Methods define the behavior of an object, detailing what the object can do. 
+  - In the `Player` class, methods like `increaseScore` alter the object's attribute value.
+  - The `useWeapon` method is an example of a behavior that a Player object can perform (e.g. allow the `Player` object to use a weapon)
 
 <div style="page-break-before: always;" />
 
-**Methods**: Methods define the behavior of an object, detailing what the object can do. 
-- In the `Player` class, methods like `increaseScore` alter the object's attribute value.
-- The `useWeapon` method is an example of a behavior that a Player object can perform (e.g. allow the Player object to use a weapon)
-- **Setter Methods**: These methods are used to modify the state of an object. E.g. The `setName(String name)` method in the Player class is a setter method that allows you to change the player's name.
-- **Getter Method**: The getter method is used to access the value of a private field. In this class, `getName()` is a getter method that returns the value of the name field. 
+In OOD, UML class diagrams can be used to visually represent the structure of the `Player` class:
 
+![Alt text](image-20.png)
+
+Each class is represented as a rectangle divided into three sections.
+- The top section contains the name of the class (`Player` in this case). 
+- The middle section contains the attributes (`name`, `health`, and `score`) with their corresponding types. 
+  - The `-` symbol before the attribute names (`name`, `health`, and `score`) indicates that they are private, meaning they can only be accessed within the class itself.
+- The bottom section shows the methods in the class
+  - The `+` symbol before the method names (`Player(String)`, `increaseScore(int)`, `getName()`, etc) indicates that they are public, meaning they can be accessed from other classes.
+    - The `()` after the method names indicates that they are methods (functions) of the class.
+  - The `String`, `int`, and other data types represent the types of attributes and return types of methods.
+  - The `: String` after `getName()` indicates that the return type of the method is `String`.
+  - The parameters of the methods (`String name` in `Player(String)`, `int points` in `increaseScore(int)`, etc) indicate the input values that can be passed to the methods when they are called.
+
+
+<div style="page-break-before: always;" />
+
+Here is the code for the `Player` class in Java.
 
 ```java
 public class Player {
@@ -101,11 +100,16 @@ public class Player {
 }
 ```
 
-A `constructor` is a special method that is invoked when an object of a class is instantiated. It is used to initialize the attributes of the class. The `Player` constructor, for example, initializes the player's name, health, and score.
-
+About the code:
+- A `constructor` is a special method that is invoked when an object of a class is instantiated. It is used to initialize the attributes of the class. The `Player` constructor, for example, initializes the player's name, health, and score.
+- *Setter Methods*: These methods are used to modify the state of an object. E.g. The `setName(String name)` method in the `Player` class is a setter method that allows you to change the player's name.
+- *Getter Method*: The getter method is used to access the value of a private field. In this class, `getName()` is a getter method that returns the value of the name field. 
+  
 An `object` is an instance of a class. 
 - To create a `Player` object, we simply instantiate the class with the new keyword.
 - Multiple objects can be created from the same class. Each object has its own state and behavior. 
+
+<div style="page-break-before: always;" />
 
 For example, we can create two `Player` objects, `player1` and `player2`, with different names, health, and scores.
 
@@ -125,22 +129,7 @@ player1.increaseScore(10); //increases player1's score by 10
 <div style="page-break-before: always;" />
 
 
-## UML Class Diagram
 
-![Alt text](image-20.png)
-The UML class diagram visually represents the structure of the `Player` class, including its attributes, constructor, methods, and signatures. The class is represented as a rectangle divided into three sections.
-- The top section contains the name of the class (`Player` in this case). 
-- The middle section contains the attributes (`name`, `health`, and `score`) with their corresponding types. 
-  - The `-` symbol before the attribute names (`name`, `health`, and `score`) indicates that they are private, meaning they can only be accessed within the class itself.
-- The bottom section shows the methods in the class
-  - The `+` symbol before the method names (`Player(String)`, `increaseScore(int)`, `getName()`, etc) indicates that they are public, meaning they can be accessed from other classes.
-    - The `()` after the method names indicates that they are methods (functions) of the class.
-  - The `String`, `int`, and other data types represent the types of attributes and return types of methods.
-  - The `: String` after `getName()` indicates that the return type of the method is `String`.
-  - The parameters of the methods (`String name` in `Player(String)`, `int points` in `increaseScore(int)`, etc) indicate the input values that can be passed to the methods when they are called.
-
-
-<div style="page-break-before: always;" />
 
 # Fundamental OO Concepts
 
@@ -169,17 +158,11 @@ public class Monster {
         }
     }
 
-    // Getters
-    public String getName() {
-        return name;
-    }
-
-    public int getHealth() {
-        return health;
-    }
-
+   //other methods ...
 }
 ```
+
+<div style="page-break-before: always;" />
 
 Let's instantiate three monsters from the `Monster` class.
 
@@ -331,6 +314,20 @@ public class Mage extends Player {
 
 <div style="page-break-before: always;" />
 
+## Multiple Inheritance
+
+Java does not support multiple inheritance. Multiple inheritance is a language feature that allows a class to inherit from multiple parent classes. While it can provide flexibility and code reuse, it also introduces challenges, one of which is the "Diamond Problem" or "Diamond Inheritance Problem."
+
+<img src="image-15.png" alt="Alt text" width="80%"/>
+
+The Diamond Problem occurs when a class inherits from two or more classes that have a common base class
+- In the example above, the `MagicKnight` class inherits from both the `Warrior` and `Mage` classes, which themselves inherit from the `Character` class. This creates a diamond-shaped inheritance hierarchy.
+- The issue arises when both the `Warrior` and `Mage` classes define their own implementation of the `attack` method, which overrides the default implementation in the `Character` class. In the `MagicKnight` class, there is ambiguity about which `attack` method should be used. Should it use the `attack` implementation from `Warrior` or `Mage`?
+
+The Diamond Problem leads to code ambiguity and potential conflicts. To avoid such issues, languages such as Java often promote alternative approaches like interfaces or composition, which provide a more flexible and manageable way to achieve code reuse and extensibility without the problems associated with multiple inheritance.
+
+<div style="page-break-before: always;" />
+
 ## Interface 
 
 An interface in OO defines a contract that a class agrees to follow. The purpose of an interface is to specify a contract or behavior that classes can implement. 
@@ -477,7 +474,7 @@ For instance, we can instead define the abstract class `Weapon` to define a conc
   }
   ```
 
-Any subclass of `Weapon` needs to extend the abstract class rather than implementing it like an interface. For instance, a `Bow` class extending the `Weapon` abstract class would inherit the `getDamage()` method and must provide its own implementation of the `use()` method:
+Any subclass of `Weapon` needs to extend the abstract class rather than implement it like an interface. For instance, a `Bow` class extending the `Weapon` abstract class would inherit the `getDamage()` method and must provide its own implementation of the `use()` method:
 
 ```java
 public class Bow extends Weapon {
@@ -544,9 +541,9 @@ For instance, for the `Player` class,
 
 ## Program to an interface
 
-"Program to an interface" is an OO Design principle which suggest that software components should interact with each other through interfaces rather than concrete implementations. This principle promotes decoupling and enhances the flexibility and maintainability of the code.
+"Program to an interface" is an OO Design principle which suggests that software components should interact with each other through interfaces rather than concrete implementations. This principle promotes decoupling and enhances the flexibility and maintainability of the code.
 
-In our RPG game, a player can use different types of weapon. Assume that the player class contains a function with the following code:
+In our RPG game, a player can use different types of weapons. Assume that the `Player` class contains a function with the following code:
 
 ```java
 public class Player {
@@ -556,7 +553,7 @@ public class Player {
 }
 ```
 
-If we want to change the player's weapon to a `Sword`, we need to modify the function in player class as follows.
+If we want to change the player's weapon to a `Sword`, we need to modify the function in the `Player` class as follows.
 
 ```java
 public class Player {
@@ -566,7 +563,9 @@ public class Player {
 }
 ```
 
-In this example, the player class is tightly coupled with the `Bow` class. We have to change the player class if we want to use a different type of weapon. It makes the code less flexible and maintainable.
+In this example, the `Player` class is **tightly coupled** with the `Bow` class. We have to change the `Player` class if we want to use a different types of weapons. It makes the code less flexible and maintainable.
+
+Suppose our `Player` class is programmed to an interface (`Weapon`) instead of a concrete implementation (e.g. `Bow`, `Sword`), 
 
 ```java
 public class Player {
@@ -584,7 +583,8 @@ If you want to introduce a new type of weapon, you just need to create a new cla
 
 Polymorphism, a core principle in object-oriented programming (OOP), is derived from the Greek words meaning "many shapes."
 - It refers to the ability of a variable, function, or object to assume various forms. 
-- This technique allows for writing versatile code that does not have to be aware of the specific subtype of an object, as long as the object adheres to a defined interface.
+- In OO, Polymporphism is often achieved through inheritance and interface implementation.
+- Allows for writing versatile code that does not have to be aware of the specific subtype of an object, as long as the object adheres to a defined interface.
 
 In the following example, with both `Bow` and `Sword` classes implementing the `Weapon` interface, they demonstrate polymorphism by being used interchangeably wherever a `Weapon` type is expected. Both classes possess a `use()` method, albeit with differing implementations:
 
@@ -596,6 +596,8 @@ w.use(); // Prints "Shooting an arrow"
 w = new Sword();
 w.use(); // Prints "Swinging the sword"
 ```
+
+
 
 The benefit of this approach is the creation of flexible and extendable code. It allows for the introduction of varied behaviors (like different ways of using weapons) depending on the type of object at runtime, without the need for changing existing code. 
 
@@ -627,12 +629,12 @@ player.useWeapon(); // Use the hammer
 
 ```
 
+In our context, polymorphism allows the `Player` class to use any object that implements the `Weapon` interface. For instance, the `Player` class can use a `Bow` object, a `Sword` object, or a `Hammer` object. This leads to a more flexible and maintainable codebase as new functionalities can be added with minimal changes.
 
-Polymorphism enables the `Player` class to interact with any object that implements the `Weapon` interface, regardless of the weapon's specific type or the details of its `use()` method. This leads to a more maintainable, scalable, and flexible codebase, where new functionalities can be added with minimal changes.
 
 <div style="page-break-before: always;" />
 
-## Relationship between Class
+## Relationship between Classes
 
 In UML (Unified Modeling Language) class diagrams, the structure and relationships in an object-oriented system can be graphically represented.
 - **Classes**: Represented by rectangles divided into three parts: the top part for the class name, the middle part for attributes, and the bottom part for methods.
@@ -683,7 +685,7 @@ By delegating the responsibility of using a weapon to the Weapon class, the `Pla
 
 ## Open/Closed Principle (OCP)
 
-The Open/Closed Principle states that software entities should be open for extension, but closed for modification. This means creating modules that can be extended without altering their existing code.
+The Open/Closed Principle states that software entities should be **open for extension but closed for modification**. This allows for extending the functionality of a class without modifying its existing code.
 
 Let's revisit the `Weapon` interface and `Player` class.
 
@@ -743,13 +745,16 @@ Open-closed principle is a powerful concept in object-oriented design where you 
 <div style="page-break-before: always;" />
 
 ## Liskov Substitution Principle (LSP)
-According to LSP, objects of a superclass should be replaceable with objects of its subclasses without affecting the application. 
+LSP states that: 
+- Objects of a superclass should be replaceable with objects of its subclasses without altering the correctness of the program. 
+- In simpler terms, if you have a parent class and a child class, then anywhere in your code where you use an instance of the parent class, you should be able to use an instance of the child class without causing any issues or changes in behavior.
+- This principle is used to ensure that a subclass can stand in for its superclass without causing any issues in the program.
 
 ### Example 
 Suppose that in our RPG game, there are three types of characters: `Player`, `Monster`, and `NPC` (Non-Player Character). Let's define the `Character` class as the base class for all three types of characters. 
 
-**Base Class: `Character`**
-This is the base class representing a general character in the RPG game. 
+**Base Class: `Character`**:  This represents a general character in the RPG game. To allow the subclasses to reuse the functionality of the base class, the `Character` class defines two methods: `attack` and `talk`. 
+
 
 ```java
 public class Character {
@@ -766,8 +771,7 @@ public class Character {
 }
 ```
 
-`Player` is a subclass of `Character` that inherits and utilizes the `attack` and `talk` methods without modification. This class signifies that players in the game can both attack and talk.
-
+`Player` is a subclass of `Character` that inherits the `attack` and `talk` methods. This class signifies that players in the game can both attack and talk.
 
 ```java
 public class Player extends Character {
@@ -785,7 +789,7 @@ public class Player extends Character {
 
 <div style="page-break-before: always;" />
 
-`Monster` is another subclass of `Character`. While it retains the attacking capability (inherited from `Character`), it overrides the `talk` method to throw an exception, indicating that monsters in the game are not capable of talking.
+`Monster` is another subclass of `Character`. While it retains the attacking capability (inherited from `Character`), it overrides the `talk` method to throw an exception, indicating that monsters in the game cannot talk.
 
 ```java
 public class Monster extends Character {
@@ -801,7 +805,7 @@ public class Monster extends Character {
 }
 ```
 
-`NPC` (Non-Player Character) extends `Character` and is designed to talk but not to attack. The `talk` method is used as inherited, but the `attack` method is overridden to throw an exception, reflecting that NPCs are not designed for combat in the game.
+`NPC` (Non-Player Character), which extends the `Character` class, can talk but not attack others. The `attack` method is overridden to throw an exception, reflecting that NPCs are not designed for combat in the game. 
 
 ```java
 public class NPC extends Character {
@@ -817,12 +821,13 @@ public class NPC extends Character {
 }
 ```
 
+> Remark: In Java, exceptions are used to signal that something unusual has occurred and it passes the responsibility of handling the exception to the caller.
+
 <div style="page-break-before: always;" />
 
-LSP states that objects of a superclass should be replaceable with objects of its subclasses without altering the correctness of the program. When subclasses cannot use all the methods inherited from the parent class without modification or when they need to throw exceptions for certain methods (as seen in the `Monster` and `NPC` classes in the RPG example), it violates LSP. In the given example, replacing a `Character` object with a `Monster` or `NPC` object could lead to runtime errors, as these subclasses do not fully support all behaviors of the base class.
 
-Let's consider the following example. `npc.attack(player) ` and `monster.attack(player)` will throw an exception, which violates LSP. 
-
+Let's consider the following example. `npc.attack(player) ` and `monster.attack(player)` will throw an exception. 
+  
 ```java
 Character player = new Player();
 Character monster = new Monster();
@@ -834,19 +839,25 @@ monster.talk();
 npc.talk();
 npc.attack(player);
 ```
+LSP states that objects of a superclass should be replaceable with objects of its subclasses without altering the correctness of the program. 
+- However, in this example, the `NPC` and `Monster` classes cannot be used as a replacement for the `Character` class. This may lead to runtime errors, as these subclasses do not fully support all behaviors of the base class. 
+- The subclass behaves differently from the base class, which violates the LSP. This can cause bugs that are hard to detect because the code seems correct when looking at the superclass but fails when using some of the subclasses
+
 
 <div style="page-break-before: always;" />
     
 ### Using Interface to model behaviors
 
-While inheritance is a commonly used mechanism in object-oriented programming for sharing behavior among classes,  inheritance may also create a tight coupling between the base class and its subclasses. Any changes made to the base class can have unintended ripple effects on all of its derived classes. This rigidity can make maintenance and future updates more challenging.
+While inheritance is a commonly used mechanism in object-oriented programming for sharing behavior among classes,  inheritance may also create a tight coupling between the base class and its subclasses. 
+- Since the subclasses inherit the methods/attributes from the base class,  changes to the base class may have unintended ripple effects on all its derived classes. For instance, suppose the base case `Player` has an attribute `position` to store the player's position in the game. If we decide to remove the `position` attribute from the `Player` class, we also need to modify the `Monster` and `NPC` classes.
+- This can make maintenance and future updates more challenging.
 
-We can define interface classes to address the limitations of inheritance. In our RPG example, we can define interfaces like `Attackable` and `Talkable` instead of using a base `Character` class. 
+Instead of using inheritance, we can define interface classes to address the limitations of inheritance. In our RPG example, we can define interfaces like `Attackable` and `Talkable` which models the behavior of different types of characters in the game.
 
 ![Alt text](image-16.png)
 
 We first define the interface to model the behavior of different types of characters.
-- `Attackable` is an interface with the method `attack(Character target)`, which define the behavior to attack other characters.
+- `Attackable` is an interface with the method `attack(Character target)`, which defines the behavior to attack other characters.
 - `Talkable` is another interface with the method `talk()` that represents the ability to talk.
   
 ```java
@@ -862,7 +873,7 @@ public interface Talkable {
 <div style="page-break-before: always;" />
 
 
-The `Player` class  implements both `Attackable` and `Talkable` interfaces.
+The `Player` class implements both `Attackable` and `Talkable` interfaces.
 - By implementing `Attackable`, the `Player` class provides concrete implementations of the `attack`  methods
 - By implementing `Talkable`, the `Player` class also provides a concrete implementation of the talk method, giving it the ability to speak.
 
@@ -918,17 +929,17 @@ public class Game {
 ```
 
 
-By using interfaces instead of inheritance provides enhanced flexibility, modularity, and maintainability. 
+Using interfaces instead of inheritance provides enhanced flexibility, modularity, and maintainability.
 - Classes like `Player`, `Monster`, and `NPC` can implement multiple interfaces, allowing for a mix-and-match approach to functionality. 
 - This design enables classes to implement only the behaviors they need, avoiding the constraints and potential complexity of a rigid inheritance hierarchy. 
-- It leads to a system that is easier to extend and adapt, with loosely coupled, interchangeable components.
+- The interface contains only the definitions of the methods, not the implementation. The subclasses are coupled only to the interface, not to the implementation. In other words, the issue that the changes in the implementation of superclasses may affect the subclasses is avoided. Remark: The dependency on an interface is considered a loosely coupled relationship.
 
 
 
 ## Interface Segregation Principle (ISP)
 
 The Interface Segregation Principle states that no client should be forced to depend on methods it does not use. 
-- **Segregate Interfaces**: Instead of having a single large interface for all actions a character can perform, break it down into smaller interfaces. For example, `Attackable` for attack actions, `Talkable` for talking actions, etc.
+-  Instead of having a single large interface for all actions a character can perform, break it down into smaller interfaces. For example, `Attackable` for attack actions, `Talkable` for talking actions, etc.
 - **Implement Only What Is Needed**: Each type of character (like Monster, Player, NPC) should only implement the interfaces that are relevant to it. For instance, a Monster might only implement `Attackable` and not `Talkable`.
 
 This approach makes your code more flexible and maintainable. If you need to add a new type of action, you can create a new interface without modifying existing interfaces or classes that don’t need that action.
@@ -943,7 +954,7 @@ We will start with a `GameSaver` class for saving the state of a game. Consider 
 
 ```java
 public class GameSaver {
-    private MySQLDatabase database;
+    private MySQLDatabase database; //GameSaver is coupled to MySQLDatabase
 
     public GameSaver() {
         this.database = new MySQLDatabase();
@@ -983,7 +994,7 @@ The problem with this design is that if you want to change the type of database 
 
 ```java
 public class GameSaver {
-    private MongoDB database;
+    private MongoDB database; //GameSaver is coupled to MongoDB
 
     public GameSaver() {
         this.database = new MongoDB();
@@ -1017,7 +1028,6 @@ In the context of the `GameSaver` example, GameSaver is a high-level module and 
 
 <div style="page-break-before: always;" />
 
-
 **Dependency Injection** is a technique that implements the *Dependency Inversion Principle*, where an object receives other objects it depends on, rather than creating them itself. These dependencies are usually provided through a constructor, a setter, or some kind of factory method.
 
 First, we define a `Database` interface, which declares a method `saveGame(GameState gameState)`, which is expected to be implemented by any class that implements this interface. The `saveGame`` method is intended to save a game state to a database.
@@ -1050,7 +1060,7 @@ Let's improve the design of the `GameSever` class.
 
 ```java
 public class GameSaver {
-    private Database database;
+    private Database database; //GamseSaver is coupled to 
 
     public GameSaver(Database database) {
         this.database = database;
@@ -1062,16 +1072,17 @@ public class GameSaver {
 }
 ```
 
-By passing different implementation of *Database* interface to the `GameSaver` constructor, you can save the game  using different types of databases without modifying the `GameSaver` class.
+By passing different implementations of the *Database* interface to the `GameSaver` constructor, you can save the game using different types of databases without modifying the `GameSaver` class.
 
-For instance, for using the MySQL database,
+For instance, to use the MySQL database, we can first create a `MySQLDatabase` object and pass it to the `GameSaver` constructor.
+
 ```java
 Database mySqlDatabase = new MySQLDatabase();
 GameSaver gameSaver = new GameSaver(mySqlDatabase);
 gameSaver.saveGame(); // Save the game state using MySQLDatabase
 ```
 
-If we want to change to MongoDB, there is no need modify existing classes (e.g. `GameSaver`)
+To use the MongoDB database, we can create a `MongoDB` object and pass it to the `GameSaver` constructor. Tere is no need to modify the existing classes (e.g. `GameSaver`)
 
 ```java
 Database mongoDB = new MongoDB();
@@ -1081,10 +1092,10 @@ gameSaver.saveGame(); // Save the game state using MongoDB
 
 The improved design allows for flexibility in choosing the type of database to use for saving the game. Any class that implements the `Database` interface can be used, making it easy to switch between different types of databases.
 
-Types of Dependency Injection:
+**Types of Dependency Injection:**
 
-**Constructor Injection**: 
-In this type, the dependencies are provided through a class constructor. This is the most common type of DI and is typically used when the dependency is required for the class to function.
+**Constructor Injection**: The dependencies are provided through a class constructor. 
+- This is the most common type of DI and is typically used when the dependency is required for the class to function.
 
 ```java
 public class GameSaver {
@@ -1100,6 +1111,8 @@ public class GameSaver {
     }
 }
 ```
+<div style="page-break-before: always;" />
+
 A concrete `Database` object is injected from outside when the `GameSaver` object is instantiated.
 
 ```java
@@ -1107,11 +1120,8 @@ Database mySqlDatabase = new MySQLDatabase();
 GameSaver gameSaver = new GameSaver(mySqlDatabase);
 ```
 
-<div style="page-break-before: always;" />
-
-**Setter Injection**
-
-In this type of dependency injection, the client exposes a setter method that the injector uses to inject the dependency. This is typically used when the dependency is optional.
+**Setter Injection**: The client exposes a setter method that the injector uses to inject the dependency. 
+- This is typically used when the dependency is optional.
 
  ```java
  public class GameSaver {
@@ -1136,33 +1146,16 @@ Database mySqlDatabase = new MySQLDatabase();
 GameSaver gameSaver = new GameSaver();
 gameSaver.setDatabase(mySqlDatabase);
 ```
-<div style="page-break-before: always;" />
-
-# Additional topics related to OO 
-
-## Multiple Inheritance
-
-Java does not support multiple inheritance. Multiple inheritance is a language feature that allows a class to inherit from multiple parent classes. While it can provide flexibility and code reuse, it also introduces challenges, one of which is the "Diamond Problem" or "Diamond Inheritance Problem."
-
-<img src="image-15.png" alt="Alt text" width="80%"/>
-
-The Diamond Problem occurs when a class inherits from two or more classes that have a common base class
-- In the example above, the `MagicKnight` class inherits from both the `Warrior` and `Mage` classes, which themselves inherit from the `Character` class. This creates a diamond-shaped inheritance hierarchy.
-- The issue arises when both the `Warrior` and `Mage` classes define their own implementation of the `attack` method, which overrides the default implementation in the `Character` class. In the `MagicKnight` class, there is ambiguity about which `attack` method should be used. Should it use the `attack` implementation from `Warrior` or `Mage`?
-
-The Diamond Problem leads to code ambiguity and potential conflicts. To avoid such issues, languages such as Java often promote alternative approaches like interfaces or composition, which provide a more flexible and manageable way to achieve code reuse and extensibility without the problems associated with multiple inheritance.
 
 <div style="page-break-before: always;" />
-
 
 ### Inversion of Control (IoC) container
 
-In frameworks like Java Spring, the creation and management of dependencies are delegated to an Inversion of Control (IoC) container. 
+In frameworks like Java Spring, the creation and management of dependencies are delegated to an Inversion of Control (IoC) container. In Java Spring, the IoC container is represented by the `ApplicationContext` class.
   - Responsible for instantiating, configuring, and assembling the objects in your application. 
   - Simplifies the management of dependencies and promotes a coding style that leads to more modular, understandable, and testable code. 
 
-
-In Spring boot, you can define your configuration in `application.yaml` (or `application.yml`) files. For example, if you have different configurations for MySQL and MongoDB, you might define two files: `application-mysql.yml` and `application-mongodb.yml`.
+In Spring Boot, you can define your configuration in `application.yaml` (or `application.yml`) files. For example, if you have different configurations for MySQL and MongoDB, you might define two files: `application-mysql.yml` and `application-mongodb.yml`, which contain the configuration for MySQL and MongoDB, respectively.
 
 Here's an example of what `applcation-mysql.yml` might look like:
 
@@ -1182,7 +1175,7 @@ spring:
       uri: mongodb://localhost:27017/mydatabase
 ```
 
-You can choose which profile (and thus which configuration file) to use when launching the application  by setting the `spring.profiles.active` property. For intsance, 
+You can choose which profile (and thus which configuration file) to use when launching the application by setting the `spring.profiles.active` property. For intsance, 
 
 1. To launch your app with MySQL, you may execute
 
@@ -1196,16 +1189,15 @@ You can choose which profile (and thus which configuration file) to use when lau
 ./mvnw spring-boot:run -Dspring-boot.run.profiles=mongodb
 ```
 
-The Inversion of Control (IoC) container in Spring Boot will instantiate the corresponding object and inject it into the application. This automatic creation, configuration, and injection of dependencies is handled by the Spring Framework's IoC container. By outsourcing the creation and management of dependencies to the IoC container,it allows developers to focus on the core functionality of their application rather than the details of object creation and management. Your application components can remain focused on their core responsibilities, leading to cleaner and more maintainable code.
+The Inversion of Control (IoC) container in Spring Boot will instantiate the corresponding object and inject it into the application. This automatic creation, configuration, and injection of dependencies is handled by the Spring Framework's IoC container. By outsourcing the creation and management of dependencies to the IoC container, it allows developers to focus on the core functionality of their application rather than the details of object creation and management. Your application components can remain focused on their core responsibilities, leading to cleaner and more maintainable code.
 
 
+### Testing with Mock objects
+In Unit Testing, functions are tested in isolation. However, some functions may depend on external resources like databases, files, or external systems. For instance, the `GameSaver` class depends on the `Database` interface. However, direct testing of functions that integrate with databases can be slow and unreliable. Also, it may be difficult to simulate various database states (e.g. database connection failure, no more space to save data) during testing. 
 
-## Testing with Mock objects
-
-In unit testing , mock objects can be used to imitate the behavior of external dependency in a controlled manner. This is useful when testing functions that interact with files, databases, or external systems. Direct testing of functions that integrate with databases can be slow and unreliable.
-
-
-The Dependency Inversion Principle (DIP) enhances the testability of the `GameSaver` class by facilitating the injection of mock database objects during tests. This mock object replicates the functionality of a genuine `Database`, minus the side effects like real data storage. As a result, the `GameSaver` class can be tested in isolation, removing the need to set up and dismantle a real database for each test.
+The Dependency Inversion Principle (DIP) enhances the testability of the `GameSaver` class by facilitating the injection of mock database objects during tests. 
+- A mock object is a simulated object that mimics the behavior of a real object in a controlled manner.
+- For instance, a mock object may replicate the functionality of a `Database` object to allow the testing of the `GameSaver` class without involving the setting up and tearing down of a real database.
 
 Let's consider the following `MockDatabase` class which simulates the error condition of failing to connect to the database.
 - The `MockDatabase` serves as a simulated `Database` object for testing. 
@@ -1213,16 +1205,14 @@ Let's consider the following `MockDatabase` class which simulates the error cond
 
 ```java
 public class MockDatabase implements Database {
-    
-    @Override
     public void saveGame(GameState gameState) {
         throw new DatabaseConnectionException("Failed to connect to database.");
     }
-
 }
 ```
+<div style="page-break-before: always;" />
 
-Here is a sample test case when there is database connection failure to  test the error-handling abilities of the `GameSaver` class in JUnit.
+Here is a sample test case when there is a database connection failure to test the error-handling abilities of the `GameSaver` class in JUnit.
    
 ```java
 @Test
@@ -1233,13 +1223,12 @@ public void testSaveGameFailure() {
     
     gameSaver.saveGame(mockGameState);
 
-    // check if the gameSaver handles the error gracefully ...
+    // check if the gameSaver handles the error gracefully ..
+    assertTrue(gameSaver.isErrorLogged());
 }
 ```
 
-<div style="page-break-before: always;" />
-
-By using mock databases, we can isolate and assess our application logic without involving real database operations. The advantages include:
+By using mock databases, we can isolate the testing of our application logic without involving real database operations. The advantages include:
 - Increased speed of the unit test by avoiding the latency of actual database transactions.
 - Simplified testing by allowing the easy simulation of various database states.
 - Reliable and consistent outcomes, not influenced by external elements such as network interruptions or database downtimes.
