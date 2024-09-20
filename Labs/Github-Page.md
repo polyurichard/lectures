@@ -3,8 +3,8 @@
 
 A Github page is a static website hosted on Github. In this lab, you will create a Github page for yourself. You can use this page to introduce yourself to the world. 
 
-1. Visit the [invite link](https://classroom.github.com/a/2zJyUoyQ). Complete the steps and visit your repository.
-2. A GitHub repository will be created for you under our Github Organization (https://github.com/polyulabs)
+1. Visit the invite link provided in the Blackblack. Complete the steps and visit your repository.
+2. A GitHub repository will be created for you under our Github Organization 
 3. Inside your repository, create a new page "index.md" in the root folder of your `main` branch. Give an introduction about yourself. Commit th changes.
    ![Alt text](image-1.png)
 4. Setup the Github page under the `Settings` tab. 
@@ -19,4 +19,13 @@ A Github page is a static website hosted on Github. In this lab, you will create
    ![Alt text](image-6.png)
 7. The complete page should look like this:
    ![Alt text](image-7.png)
+8. To add an image, you may upload an image to your Github Folder or provide the URL to the image using the following syntax (suppose the image filename is `image_filename.png`).
+   
+```
+# About me
+
+I'm Richard Lui. I work in PolyU.
+
+![image](image_filename.png)
+```
 
