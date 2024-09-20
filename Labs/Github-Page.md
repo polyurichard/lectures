@@ -17,15 +17,13 @@ A Github page is a static website hosted on Github. In this lab, you will create
    - Your URL should be in the form of `https://<organization-name>.github.io/<your-repository-name>/index.html`
    - *Remark*: Your `index.md` will be converted to `index.html` by Github actions when it is deployed.
    ![Alt text](image-6.png)
-7. The complete page should look like this:
-   ![Alt text](image-7.png)
-8. To add an image, you may upload an image to your Github Folder or provide the URL to the image using the following syntax (suppose the image filename is `image_filename.png`).
+7. To add an image, you may upload an image to your Github Folder or provide the URL to the image using the following syntax (suppose the image filename is `image_filename.png`).
    
 ```
 # About me
 
 I'm Richard Lui. I work in PolyU.
-
-![image](image_filename.png)
+![Github Page](https://github.com/[your Github ID])
+![An image](image_filename.png)
 ```
 
