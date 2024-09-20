@@ -19,10 +19,12 @@ A Github page is a static website hosted on Github. In this lab, you will create
    ![Alt text](image-6.png)
 7. Add the link to your Github Page and an image to the page. You may upload an image to your Github Folder or provide the URL to the image.
 
-   Example: 
-```
+   Example:
+   
+```text
 
 ![Github Page](https://github.com/[your Github ID])
 ![An image]([your_image_filename].jpg)
+
 ```
 
