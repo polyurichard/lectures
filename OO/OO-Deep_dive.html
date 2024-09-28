@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Comprehensive Object-Oriented Programming Study Guide</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.0/themes/prism.min.css" rel="stylesheet" />
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        pre {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            overflow: auto;
+        }
+        h2 {
+            color: #2c3e50;
+        }
+        h3 {
+            color: #34495e;
+        }
+        a {
+            text-decoration: none;
+            color: #2980b9;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .mermaid {
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Comprehensive Object-Oriented Programming Study Guide</h1>
+
+    <h2>Table of Contents</h2>
+    <ul>
+        <li><a href="#introduction">Introduction to Object-Oriented Programming</a>
+            <ul>
+                <li><a href="#why-oop">Why Object-Oriented Programming?</a></li>
+                <li><a href="#classes-objects">Classes and Objects</a></li>
+            </ul>
+        </li>
+        <li><a href="#core-principles">Core Principles of Object-Oriented Programming</a>
+            <ul>
+                <li><a href="#inheritance">Inheritance</a></li>
+                <li><a href="#encapsulation">Encapsulation</a></li>
+                <li><a href="#polymorphism">Polymorphism</a></li>
+            </ul>
+        </li>
+        <li><a href="#additional-principles">Additional OOP Principles</a>
+            <ul>
+                <li><a href="#dependency-inversion">Dependency Inversion Principle</a></li>
+                <li><a href="#open-closed">Open-Closed Principle</a></li>
+                <li><a href="#dependency-injection">Dependency Injection</a></li>
+            </ul>
+        </li>
+        <li><a href="#design-patterns">Design Patterns in Object-Oriented Programming</a>
+            <ul>
+                <li><a href="#factory-pattern">Factory Pattern</a></li>
+            </ul>
+        </li>
+    </ul>
+
+    <hr>
+
+    <h2 id="introduction">Introduction to Object-Oriented Programming</h2>
+
+    <h3 id="why-oop">Why Object-Oriented Programming?</h3>
+    <p>
+        Object-Oriented Programming (OOP) is a programming paradigm that organizes software design around data, or objects, rather than functions and logic. This approach mirrors how we perceive the real world by modeling real-life entities as objects with attributes and behaviors. OOP aims to make programming more intuitive, manageable, and scalable by encapsulating data and related behaviors within objects, promoting reusability and modularity.
+    </p>
+    <p>
+        One of the primary motivations behind OOP is to address the complexity of large software systems. By breaking down a system into smaller, interacting objects, developers can manage and understand the system more effectively. Additionally, OOP facilitates code reuse through inheritance, enhances code maintainability, and supports the creation of more flexible and scalable software architectures.
+    </p>
+
+    <h3 id="classes-objects">Classes and Objects</h3>
+    <p>
+        At the heart of OOP are the concepts of classes and objects. A <strong>class</strong> serves as a blueprint or template for creating objects. It defines the properties (attributes) and behaviors (methods) that the objects created from the class will have.
+    </p>
+    <p>
+        An <strong>object</strong> is an instance of a class. It encapsulates data and functionality related to that data. Using classes and objects allows developers to model real-world entities in code, making the software more understandable and easier to manage.
+    </p>
+
+    <h4>Example: Classes and Objects</h4>
+    <pre><code class="language-python"># Python Example of Classes and Objects
+
+class Animal:
+    def __init__(self, name, color, size):
+        self.name = name
+        self.color = color
+        self.size = size
+
+    def make_sound(self):
+        pass
+
+    def sleep(self):
+        print(f"{self.name} is sleeping.")
+
+class Lion(Animal):
+    def __init__(self, name, color, size, mane_size):
+        super().__init__(name, color, size)
+        self.mane_size = mane_size
+
+    def make_sound(self):
+        print(f"{self.name} roars!")
+
+# Creating an instance of Lion
+simba = Lion("Simba", "Golden", "Large", "Big")
+simba.make_sound()  # Output: Simba roars!
+simba.sleep()       # Output: Simba is sleeping.
+</code></pre>
+
+    <div class="mermaid">
+    classDiagram
+        class Animal {
+            +__init__(name, color, size)
+            +make_sound()
+            +sleep()
+        }
+        class Lion {
+            +__init__(name, color, size, mane_size)
+            +make_sound()
+        }
+        Animal <|-- Lion
+    </div>
+
+    <hr>
+
+    <h2 id="core-principles">Core Principles of Object-Oriented Programming</h2>
+
+    <h3 id="inheritance">Inheritance</h3>
+    <p>
+        <strong>Inheritance</strong> is a fundamental OOP principle that allows a class to inherit attributes and methods from another class. The class being inherited from is called the <em>parent</em> or <em>superclass</em>, while the class that inherits is known as the <em>child</em> or <em>subclass</em>. Inheritance promotes code reusability and establishes a natural hierarchy between classes.
+    </p>
+    <p>
+        By using inheritance, developers can create generalized classes that encapsulate common behavior and specialized subclasses that extend or override this behavior as needed. This approach reduces redundancy and enhances the maintainability of the codebase.
+    </p>
+
+    <h4>Example: Inheritance</h4>
+    <pre><code class="language-python"># Python Example of Inheritance
+
+class Mammal:
+    def __init__(self, name, has_fur):
+        self.name = name
+        self.has_fur = has_fur
+
+    def breathe(self):
+        print(f"{self.name} is breathing.")
+
+class Lion(Mammal):
+    def __init__(self, name, has_fur, mane_size):
+        super().__init__(name, has_fur)
+        self.mane_size = mane_size
+
+    def roar(self):
+        print(f"{self.name} roars loudly!")
+
+# Creating an instance of Lion
+simba = Lion("Simba", True, "Large")
+simba.breathe()  # Output: Simba is breathing.
+simba.roar()     # Output: Simba roars loudly!
+</code></pre>
+
+    <div class="mermaid">
+    classDiagram
+        class Mammal {
+            +__init__(name, has_fur)
+            +breathe()
+        }
+        class Lion {
+            +__init__(name, has_fur, mane_size)
+            +roar()
+        }
+        Mammal <|-- Lion
+    </div>
+
+    <h3 id="encapsulation">Encapsulation</h3>
+    <p>
+        <strong>Encapsulation</strong> is the concept of bundling data and the methods that operate on that data within a single unit, typically a class. It restricts direct access to some of an object's components, which is a means of preventing unintended interference and misuse of the data.
+    </p>
+    <p>
+        By encapsulating data, developers can create a clear interface for interacting with objects while keeping the internal implementation details hidden. This leads to improved modularity, easier maintenance, and enhanced security within the codebase.
+    </p>
+
+    <h4>Example: Encapsulation</h4>
+    <pre><code class="language-python"># Python Example of Encapsulation
+
+class Robot:
+    def __init__(self, name):
+        self.name = name
+        self.__battery_level = 100  # Private attribute
+
+    def charge(self):
+        self.__battery_level = 100
+        print(f"{self.name} has been charged.")
+
+    def perform_task(self):
+        if self.__battery_level > 0:
+            print(f"{self.name} is performing a task.")
+            self.__battery_level -= 10
+        else:
+            print(f"{self.name} needs to recharge.")
+
+# Creating an instance of Robot
+r2d2 = Robot("R2-D2")
+r2d2.perform_task()  # Output: R2-D2 is performing a task.
+r2d2.__battery_level  # Raises AttributeError
+</code></pre>
+
+    <div class="mermaid">
+    classDiagram
+        class Robot {
+            +__init__(name)
+            +charge()
+            +perform_task()
+            -battery_level
+        }
+    </div>
+
+    <h3 id="polymorphism">Polymorphism</h3>
+    <p>
+        <strong>Polymorphism</strong> allows objects of different classes to be treated as instances of the same class through a common interface. It enables a single method or function to operate differently based on the object it is acting upon.
+    </p>
+    <p>
+        Polymorphism enhances flexibility and integration within the code, allowing developers to write more generalized and reusable code. It facilitates the implementation of interchangeable components and supports dynamic method binding.
+    </p>
+
+    <h4>Example: Polymorphism</h4>
+    <pre><code class="language-python"># Python Example of Polymorphism
+
+class Animal:
+    def make_sound(self):
+        pass
+
+class Lion(Animal):
+    def make_sound(self):
+        print("Lion roars!")
+
+class Bird(Animal):
+    def make_sound(self):
+        print("Bird chirps!")
+
+class Monkey(Animal):
+    def make_sound(self):
+        print("Monkey howls!")
+
+def animal_sound(animal):
+    animal.make_sound()
+
+# Creating instances
+simba = Lion()
+tweety = Bird()
+george = Monkey()
+
+# Using polymorphism
+animal_sound(simba)   # Output: Lion roars!
+animal_sound(tweety)  # Output: Bird chirps!
+animal_sound(george)  # Output: Monkey howls!
+</code></pre>
+
+    <div class="mermaid">
+    classDiagram
+        class Animal {
+            +make_sound()
+        }
+        class Lion {
+            +make_sound()
+        }
+        class Bird {
+            +make_sound()
+        }
+        class Monkey {
+            +make_sound()
+        }
+        Animal <|-- Lion
+        Animal <|-- Bird
+        Animal <|-- Monkey
+    </div>
+
+    <hr>
+
+    <h2 id="additional-principles">Additional OOP Principles</h2>
+
+    <h3 id="dependency-inversion">Dependency Inversion Principle</h3>
+    <p>
+        The <strong>Dependency Inversion Principle</strong> is one of the SOLID principles of OOP. It states that high-level modules should not depend on low-level modules; both should depend on abstractions. Additionally, abstractions should not depend on details, but details should depend on abstractions.
+    </p>
+    <p>
+        This principle aims to reduce the coupling between different parts of the code, making it more flexible and easier to maintain. By depending on abstractions rather than concrete implementations, developers can create systems that are more modular and adaptable to change.
+    </p>
+
+    <h4>Example: Dependency Inversion Principle</h4>
+    <pre><code class="language-python"># Python Example of Dependency Inversion Principle
+
+from abc import ABC, abstractmethod
+
+class SocialLogin(ABC):
+    @abstractmethod
+    def authenticate(self):
+        pass
+
+class FacebookLogin(SocialLogin):
+    def authenticate(self):
+        print("Authenticating with Facebook.")
+
+class GoogleLogin(SocialLogin):
+    def authenticate(self):
+        print("Authenticating with Google.")
+
+class Website:
+    def __init__(self, social_login: SocialLogin):
+        self.social_login = social_login
+
+    def login(self):
+        self.social_login.authenticate()
+
+# Usage
+facebook = FacebookLogin()
+google = GoogleLogin()
+
+site = Website(facebook)
+site.login()  # Output: Authenticating with Facebook.
+
+site = Website(google)
+site.login()  # Output: Authenticating with Google.
+</code></pre>
+
+    <div class="mermaid">
+    classDiagram
+        class SocialLogin {
+            &lt;&lt;interface&gt;&gt;
+            +authenticate()
+        }
+        class FacebookLogin {
+            +authenticate()
+        }
+        class GoogleLogin {
+            +authenticate()
+        }
+        class Website {
+            +__init__(social_login)
+            +login()
+        }
+        SocialLogin <|.. FacebookLogin
+        SocialLogin <|.. GoogleLogin
+        Website --> SocialLogin
+    </div>
+
+    <h3 id="open-closed">Open-Closed Principle</h3>
+    <p>
+        The <strong>Open-Closed Principle</strong> is another SOLID principle that states that software entities (classes, modules, functions, etc.) should be open for extension but closed for modification. This means that it's possible to extend the behavior of a system without altering its existing code.
+    </p>
+    <p>
+        Adhering to this principle promotes stability in the codebase, as existing functionalities remain unaffected by new changes. It encourages the use of abstraction and polymorphism to introduce new features seamlessly.
+    </p>
+
+    <h4>Example: Open-Closed Principle</h4>
+    <pre><code class="language-python"># Python Example of Open-Closed Principle
+
+from abc import ABC, abstractmethod
+
+class Animal(ABC):
+    @abstractmethod
+    def make_sound(self):
+        pass
+
+class Lion(Animal):
+    def make_sound(self):
+        print("Lion roars!")
+
+class Bird(Animal):
+    def make_sound(self):
+        print("Bird chirps!")
+
+class Zoo:
+    def __init__(self):
+        self.animals = []
+
+    def add_animal(self, animal: Animal):
+        self.animals.append(animal)
+
+    def make_all_sounds(self):
+        for animal in self.animals:
+            animal.make_sound()
+
+# Extending functionality without modifying existing classes
+class Monkey(Animal):
+    def make_sound(self):
+        print("Monkey howls!")
+
+# Usage
+zoo = Zoo()
+zoo.add_animal(Lion())
+zoo.add_animal(Bird())
+zoo.add_animal(Monkey())  # New functionality added
+
+zoo.make_all_sounds()
+# Output:
+# Lion roars!
+# Bird chirps!
+# Monkey howls!
+</code></pre>
+
+    <div class="mermaid">
+    classDiagram
+        class Animal {
+            &lt;&lt;interface&gt;&gt;
+            +make_sound()
+        }
+        class Lion {
+            +make_sound()
+        }
+        class Bird {
+            +make_sound()
+        }
+        class Monkey {
+            +make_sound()
+        }
+        class Zoo {
+            +__init__()
+            +add_animal(animal)
+            +make_all_sounds()
+        }
+        Animal <|.. Lion
+        Animal <|.. Bird
+        Animal <|.. Monkey
+        Zoo --> Animal
+    </div>
+
+    <h3 id="dependency-injection">Dependency Injection</h3>
+    <p>
+        <strong>Dependency Injection</strong> is a design pattern that implements the Dependency Inversion Principle. It involves supplying an external dependency to a class rather than having the class create or manage its dependencies internally. This approach decouples the class from its dependencies, enhancing modularity and testability.
+    </p>
+    <p>
+        By injecting dependencies, developers can easily swap out implementations, facilitate mocking during tests, and reduce the tight coupling between classes, leading to more maintainable and flexible codebases.
+    </p>
+
+    <h4>Example: Dependency Injection</h4>
+    <pre><code class="language-python"># Python Example of Dependency Injection
+
+from abc import ABC, abstractmethod
+
+class Database(ABC):
+    @abstractmethod
+    def connect(self):
+        pass
+
+class MySQLDatabase(Database):
+    def connect(self):
+        print("Connecting to MySQL database.")
+
+class PostgreSQLDatabase(Database):
+    def connect(self):
+        print("Connecting to PostgreSQL database.")
+
+class DataRepository:
+    def __init__(self, database: Database):
+        self.database = database
+
+    def get_data(self):
+        self.database.connect()
+        print("Fetching data from the database.")
+
+# Usage
+mysql = MySQLDatabase()
+postgres = PostgreSQLDatabase()
+
+repo = DataRepository(mysql)
+repo.get_data()
+# Output:
+# Connecting to MySQL database.
+# Fetching data from the database.
+
+repo = DataRepository(postgres)
+repo.get_data()
+# Output:
+# Connecting to PostgreSQL database.
+# Fetching data from the database.
+</code></pre>
+
+    <div class="mermaid">
+    classDiagram
+        class Database {
+            &lt;&lt;interface&gt;&gt;
+            +connect()
+        }
+        class MySQLDatabase {
+            +connect()
+        }
+        class PostgreSQLDatabase {
+            +connect()
+        }
+        class DataRepository {
+            +__init__(database)
+            +get_data()
+        }
+        Database <|.. MySQLDatabase
+        Database <|.. PostgreSQLDatabase
+        DataRepository --> Database
+    </div>
+
+    <hr>
+
+    <h2 id="design-patterns">Design Patterns in Object-Oriented Programming</h2>
+
+    <h3 id="factory-pattern">Factory Pattern</h3>
+    <p>
+        The <strong>Factory Pattern</strong> is a creational design pattern that provides an interface for creating objects in a superclass but allows subclasses to alter the type of objects that will be created. It abstracts the instantiation process, promoting loose coupling by eliminating the need to bind application-specific classes into the code.
+    </p>
+    <p>
+        This pattern is particularly useful when the exact types of objects to be created are determined by dynamic factors during runtime, or when the creation process involves complex logic.
+    </p>
+    <p>
+        By centralizing object creation, the Factory Pattern enhances code manageability and scalability, making it easier to introduce new types without modifying existing code.
+    </p>
+
+    <h4>Example: Factory Pattern</h4>
+    <pre><code class="language-python"># Python Example of Factory Pattern
+
+from abc import ABC, abstractmethod
+
+class Food(ABC):
+    @abstractmethod
+    def prepare(self):
+        pass
+
+class LionFood(Food):
+    def prepare(self):
+        print("Preparing meat for the lion.")
+
+class ZebraFood(Food):
+    def prepare(self):
+        print("Preparing grass for the zebra.")
+
+class FoodFactory:
+    def create_food(self, animal_type: str) -> Food:
+        if animal_type == "lion":
+            return LionFood()
+        elif animal_type == "zebra":
+            return ZebraFood()
+        else:
+            raise ValueError(f"No food available for {animal_type}")
+
+# Usage
+factory = FoodFactory()
+
+lion_food = factory.create_food("lion")
+lion_food.prepare()  # Output: Preparing meat for the lion.
+
+zebra_food = factory.create_food("zebra")
+zebra_food.prepare()  # Output: Preparing grass for the zebra.
+</code></pre>
+
+    <div class="mermaid">
+    classDiagram
+        class Food {
+            &lt;&lt;interface&gt;&gt;
+            +prepare()
+        }
+        class LionFood {
+            +prepare()
+        }
+        class ZebraFood {
+            +prepare()
+        }
+        class FoodFactory {
+            +create_food(animal_type)
+        }
+        Food <|.. LionFood
+        Food <|.. ZebraFood
+        FoodFactory --> Food
+    </div>
+
+</body>
+</html>
