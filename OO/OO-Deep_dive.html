@@ -217,34 +217,48 @@ shere_khan.roar()
     <p>
         Encapsulation is the concept of bundling data and methods that operate on that data within a single unit or class, while restricting access to some of the object's components. This ensures that the internal representation of an object is hidden from the outside, promoting data integrity and security.
     </p>
-    <pre><code class="language-python">class Robot:
-    def __init__(self, name):
-        self.name = name
-        self.__battery_level = 100  # Private attribute
+    <pre><code class="language-python">
+    class Robot:
+        def __init__(self, name):
+            self.__name = name
+            self.__battery_level = 100  # Private attribute
+        def recharge(self):
+            self.__battery_level = 100
+            print(f"{self.name} is recharging.")
+        def get_battery_level(self):
+            return self.__battery_level
+        
+        # getter and setter
+        def get_name(self):
+            return self.__name
+        
+        def set_name(self, name):
+            # check that length of the robot name is greater than 5 characters
+            if len(name) > 5:
+                self.__name = name
+            else:
+                print("Name must be more than 5 characters")
+    
 
-    def recharge(self):
-        self.__battery_level = 100
-        print(f"{self.name} is recharging.")
-
-    def get_battery_level(self):
-        return self.__battery_level
-
-# Creating an instance of Robot
-r2d2 = Robot("R2-D2")
-r2d2.recharge()
-print(r2d2.get_battery_level())  # Output: 100
-# print(r2d2.__battery_level)     # This would raise an AttributeError
-</code></pre>
+        # Creating an instance of Robot
+        r2d2 = Robot("R2-D2")
+        r2d2.recharge()
+        print(r2d2.get_battery_level())  # Output: 100
+        # print(r2d2.__battery_level)     # This would raise an AttributeError
+        </code></pre>
 
     <h4 id="uml-diagram-2">UML Diagram</h4>
     <div class="mermaid">
         classDiagram
-        class Robot {
-            +String name
-            -int battery_level
-            +recharge()
-            +get_battery_level()
-        }
+            class Robot {
+                __name: String
+                __battery_level: int
+                + Robot(name: String)
+                + recharge()
+                + get_battery_level(): int
+                + get_name(): String
+                + set_name(name: String)
+            }
     </div>
     <p>
         In this example, the <code>Robot</code> class has a private attribute <code>__battery_level</code>, which cannot be accessed directly from outside the class. Instead, methods like <code>recharge</code> and <code>get_battery_level</code> provide controlled access to modify and retrieve the battery level, ensuring the robot's internal state remains consistent.
