@@ -212,57 +212,43 @@ shere_khan.roar()
         <p>
             Here, <code>Mammal</code> is the base class containing common attributes and methods. Both <code>Lion</code> and <code>Tiger</code> inherit from <code>Mammal</code>, gaining access to its attributes and methods while also introducing their unique features.
         </p>
-        
-        <h3 id="encapsulation">Encapsulation</h3>
-        <p>
-            Encapsulation is the principle of bundling data and methods that operate on that data within a single unit, usually a class. It also involves restricting direct access to some of an object's components, which helps in safeguarding the internal state of the object.
-        </p>
-        <p>
-            Think of a high-tech robot: users can interact with it through its interface (buttons and controls) without needing to understand the complex internal mechanisms.
-        </p>
-        
-        <h4>Example: Encapsulation in Python</h4>
-        <pre><code class="language-python">class Robot:
-            def __init__(self, name):
-                self.name = name
-                self.__battery_level = 100  # Private attribute
-                self.__software_version = "1.0.0"  # Private attribute
-        
-            def press_button(self):
-                print(f"{self.name} is performing an action.")
-        
-            def __check_systems(self):
-                print("Checking all systems... Battery level is good.")
-        
-            def perform_action(self):
-                self.__check_systems()
-                self.press_button()
-        
-        # Using the Robot class
-        r2d2 = Robot(name="R2-D2")
-        r2d2.press_button()
-        r2d2.perform_action()
-        # Attempting to access the private attribute or method will raise an error
-        # print(r2d2.__battery_level)  # AttributeError
-        # print(r2d2.__software_version)  # AttributeError
-        # r2d2.__check_systems()       # AttributeError
-        </code></pre>
-        
-        <div class="mermaid">
-            classDiagram
-            class Robot {
-                +string name
-                +press_button()
-                +perform_action()
-                -int __battery_level
-                -string __software_version
-                -__check_systems()
-            }
-        </div>
-        
-        <p>
-            In this example, the <code>Robot</code> class has private attributes <code>__battery_level</code> and <code>__software_version</code>, and a private method <code>__check_systems()</code>. These are not accessible from outside the class, ensuring that the internal workings remain hidden. Users interact with the robot through public methods like <code>press_button()</code> and <code>perform_action()</code>.
-        </p>
+
+    <h4 id="python-example-2">Python Example</h4>
+    <p>
+        Encapsulation is the concept of bundling data and methods that operate on that data within a single unit or class, while restricting access to some of the object's components. This ensures that the internal representation of an object is hidden from the outside, promoting data integrity and security.
+    </p>
+    <pre><code class="language-python">class Robot:
+    def __init__(self, name):
+        self.name = name
+        self.__battery_level = 100  # Private attribute
+
+    def recharge(self):
+        self.__battery_level = 100
+        print(f"{self.name} is recharging.")
+
+    def get_battery_level(self):
+        return self.__battery_level
+
+# Creating an instance of Robot
+r2d2 = Robot("R2-D2")
+r2d2.recharge()
+print(r2d2.get_battery_level())  # Output: 100
+# print(r2d2.__battery_level)     # This would raise an AttributeError
+</code></pre>
+
+    <h4 id="uml-diagram-2">UML Diagram</h4>
+    <div class="mermaid">
+        classDiagram
+        class Robot {
+            +String name
+            -int battery_level
+            +recharge()
+            +get_battery_level()
+        }
+    </div>
+    <p>
+        In this example, the <code>Robot</code> class has a private attribute <code>__battery_level</code>, which cannot be accessed directly from outside the class. Instead, methods like <code>recharge</code> and <code>get_battery_level</code> provide controlled access to modify and retrieve the battery level, ensuring the robot's internal state remains consistent.
+    </p>
         
         <h3 id="polymorphism">Polymorphism</h3>
         <p>
