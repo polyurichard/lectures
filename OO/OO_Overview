@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mastering Object-Oriented Design: A Comprehensive Guide</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.0/themes/prism.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script type="module">
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+      mermaid.initialize({ startOnLoad: true });
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            max-width: 800;
+        }
+        pre {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            overflow: auto;
+        }
+        a {
+            text-decoration: none;
+            color: #1a0dab;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+            border-collapse: collapse;
+            padding: 8px;
+        }
+        table {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1> Object-Oriented Design</h1>
+        <audio controls>
+            <source src="OO DesignV2.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+
+    <h2>Table of Contents</h2>
+    <ul>
+        <li><a href="#introduction">Introduction to Object-Oriented Design</a></li>
+        <li><a href="#building-blocks">Building Blocks: Classes and Objects</a>
+            <ul>
+                <li><a href="#class-object-example">Concrete Example: Digital Zoo</a></li>
+            </ul>
+        </li>
+        <li><a href="#four-pillars">The Four Pillars of Object-Oriented Programming</a></li>
+        <li><a href="#coupling-cohesion">Coupling and Cohesion</a></li>
+        <li><a href="#dependencies">Types of Dependencies</a>
+            <ul>
+                <li><a href="#interface-implementation">Interface Implementation</a></li>
+                <li><a href="#association">Association</a></li>
+                <li><a href="#aggregation">Aggregation</a></li>
+                <li><a href="#composition">Composition</a></li>
+                <li><a href="#inheritance">Inheritance</a></li>
+            </ul>
+        </li>
+        <li><a href="#solid-principles">SOLID Principles</a>
+            <ul>
+                <li><a href="#open-closed-principle">Open/Closed Principle</a></li>
+                <li><a href="#dependency-inversion-principle">Dependency Inversion Principle</a></li>
+                <li><a href="#dependency-injection">Dependency Injection</a></li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2 id="introduction">Introduction to Object-Oriented Design</h2>
+    <p>
+        Object-Oriented Design (OOD) is the foundational methodology behind much of the software we interact with daily. By breaking down complex systems into manageable, reusable components, OOD allows developers to build robust and scalable applications. Think of it like constructing with Lego bricks—each piece serves a purpose and fits seamlessly with others to create intricate structures.
+    </p>
+
+    <h2 id="building-blocks">Building Blocks: Classes and Objects</h2>
+    <p>
+        At the heart of OOD are two fundamental concepts: classes and objects. Understanding these concepts is crucial for grasping the essence of object-oriented programming.
+    </p>
+
+    <h3 id="class-object-example">Concrete Example: Digital Zoo</h3>
+    <p>
+        Imagine you're creating a digital zoo application. Each animal in the zoo, such as lions, tigers, and bears, can be represented by a class. The class serves as a blueprint for creating individual instances of animals, each with its unique characteristics and behaviors.
+    </p>
+
+    <h4>Python Example: Lion Class and Leo Object</h4>
+    <pre><code class="language-python">class Lion:
+    def __init__(self, name, age, color, has_mane):
+        self.name = name
+        self.age = age
+        self.color = color
+        self.has_mane = has_mane
+
+    def roar(self):
+        print(f"{self.name} roars!")
+
+    def hunt(self):
+        print(f"{self.name} is hunting.")
+
+    def nap(self):
+        print(f"{self.name} is napping in the sun.")
+
+# Creating an instance of Lion
+leo = Lion(name="Leo", age=5, color="Golden", has_mane=True)
+
+# Using methods
+leo.roar()
+leo.nap()
+</code></pre>
+
+    <div class="mermaid">
+        classDiagram
+        class Lion {
+            +String name
+            +int age
+            +String color
+            +bool has_mane
+            +roar()
+            +hunt()
+            +nap()
+        }
+    </div>
+
+    <p>
+        In this example, the <code>Lion</code> class defines the attributes <code>name</code>, <code>age</code>, <code>color</code>, and <code>has_mane</code>, as well as methods like <code>roar</code>, <code>hunt</code>, and <code>nap</code>. The object <code>leo</code> is an instance of the <code>Lion</code> class, representing a specific lion with its unique set of attributes.
+    </p>
+
+    <h2 id="four-pillars">The Four Pillars of Object-Oriented Programming</h2>
+    <p>
+        Object-Oriented Programming is built upon four main pillars: Abstraction, Encapsulation, Inheritance, and Polymorphism. These principles guide the design and architecture of software, ensuring it is modular, reusable, and maintainable.
+    </p>
+
+    <h2 id="coupling-cohesion">Coupling and Cohesion</h2>
+    <p>
+        Two critical concepts in OOD are coupling and cohesion. They determine how classes and modules interact and how well they are organized internally.
+    </p>
+
+    <h3>Coupling</h3>
+    <p>
+        Coupling refers to the degree of interdependence between software modules. Low coupling means that modules are largely independent, reducing the risk that changes in one module will affect others.
+    </p>
+
+    <h3>Cohesion</h3>
+    <p>
+        Cohesion measures how closely related the responsibilities of a single module are. High cohesion indicates that the module has a well-defined purpose, making the system easier to understand and maintain.
+    </p>
+
+    <h2 id="dependencies">Types of Dependencies</h2>
+    <p>
+        Dependencies describe how classes and modules rely on each other. Understanding different types of dependencies helps in designing flexible and maintainable systems.
+    </p>
+
+    <h3 id="interface-implementation">Interface Implementation</h3>
+    <p>
+        Interfaces define a contract that classes can implement, promoting flexibility and interchangeability.
+    </p>
+
+    <h4>Python Example: Animal Interface</h4>
+    <pre><code class="language-python">from abc import ABC, abstractmethod
+
+class Animal(ABC):
+    @abstractmethod
+    def roar(self):
+        pass
+
+    @abstractmethod
+    def hunt(self):
+        pass
+
+class Lion(Animal):
+    def roar(self):
+        print("Lion roars!")
+
+    def hunt(self):
+        print("Lion is hunting.")
+</code></pre>
+
+    <div class="mermaid">
+        classDiagram
+        class Animal {
+            &lt;&lt;interface&gt;&gt;
+            +roar()
+            +hunt()
+        }
+        class Lion {
+            +roar()
+            +hunt()
+        }
+        Animal <|.. Lion
+    </div>
+
+    <p>
+        Here, <code>Animal</code> is an interface with methods <code>roar</code> and <code>hunt</code>. The <code>Lion</code> class implements this interface, ensuring it provides concrete implementations of these behaviors.
+    </p>
+
+    <h3 id="association">Association</h3>
+    <p>
+        Association represents a relationship between two independent classes, where one class uses or interacts with another.
+    </p>
+
+    <h4>Python Example: Student and Course</h4>
+    <pre><code class="language-python">class Student:
+    def __init__(self, name):
+        self.name = name
+        self.courses = []
+
+    def enroll(self, course):
+        self.courses.append(course)
+
+class Course:
+    def __init__(self, title):
+        self.title = title
+        self.students = []
+
+    def add_student(self, student):
+        self.students.append(student)
+</code></pre>
+
+    <div class="mermaid">
+        classDiagram
+        class Student {
+            +String name
+            +enroll(course)
+        }
+        class Course {
+            +String title
+            +add_student(student)
+        }
+        Student "0..*" -- "0..*" Course : enrolls
+    </div>
+
+    <p>
+        In this scenario, <code>Student</code> and <code>Course</code> are independently existing entities. A student can enroll in multiple courses, and a course can have multiple students.
+    </p>
+
+    <h3 id="aggregation">Aggregation</h3>
+    <p>
+        Aggregation implies a "has-a" relationship where the contained objects can exist independently of the container.
+    </p>
+
+    <h4>Python Example: Car and Engine</h4>
+    <pre><code class="language-python">class Engine:
+    def __init__(self, horsepower):
+        self.horsepower = horsepower
+
+    def start(self):
+        print("Engine started.")
+
+class Car:
+    def __init__(self, model, engine):
+        self.model = model
+        self.engine = engine
+
+    def start_car(self):
+        self.engine.start()
+        print(f"{self.model} is starting.")
+</code></pre>
+
+    <div class="mermaid">
+        classDiagram
+        class Engine {
+            +int horsepower
+            +start()
+        }
+        class Car {
+            +String model
+            +start_car()
+        }
+        Car o-- Engine : has
+    </div>
+
+    <p>
+        Here, a <code>Car</code> has an <code>Engine</code>. The engine can exist independently of the car, allowing it to be removed or replaced without affecting the car's existence.
+    </p>
+
+    <h3 id="composition">Composition</h3>
+    <p>
+        Composition is a stronger form of aggregation where the contained objects cannot exist independently of the container.
+    </p>
+
+    <h4>Python Example: House and Rooms</h4>
+    <pre><code class="language-python">class Room:
+    def __init__(self, name):
+        self.name = name
+
+class House:
+    def __init__(self):
+        self.rooms = []
+
+    def add_room(self, room_name):
+        room = Room(room_name)
+        self.rooms.append(room)
+</code></pre>
+
+    <div class="mermaid">
+        classDiagram
+        class Room {
+            +String name
+        }
+        class House {
+            +add_room(room_name)
+        }
+        House *-- Room : contains
+    </div>
+
+    <p>
+        In this example, a <code>House</code> is composed of <code>Room</code> objects. Rooms cannot exist independently without being part of a house, establishing a lifecycle dependency.
+    </p>
+
+    <h3 id="inheritance">Inheritance</h3>
+    <p>
+        Inheritance allows a class to inherit attributes and methods from another class, promoting code reuse and hierarchical relationships.
+    </p>
+
+    <h4>Python Example: Animal and Lion</h4>
+    <pre><code class="language-python">class Animal:
+    def __init__(self, name):
+        self.name = name
+
+    def move(self):
+        print(f"{self.name} is moving.")
+
+class Lion(Animal):
+    def roar(self):
+        print(f"{self.name} roars!")
+</code></pre>
+
+    <div class="mermaid">
+        classDiagram
+        class Animal {
+            +String name
+            +move()
+        }
+        class Lion {
+            +roar()
+        }
+        Animal <|-- Lion
+    </div>
+
+    <p>
+        The <code>Lion</code> class inherits from the <code>Animal</code> class, gaining access to the <code>name</code> attribute and the <code>move</code> method while adding its own specific behavior, <code>roar</code>.
+    </p>
+
+    <h2 id="solid-principles">SOLID Principles</h2>
+    <p>
+        The SOLID principles are a set of guidelines that enhance object-oriented design, making software more understandable, flexible, and maintainable. The principles emphasized here are the Open/Closed Principle and the Dependency Inversion Principle.
+    </p>
+
+    <h3 id="open-closed-principle">Open/Closed Principle</h3>
+    <p>
+        The Open/Closed Principle states that software entities should be open for extension but closed for modification. This means you can add new functionality without altering existing code, reducing the risk of introducing bugs.
+    </p>
+
+    <h4>Python Example: Extending Functionality without Modifying Existing Code</h4>
+    <pre><code class="language-python">class PaymentProcessor:
+    def process_payment(self, payment):
+        # Original payment processing logic
+        print("Processing payment")
+
+class SecurePaymentProcessor(PaymentProcessor):
+    def process_payment(self, payment):
+        # Extended payment processing with security features
+        super().process_payment(payment)
+        print("Adding security measures")
+</code></pre>
+
+    <div class="mermaid">
+        classDiagram
+        class PaymentProcessor {
+            +process_payment(payment)
+        }
+        class SecurePaymentProcessor {
+            +process_payment(payment)
+        }
+        PaymentProcessor <|-- SecurePaymentProcessor
+    </div>
+
+    <p>
+        In this example, <code>SecurePaymentProcessor</code> extends <code>PaymentProcessor</code> by adding security features without modifying the original <code>PaymentProcessor</code> class, adhering to the Open/Closed Principle.
+    </p>
+
+    <h3 id="dependency-inversion-principle">Dependency Inversion Principle</h3>
+    <p>
+        The Dependency Inversion Principle advocates that high-level modules should not depend on low-level modules. Instead, both should depend on abstractions, such as interfaces or abstract classes. This decouples the system components, making them more modular and easier to manage.
+    </p>
+
+    <h4>Python Example: High-Level and Low-Level Modules with Abstraction</h4>
+    <pre><code class="language-python">from abc import ABC, abstractmethod
+
+class IDataStore(ABC):
+    @abstractmethod
+    def save(self, data):
+        pass
+
+class DatabaseStore(IDataStore):
+    def save(self, data):
+        print("Saving data to the database.")
+
+class FileStore(IDataStore):
+    def save(self, data):
+        print("Saving data to a file.")
+
+class DataManager:
+    def __init__(self, store: IDataStore):
+        self.store = store
+
+    def save_data(self, data):
+        self.store.save(data)
+</code></pre>
+
+    <div class="mermaid">
+        classDiagram
+        class IDataStore {
+            &lt;&lt;interface&gt;&gt;
+            +save(data)
+        }
+        class DatabaseStore {
+            +save(data)
+        }
+        class FileStore {
+            +save(data)
+        }
+        class DataManager {
+            +save_data(data)
+        }
+        IDataStore <|.. DatabaseStore
+        IDataStore <|.. FileStore
+        DataManager --> IDataStore : uses
+    </div>
+
+    <p>
+        The <code>DataManager</code> class depends on the <code>IDataStore</code> interface rather than concrete implementations. This allows for greater flexibility, as <code>DatabaseStore</code> or <code>FileStore</code> can be injected without altering the <code>DataManager</code> class.
+    </p>
+
+    <h3 id="dependency-injection">Dependency Injection</h3>
+    <p>
+        Dependency Injection is a technique where an object receives its dependencies from an external source rather than creating them itself. This approach promotes loose coupling and enhances testability.
+    </p>
+
+    <h4>Python Example: Injecting Dependencies into DataManager</h4>
+    <pre><code class="language-python"># Reusing previous classes
+
+# Injecting DatabaseStore
+db_store = DatabaseStore()
+data_manager_db = DataManager(store=db_store)
+data_manager_db.save_data("Database Record")
+
+# Injecting FileStore
+file_store = FileStore()
+data_manager_file = DataManager(store=file_store)
+data_manager_file.save_data("File Record")
+</code></pre>
+
+    <div class="mermaid">
+        classDiagram
+        class IDataStore {
+            &lt;&lt;interface&gt;&gt;
+            +save(data)
+        }
+        class DatabaseStore {
+            +save(data)
+        }
+        class FileStore {
+            +save(data)
+        }
+        class DataManager {
+            +save_data(data)
+        }
+        IDataStore <|.. DatabaseStore
+        IDataStore <|.. FileStore
+        DataManager --> IDataStore : injected with
+    </div>
+
+    <p>
+        Here, <code>DataManager</code> is provided with either a <code>DatabaseStore</code> or <code>FileStore</code> instance externally, rather than creating them internally. This design makes <code>DataManager</code> flexible and easier to test with different storage mechanisms.
+    </p>
+
+    <h2>Conclusion</h2>
+    <p>
+        Object-Oriented Design is a powerful paradigm that, when understood and applied correctly, can lead to the creation of elegant, maintainable, and scalable software systems. By leveraging classes, objects, and principles like SOLID, developers can build complex applications that are both robust and adaptable. Whether you're organizing a digital zoo or designing a flight simulator, OOD provides the tools and methodologies to turn your ideas into reality with precision and efficiency.
+    </p>
+
+</body>
+</html>
