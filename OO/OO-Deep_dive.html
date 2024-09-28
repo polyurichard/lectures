@@ -262,7 +262,7 @@ shere_khan.roar()
         
         <p>
             In this example, the <code>Robot</code> class has private attributes <code>__battery_level</code> and <code>__software_version</code>, and a private method <code>__check_systems()</code>. These are not accessible from outside the class, ensuring that the internal workings remain hidden. Users interact with the robot through public methods like <code>press_button()</code> and <code>perform_action()</code>.
-        </p>>
+        </p>
         
         <h3 id="polymorphism">Polymorphism</h3>
         <p>
@@ -307,6 +307,7 @@ animal_sound(george)    # Outputs: Monkey howls!
         <div class="mermaid">
             classDiagram
             class Animal {
+                &lt; &lt;  Abstract &gt;&gt;
                 +make_sound()
             }
             class Lion {
