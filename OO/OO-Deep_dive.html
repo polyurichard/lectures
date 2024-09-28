@@ -42,12 +42,11 @@
 </head>
 <body>
     <div class="container">
-        <h1>Mastering Object-Oriented Programming: A Comprehensive Guide</h1>
-
-    <audio controls>
-        <source src="OO DesignV2.mp3" type="audio/mpeg">
-        Your browser does not support the audio element.
-    </audio>
+        <h1>Object-Oriented Deep Dive</h1>
+        <audio controls>
+            <source src="OO DesignV2.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
         
         <h2>Table of Contents</h2>
         <ul>
@@ -223,28 +222,30 @@ shere_khan.roar()
         
         <h4>Example: Encapsulation in Python</h4>
         <pre><code class="language-python">class Robot:
-    def __init__(self, name):
-        self.name = name
-        self.__internal_code = "XYZ123"  # Private attribute
-
-    def press_button(self):
-        print(f"{self.name} is performing an action.")
-
-    def __secret_method(self):
-        print("This is a secret method.")
-
-    def perform_action(self):
-        self.__secret_method()
-        self.press_button()
-
-# Using the Robot class
-r2d2 = Robot(name="R2-D2")
-r2d2.press_button()
-r2d2.perform_action()
-# Attempting to access the private attribute or method will raise an error
-# print(r2d2.__internal_code)  # AttributeError
-# r2d2.__secret_method()       # AttributeError
-</code></pre>
+            def __init__(self, name):
+                self.name = name
+                self.__battery_level = 100  # Private attribute
+                self.__software_version = "1.0.0"  # Private attribute
+        
+            def press_button(self):
+                print(f"{self.name} is performing an action.")
+        
+            def __check_systems(self):
+                print("Checking all systems... Battery level is good.")
+        
+            def perform_action(self):
+                self.__check_systems()
+                self.press_button()
+        
+        # Using the Robot class
+        r2d2 = Robot(name="R2-D2")
+        r2d2.press_button()
+        r2d2.perform_action()
+        # Attempting to access the private attribute or method will raise an error
+        # print(r2d2.__battery_level)  # AttributeError
+        # print(r2d2.__software_version)  # AttributeError
+        # r2d2.__check_systems()       # AttributeError
+        </code></pre>
         
         <div class="mermaid">
             classDiagram
@@ -252,14 +253,15 @@ r2d2.perform_action()
                 +string name
                 +press_button()
                 +perform_action()
-                -string __internal_code
-                -__secret_method()
+                -int __battery_level
+                -string __software_version
+                -__check_systems()
             }
         </div>
         
         <p>
-            In this example, the <code>Robot</code> class has a private attribute <code>__internal_code</code> and a private method <code>__secret_method()</code>. These are not accessible from outside the class, ensuring that the internal workings remain hidden. Users interact with the robot through public methods like <code>press_button()</code> and <code>perform_action()</code>.
-        </p>
+            In this example, the <code>Robot</code> class has private attributes <code>__battery_level</code> and <code>__software_version</code>, and a private method <code>__check_systems()</code>. These are not accessible from outside the class, ensuring that the internal workings remain hidden. Users interact with the robot through public methods like <code>press_button()</code> and <code>perform_action()</code>.
+        </p>>
         
         <h3 id="polymorphism">Polymorphism</h3>
         <p>
@@ -603,4 +605,3 @@ print(zebra_food.name) # Outputs: Grass
     </div>
 </body>
 </html>
-
