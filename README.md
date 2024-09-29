@@ -1,6 +1,9 @@
-# Lectures
+# Lectures with podcast
+- https://polyurichard.github.io/lectures/OO/OOv1.html
+- https://polyurichard.github.io/lectures/OO/OOv2.html
 
-1. [OO Design](https://polyurichard.github.io/lectures/OOD/oo.html)
+# Lectures
+1. [OO Design (Java)](https://polyurichard.github.io/lectures/OOD/oo.html)
 2. [Java Spring](https://polyurichard.github.io/lectures/Spring/spring.html)
 
 # Exercises
