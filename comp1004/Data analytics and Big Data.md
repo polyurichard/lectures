@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/cdbb20d1-41d4-48f7-b3e7-115606f795fb)# Big data amd data analytics
+# Big data amd Data Analytics
 
   <audio controls>
       <source src="BigDataV4.mp3" type="audio/mpeg">
