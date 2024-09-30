@@ -82,7 +82,7 @@ Variety denotes the different forms of data being collected. Unlike the neatly o
 
 - **Structured Data**: This is the tidy, organized data that fits neatly into tables and databases, much like color-coded spreadsheets. Examples include sales figures, customer information, and transactional data.
   
-- **Semi-Structured Data**: Think of your emails or social media posts. They have some organizational structure (like metadata or tags) but are more free-form and flexible.
+- **Semi-Structured Data**: Non-tabular structure but conform to some level of structure  e.g. XML, JSON
   
 - **Unstructured Data**: This is the messy, chaotic data like images, videos, audio files, and extensive text documents. Imagine a digital junk drawer filled with miscellaneous items, each requiring different methods to analyze and interpret effectively. It’s estimated that 90% of the big data we generate is unstructured!
 
@@ -132,7 +132,7 @@ To truly appreciate the power of data analytics, let’s explore some real-world
 
 ### Project Greenlight: Smarter Traffic Management
 
-![image](https://github.com/user-attachments/assets/7d6a1c13-4b60-4766-85b8-48bc76cf9a14)
+![image](https://github.com/user-attachments/assets/d9a08b65-9230-42c0-b010-0e4d265a51d4)
 
 One compelling example is Project Greenlight, implemented in Detroit. This program utilizes cameras and sensors installed at intersections and traffic lights to collect vast amounts of data on traffic patterns. The data includes information on vehicle flow, speed, and congestion points. 
 
@@ -140,6 +140,7 @@ By analyzing this data, Project Greenlight adjusts the timing of traffic lights 
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/T6c_NdpbUvE?si=ywfiRxGC9C1Z6TgA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
+Reference: https://blog.google/outreach-initiatives/sustainability/google-ai-project-greenlight/
 
 ### Personalized Recommendations: The Netflix Example
 
