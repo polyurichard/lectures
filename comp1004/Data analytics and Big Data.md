@@ -1,4 +1,4 @@
-# Big data amd data analytics
+![image](https://github.com/user-attachments/assets/cdbb20d1-41d4-48f7-b3e7-115606f795fb)# Big data amd data analytics
 
   <audio controls>
       <source src="BigDataV4.mp3" type="audio/mpeg">
@@ -84,7 +84,9 @@ Variety denotes the different forms of data being collected. Unlike the neatly o
   
 - **Semi-Structured Data**: Think of your emails or social media posts. They have some organizational structure (like metadata or tags) but are more free-form and flexible.
   
-- **Unstructured Data**: This is the messy, chaotic data like images, videos, audio files, and extensive text documents. Imagine a digital junk drawer filled with miscellaneous items, each requiring different methods to analyze and interpret effectively.
+- **Unstructured Data**: This is the messy, chaotic data like images, videos, audio files, and extensive text documents. Imagine a digital junk drawer filled with miscellaneous items, each requiring different methods to analyze and interpret effectively. It’s estimated that 90% of the big data we generate is unstructured!
+
+
 
 ### Veracity: The Trustworthiness of Data
 
@@ -105,6 +107,8 @@ At the heart of data analytics are algorithms and statistical models. Think of a
 ## The Four Types of Data Analytics
 
 Data analytics can be categorized into four main types: descriptive, diagnostic, predictive, and prescriptive. Each type serves a unique purpose in the data analysis process.
+
+![image](https://github.com/user-attachments/assets/71b6101b-7965-46dc-99b6-ebf8199ab3da)
 
 ### Descriptive Analytics: Understanding the Past
 
@@ -128,9 +132,14 @@ To truly appreciate the power of data analytics, let’s explore some real-world
 
 ### Project Greenlight: Smarter Traffic Management
 
+![image](https://github.com/user-attachments/assets/7d6a1c13-4b60-4766-85b8-48bc76cf9a14)
+
 One compelling example is Project Greenlight, implemented in Detroit. This program utilizes cameras and sensors installed at intersections and traffic lights to collect vast amounts of data on traffic patterns. The data includes information on vehicle flow, speed, and congestion points. 
 
 By analyzing this data, Project Greenlight adjusts the timing of traffic lights in real-time to optimize traffic flow and reduce congestion. The result? Fewer cars idling at red lights, leading to a significant drop in emissions—some areas have seen reductions of nearly 20%. This intelligent traffic management not only eases commutes but also contributes to a greener, more sustainable urban environment.
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/T6c_NdpbUvE?si=ywfiRxGC9C1Z6TgA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
 
 ### Personalized Recommendations: The Netflix Example
 
