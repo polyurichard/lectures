@@ -140,7 +140,7 @@ By analyzing this data, Project Greenlight adjusts the timing of traffic lights 
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/T6c_NdpbUvE?si=ywfiRxGC9C1Z6TgA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
-[Reference](https://blog.google/outreach-initiatives/sustainability/google-ai-project-greenlight)
+<a href="https://blog.google/outreach-initiatives/sustainability/google-ai-project-greenlight" target="_blank">Read about Project Green Light</a>
 
 ### Personalized Recommendations: The Netflix Example
 
