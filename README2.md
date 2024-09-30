@@ -1,6 +1,6 @@
 # Lectures with podcast
-- https://polyurichard.github.io/lectures/OO/OOv1.html
-- https://polyurichard.github.io/lectures/OO/OOv2.html
+- [OOV1](https://polyurichard.github.io/lectures/OO/OOv1.html)
+- [OOV2](https://polyurichard.github.io/lectures/OO/OOv2.html)
 
 # Lectures
 1. [OO Design (Java)](https://polyurichard.github.io/lectures/OOD/oo.html)
