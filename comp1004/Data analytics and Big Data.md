@@ -46,7 +46,7 @@
 
 ## Introduction
 
-Ever had that eerie feeling of being watched online? Maybe you ordered a pizza, and suddenly, your social media feeds are flooded with ads for pepperoni and extra cheese. It feels almost magical, but there's no sorcery involved—it's the power of big data in action. Every click, scroll, and purchase contributes to the vast ocean of data that shapes our digital experiences. This guide will take you on a journey through the expansive world of big data, exploring its origins, components, and the transformative power it holds in various sectors.
+Have you ever experienced that weird feeling of being watched online? Maybe you ordered a pizza, and suddenly your social media feeds are flooded with ads for pepperoni and extra cheese. It feels almost magical, but there’s no sorcery involved—it’s the power of big data in action. Every click, scroll, and purchase contributes to the vast ocean of data that shapes our digital experiences. This guide will take you on a journey through the expansive world of big data, exploring its origins, components, and the transformative power it holds across various sectors.
 
 ## Understanding Big Data
 
