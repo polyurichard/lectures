@@ -108,7 +108,7 @@ At the heart of data analytics are algorithms and statistical models. Think of a
 
 Data analytics can be categorized into four main types: descriptive, diagnostic, predictive, and prescriptive. Each type serves a unique purpose in the data analysis process.
 
-![image](https://github.com/user-attachments/assets/71b6101b-7965-46dc-99b6-ebf8199ab3da)
+<img src="https://github.com/user-attachments/assets/71b6101b-7965-46dc-99b6-ebf8199ab3da" alt="image" style="width: 50%;">
 
 ### Descriptive Analytics: Understanding the Past
 
@@ -131,8 +131,8 @@ Prescriptive analytics takes predictive analytics a step further by not only for
 To truly appreciate the power of data analytics, let’s explore some real-world applications that illustrate its transformative impact across various sectors.
 
 ### Project Greenlight: Smarter Traffic Management
+<img src="https://github.com/user-attachments/assets/d9a08b65-9230-42c0-b010-0e4d265a51d4" alt="image" style="width: 50%;">
 
-![image](https://github.com/user-attachments/assets/d9a08b65-9230-42c0-b010-0e4d265a51d4)
 
 One compelling example is Project Greenlight, implemented in Detroit. This program utilizes cameras and sensors installed at intersections and traffic lights to collect vast amounts of data on traffic patterns. The data includes information on vehicle flow, speed, and congestion points. 
 
@@ -140,7 +140,7 @@ By analyzing this data, Project Greenlight adjusts the timing of traffic lights 
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/T6c_NdpbUvE?si=ywfiRxGC9C1Z6TgA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
-Reference: https://blog.google/outreach-initiatives/sustainability/google-ai-project-greenlight/
+[Reference](https://blog.google/outreach-initiatives/sustainability/google-ai-project-greenlight)
 
 ### Personalized Recommendations: The Netflix Example
 
