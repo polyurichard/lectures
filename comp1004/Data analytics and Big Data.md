@@ -1,4 +1,4 @@
-# Big data amd Data Analytics
+# Big data and Data Analytics
 
   <audio controls>
       <source src="BigDataV4.mp3" type="audio/mpeg">
