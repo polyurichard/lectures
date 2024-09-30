@@ -82,7 +82,7 @@ Variety denotes the different forms of data being collected. Unlike the neatly o
 
 - **Structured Data**: This is the tidy, organized data that fits neatly into tables and databases, much like color-coded spreadsheets. Examples include sales figures, customer information, and transactional data.
   
-- **Semi-Structured Data**: Non-tabular structure but conform to some level of structure  e.g. XML, JSON
+- **Semi-Structured Data**: Non-tabular structure but conform to some level of structure  e.g. XML, JSON documents.
   
 - **Unstructured Data**: This is the messy, chaotic data like images, videos, audio files, and extensive text documents. Imagine a digital junk drawer filled with miscellaneous items, each requiring different methods to analyze and interpret effectively. It’s estimated that 90% of the big data we generate is unstructured!
 
