@@ -8,7 +8,7 @@
 
 Welcome to our ultimate guide on Git and GitHub! Whether you're a seasoned developer or just venturing into the world of coding, understanding these tools is essential. This comprehensive article will walk you through everything discussed in our recent podcast, elaborating on each concept with detailed explanations, motivating examples, and practical analogies to ensure you grasp the full power of Git and GitHub.
 
-## Table of Contents## Table of Contents
+## Table of Contents
 
 1. [Introduction](#introduction)
 2. [The Importance of Version Control](#the-importance-of-version-control)
