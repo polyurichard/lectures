@@ -1,5 +1,10 @@
 # Mastering Git and GitHub: The Ultimate Deep Dive for Developers
 
+  <audio controls>
+      <source src="OO DesignV2.mp3" type="audio/mpeg">
+      Your browser does not support the audio element.
+  </audio>
+
 Welcome to our comprehensive guide on Git and GitHub! Whether you're a seasoned developer or just starting your coding journey, understanding these tools is essential for effective version control and collaboration. In this blog post, we'll explore the ins and outs of Git and GitHub, unraveling their functionalities, benefits, and best practices. Let's embark on this deep dive together!
 
 ## Table of Contents
