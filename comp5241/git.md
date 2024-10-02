@@ -105,7 +105,7 @@ To harness the full power of Git, mastering its fundamental commands is crucial.
 
 Before you can start tracking your project with Git, you need to initialize a repository:
 
-```bash
+```
 git init
 ```
 
@@ -117,7 +117,7 @@ This command creates a new Git repository in your current directory, setting up 
 
 Cloning allows you to create a local copy of a remote repository. This is especially useful when collaborating on projects hosted on GitHub.
 
-```bash
+```
 git clone https://github.com/username/repository.git
 ```
 
@@ -129,19 +129,19 @@ Git operates with a staging area, where you prepare changes before committing th
 
 - **Staging Changes**:
 
-  ```bash
+  ```
   git add filename
   ```
 
   or to stage all changes:
 
-  ```bash
+  ```
   git add .
   ```
 
 - **Committing Changes**:
 
-  ```bash
+  ```
   git commit -m "Your commit message here"
   ```
 
@@ -151,13 +151,13 @@ Git operates with a staging area, where you prepare changes before committing th
 
 - **Pushing Changes**: Upload your local commits to a remote repository (e.g., GitHub).
 
-  ```bash
+  ```
   git push origin branch-name
   ```
 
 - **Pulling Changes**: Fetch and integrate changes from a remote repository into your local repository.
 
-  ```bash
+  ```
   git pull origin branch-name
   ```
 
@@ -201,7 +201,7 @@ A merge conflict occurs when Git cannot automatically reconcile differences betw
 2. **Edit the Affected Files**: Manually resolve the differences by choosing which changes to keep.
 3. **Mark as Resolved and Commit**:
 
-   ```bash
+   ```
    git add filename
    git commit -m "Resolved merge conflict"
    ```
