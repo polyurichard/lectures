@@ -1,4 +1,4 @@
-# The Comprehensive Guide to Machine Learning: From Early AI to Modern Innovations
+#  Machine Learning
 
   <audio controls>
       <source src="ml.mp3" type="audio/mpeg">
