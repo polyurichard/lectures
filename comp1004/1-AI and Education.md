@@ -1,7 +1,7 @@
 # AI and Education
 
   <audio controls>
-      <source src="AI and educationV3.mp3" type="audio/mpeg">
+      <source src="AI and EducationV3.mp3" type="audio/mpeg">
       Your browser does not support the audio element.
   </audio>
   
