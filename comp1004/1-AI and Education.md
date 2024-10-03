@@ -126,7 +126,7 @@ While AI in healthcare offers immense benefits, it also raises ethical concerns.
 
 #### Current Implementations and Milestones
 
-Self-driving cars are at the forefront of AI's impact on transportation. Companies like BYD are already deploying driverless taxis in China through their Apollo Go service, accumulating millions of miles navigating bustling city streets without human intervention. These milestones mark significant progress towards fully autonomous transportation systems, promising increased safety, reduced traffic congestion, and enhanced mobility for all.
+Self-driving cars are at the forefront of AI's impact on transportation. Companies like Baidu are already deploying driverless taxis in China through their Apollo Go service, accumulating millions of miles navigating bustling city streets without human intervention. These milestones mark significant progress towards fully autonomous transportation systems, promising increased safety, reduced traffic congestion, and enhanced mobility for all.
 
 #### Potential Impact on the Workforce
 
