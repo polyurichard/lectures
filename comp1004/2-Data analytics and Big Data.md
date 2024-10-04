@@ -142,9 +142,11 @@ By analyzing this data, Project Greenlight adjusts the timing of traffic lights 
 
 <a href="https://blog.google/outreach-initiatives/sustainability/google-ai-project-greenlight" target="_blank">Read about Project Green Light</a>
 
-### Personalized Recommendations: The Netflix Example
+### The Netflix Example
 
 Another prime example is Netflix’s recommendation system. By analyzing your viewing history, ratings, and even the time you watch, Netflix uses predictive analytics to suggest shows and movies tailored to your preferences. This not only enhances user experience by making personalized content accessible but also drives viewer engagement and retention. The algorithm behind these recommendations is a sophisticated blend of historical data analysis and machine learning models that continually refine the suggestions based on new data.
+
+Netflix goes beyond just recommending content; it also personalizes the artwork displayed for each show and movie based on a user’s viewing history. If you frequently watch comedies, you might notice that the artworks prominently feature the lead actors known for their comedic roles. Conversely, if you’re a fan of action-packed scenes, the artwork might highlight more dynamic, high-energy visuals. This subtle personalization enhances the user experience by making the content library feel more tailored and relevant to each individual. x
 
 ### Grocery Shopping: Personalized Deals and Recommendations
 
@@ -184,6 +186,3 @@ However, with this immense power comes the responsibility to manage and utilize 
 
 The future of big data holds incredible potential, promising innovations that can enhance efficiency, drive sustainability, and improve the quality of life globally. As we move forward, embracing big data with a balanced approach—leveraging its benefits while mitigating its risks—will be key to shaping a future where data serves as a catalyst for positive change.
 
----
-
-*Whether you're a business leader, a tech enthusiast, or simply a curious mind, understanding big data equips you with the knowledge to navigate and thrive in our increasingly data-driven world. Keep exploring, keep questioning, and stay informed, because the story of big data is still unfolding, and we're all part of it.*
