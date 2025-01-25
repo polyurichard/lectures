@@ -20,7 +20,7 @@ A Github page is a static website hosted on Github. In this lab, you will create
 
    Example:
    
-```text
+```
 
 ![Github Page](https://github.com/[your Github ID])
 ![An image]([your_image_filename].jpg)
