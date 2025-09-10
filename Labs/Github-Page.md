@@ -1,9 +1,8 @@
 ---
 layout: default
 title: GitHub Page Exercise
-theme: minima
+theme: jekyll-theme-cayman
 ---
-
 # Exercise: GitHub Page
 
 A Github page is a static website hosted on Github. In this lab, you will create a Github page for yourself. You can use this page to introduce yourself to the world. 
