@@ -1,3 +1,8 @@
+---
+layout: default
+title: GitHub Page Exercise
+theme: minima
+---
 
 # Exercise: GitHub Page
 
