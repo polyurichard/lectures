@@ -1,1 +1,9 @@
+title: Lectures
+theme: jekyll-theme-cayman
+defaults:
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: default
 theme: jekyll-theme-cayman
