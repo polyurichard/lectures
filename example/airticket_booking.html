@@ -1,0 +1,3444 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkyWings Airlines - Book Your Flight</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://kit.fontawesome.com/YOUR_KIT_ID.js" crossorigin="anonymous"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'cathay-green': '#006564',
+                        'cathay-light-green': '#00A79D',
+                        'cathay-gold': '#D4AF37'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .bg-cathay-gradient {
+            background: linear-gradient(135deg, #006564 0%, #00A79D 100%);
+        }
+        .seat {
+            width: 28px;
+            height: 28px;
+            margin: 2px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .seat.available { background-color: #e5e7eb; border: 1px solid #d1d5db; }
+        .seat.selected { background-color: #006564; border: 1px solid #006564; }
+        .seat.occupied { background-color: #ef4444; border: 1px solid #dc2626; cursor: not-allowed; }
+        .seat.premium { background-color: #d4af37; border: 1px solid #b8860b; }
+    </style>
+</head>
+<body class="h-full bg-gray-50 dark:bg-gray-900">
+    <!-- Dark mode setup -->
+    <script>
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+        }
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+            if (event.matches) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        });
+    </script>
+
+    <!-- Header -->
+    <header class="bg-cathay-gradient text-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <h1 class="text-xl font-bold">SkyWings Airlines</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <select id="languageSelect" class="bg-transparent border border-white/30 rounded px-3 py-1 text-sm">
+                        <option value="en" class="text-black">English</option>
+                        <option value="zh" class="text-black">中文</option>
+                        <option value="ja" class="text-black">日本語</option>
+                    </select>
+                    <!-- User Menu when logged in -->
+                    <div id="userMenu" class="hidden relative">
+                        <button id="userMenuBtn" class="flex items-center space-x-2 bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                            <span id="userName">John Doe</span>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div id="userDropdown" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg py-2 z-50">
+                            <button onclick="showMyBookings()" class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">My Bookings</button>
+                            <button onclick="logout()" class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">Logout</button>
+                        </div>
+                    </div>
+                    <!-- Login button when not logged in -->
+                    <button id="loginBtn" class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                        Login
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <!-- Step Indicator -->
+        <div class="mb-8">
+            <div class="flex items-center justify-center">
+                <div class="flex items-center space-x-4">
+                    <div id="step1" class="flex items-center">
+                        <div class="w-8 h-8 bg-cathay-green text-white rounded-full flex items-center justify-center text-sm font-bold">1</div>
+                        <span class="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300">Search</span>
+                    </div>
+                    <div class="w-8 h-0.5 bg-gray-300"></div>
+                    <div id="step2" class="flex items-center">
+                        <div class="w-8 h-8 bg-gray-300 text-gray-600 rounded-full flex items-center justify-center text-sm font-bold">2</div>
+                        <span class="ml-2 text-sm font-medium text-gray-500">Select</span>
+                    </div>
+                    <div class="w-8 h-0.5 bg-gray-300"></div>
+                    <div id="step3" class="flex items-center">
+                        <div class="w-8 h-8 bg-gray-300 text-gray-600 rounded-full flex items-center justify-center text-sm font-bold">3</div>
+                        <span class="ml-2 text-sm font-medium text-gray-500">Details</span>
+                    </div>
+                    <div class="w-8 h-0.5 bg-gray-300"></div>
+                    <div id="step4" class="flex items-center">
+                        <div class="w-8 h-8 bg-gray-300 text-gray-600 rounded-full flex items-center justify-center text-sm font-bold">4</div>
+                        <span class="ml-2 text-sm font-medium text-gray-500">Payment</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 1: Flight Search -->
+        <div id="searchStep" class="space-y-6">
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Book Your Flight</h2>
+                
+                <!-- Trip Type -->
+                <div class="mb-6">
+                    <div class="flex space-x-4">
+                        <label class="flex items-center">
+                            <input type="radio" name="tripType" value="roundtrip" checked class="mr-2">
+                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Round-trip</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="radio" name="tripType" value="oneway" class="mr-2">
+                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">One-way</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="radio" name="tripType" value="multicity" class="mr-2">
+                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Multi-city</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Flight Search Form -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">From</label>
+                        <select id="departure" class="w-full px-4 py-3 text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-cathay-green focus:border-transparent dark:bg-gray-700 dark:text-white">
+                            <option value="">Select departure city</option>
+                            <option value="Hong Kong (HKG)" selected>Hong Kong (HKG)</option>
+                            <option value="Tokyo (NRT)">Tokyo (NRT)</option>
+                            <option value="Singapore (SIN)">Singapore (SIN)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">To</label>
+                        <select id="destination" class="w-full px-4 py-3 text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-cathay-green focus:border-transparent dark:bg-gray-700 dark:text-white">
+                            <option value="">Select destination city</option>
+                            <option value="Los Angeles (LAX)" selected>Los Angeles (LAX)</option>
+                            <option value="New York (JFK)">New York (JFK)</option>
+                            <option value="London (LHR)">London (LHR)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Departure Date</label>
+                        <input type="date" id="departureDate"
+                               class="w-full px-4 py-3 text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-cathay-green focus:border-transparent dark:bg-gray-700 dark:text-white">
+                    </div>
+                    <div id="returnDateDiv">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Return Date</label>
+                        <input type="date" id="returnDate"
+                               class="w-full px-4 py-3 text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-cathay-green focus:border-transparent dark:bg-gray-700 dark:text-white">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Passengers</label>
+                        <select id="passengers" class="w-full px-4 py-3 text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-cathay-green focus:border-transparent dark:bg-gray-700 dark:text-white">
+                            <option value="1">1 Passenger</option>
+                            <option value="2">2 Passengers</option>
+                            <option value="3">3 Passengers</option>
+                            <option value="4">4 Passengers</option>
+                            <option value="5">5+ Passengers</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Cabin Class</label>
+                        <select id="cabinClass" class="w-full px-4 py-3 text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-cathay-green focus:border-transparent dark:bg-gray-700 dark:text-white">
+                            <option value="economy">Economy</option>
+                            <option value="premium">Premium Economy</option>
+                            <option value="business">Business</option>
+                            <option value="first">First</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Currency</label>
+                        <select id="currency" class="w-full px-4 py-3 text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-cathay-green focus:border-transparent dark:bg-gray-700 dark:text-white">
+                            <option value="HKD" selected>HKD</option>
+                            <option value="USD">USD</option>
+                            <option value="EUR">EUR</option>
+                            <option value="GBP">GBP</option>
+                            <option value="CNY">CNY</option>
+                            <option value="JPY">JPY</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex space-x-4">
+                    <button id="searchFlights" class="flex-1 bg-cathay-green hover:bg-cathay-light-green text-white font-bold py-4 px-6 rounded-lg transition-colors">
+                        Search Flights
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 2: Flight Results -->
+        <div id="resultsStep" class="hidden space-y-6">
+            <!-- Filters -->
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Filter & Sort</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Stops</label>
+                        <select id="stopsFilter" class="w-full px-3 py-2 text-base border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white">
+                            <option value="">All flights</option>
+                            <option value="nonstop">Non-stop only</option>
+                            <option value="1stop">1 stop max</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Price Range</label>
+                        <select id="priceFilter" class="w-full px-3 py-2 text-base border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white">
+                            <option value="">Any price</option>
+                            <option value="low">Under $500</option>
+                            <option value="medium">$500 - $1000</option>
+                            <option value="high">Over $1000</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Departure Time</label>
+                        <select id="timeFilter" class="w-full px-3 py-2 text-base border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white">
+                            <option value="">Any time</option>
+                            <option value="morning">Morning (6AM-12PM)</option>
+                            <option value="afternoon">Afternoon (12PM-6PM)</option>
+                            <option value="evening">Evening (6PM-12AM)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Fare Type</label>
+                        <select id="fareTypeFilter" class="w-full px-3 py-2 text-base border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white">
+                            <option value="">All fares</option>
+                            <option value="light">Light</option>
+                            <option value="essential">Essential</option>
+                            <option value="flex">Flex</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Sort By</label>
+                        <select id="sortBy" class="w-full px-3 py-2 text-base border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white">
+                            <option value="price">Price (Low to High)</option>
+                            <option value="duration">Duration</option>
+                            <option value="departure">Departure Time</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Flight Results -->
+            <div id="flightResults" class="space-y-4">
+                <!-- Results will be populated here -->
+            </div>
+            
+            <!-- Cancel Button -->
+            <div class="flex justify-center">
+                <button onclick="cancelBooking()" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg transition-colors">
+                    Cancel & Start Over
+                </button>
+            </div>
+        </div>
+
+        <!-- Step 3: Passenger Details -->
+        <div id="detailsStep" class="hidden space-y-6">
+            <!-- Passenger Information -->
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Passenger Information</h3>
+                <div id="passengerForms">
+                    <!-- Passenger forms will be generated here -->
+                </div>
+            </div>
+
+            <!-- Seat Selection -->
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Seat Selection</h3>
+                <div id="seatMap" class="mb-6">
+                    <!-- Seat map will be generated here -->
+                </div>
+                <div class="flex items-center space-x-6 text-sm">
+                    <div class="flex items-center">
+                        <div class="seat available mr-2"></div>
+                        <span class="text-gray-700 dark:text-gray-300">Available</span>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="seat selected mr-2"></div>
+                        <span class="text-gray-700 dark:text-gray-300">Selected</span>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="seat occupied mr-2"></div>
+                        <span class="text-gray-700 dark:text-gray-300">Occupied</span>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="seat premium mr-2"></div>
+                        <span class="text-gray-700 dark:text-gray-300">Premium (+$50)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ancillary Services -->
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Additional Services</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                        <h4 class="font-medium text-gray-900 dark:text-white mb-3">Extra Baggage</h4>
+                        <div class="space-y-2">
+                            <label class="flex items-center">
+                                <input type="checkbox" name="baggage" value="23kg" class="mr-2">
+                                <span class="text-sm text-gray-700 dark:text-gray-300">+23kg ($75)</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" name="baggage" value="32kg" class="mr-2">
+                                <span class="text-sm text-gray-700 dark:text-gray-300">+32kg ($120)</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="font-medium text-gray-900 dark:text-white mb-3">Meal Preferences</h4>
+                        <select class="w-full px-3 py-2 text-base border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white">
+                            <option value="">Standard meal</option>
+                            <option value="vegetarian">Vegetarian</option>
+                            <option value="vegan">Vegan</option>
+                            <option value="halal">Halal</option>
+                            <option value="kosher">Kosher</option>
+                        </select>
+                    </div>
+                    <div>
+                        <h4 class="font-medium text-gray-900 dark:text-white mb-3">Travel Insurance</h4>
+                        <label class="flex items-center">
+                            <input type="checkbox" name="insurance" value="basic" class="mr-2">
+                            <span class="text-sm text-gray-700 dark:text-gray-300">Basic Coverage ($25)</span>
+                        </label>
+                        <label class="flex items-center mt-2">
+                            <input type="checkbox" name="insurance" value="comprehensive" class="mr-2">
+                            <span class="text-sm text-gray-700 dark:text-gray-300">Comprehensive ($65)</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Price Summary -->
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Price Summary</h3>
+                <div id="priceSummary" class="space-y-2">
+                    <!-- Price breakdown will be shown here -->
+                </div>
+            </div>
+
+            <div class="flex space-x-4">
+                <button onclick="cancelBooking()" class="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-bold py-4 px-6 rounded-lg transition-colors">
+                    Cancel & Start Over
+                </button>
+                <button id="proceedToPayment" class="flex-1 bg-cathay-green hover:bg-cathay-light-green text-white font-bold py-4 px-6 rounded-lg transition-colors">
+                    Proceed to Payment
+                </button>
+            </div>
+        </div>
+
+        <!-- Step 4: Payment -->
+        <div id="paymentStep" class="hidden space-y-6">
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Payment Information</h3>
+                
+                <!-- Payment Methods -->
+                <div class="mb-6">
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <label class="flex items-center p-3 border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700">
+                            <input type="radio" name="paymentMethod" value="card" checked class="mr-2">
+                            <span class="text-sm font-medium">Credit/Debit Card</span>
+                        </label>
+                        <label class="flex items-center p-3 border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700">
+                            <input type="radio" name="paymentMethod" value="paypal" class="mr-2">
+                            <span class="text-sm font-medium">PayPal</span>
+                        </label>
+                        <label class="flex items-center p-3 border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700">
+                            <input type="radio" name="paymentMethod" value="alipay" class="mr-2">
+                            <span class="text-sm font-medium">Alipay</span>
+                        </label>
+                        <label class="flex items-center p-3 border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700">
+                            <input type="radio" name="paymentMethod" value="wechat" class="mr-2">
+                            <span class="text-sm font-medium">WeChat Pay</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Card Details -->
+                <div id="cardDetails" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Card Number</label>
+                        <input type="text" placeholder="1234 5678 9012 3456" 
+                               class="w-full px-4 py-3 text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-cathay-green focus:border-transparent dark:bg-gray-700 dark:text-white">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Expiry Date</label>
+                            <input type="text" placeholder="MM/YY"
+                                   class="w-full px-4 py-3 text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-cathay-green focus:border-transparent dark:bg-gray-700 dark:text-white">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">CVV</label>
+                            <input type="text" placeholder="123"
+                                   class="w-full px-4 py-3 text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-cathay-green focus:border-transparent dark:bg-gray-700 dark:text-white">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Cardholder Name</label>
+                        <input type="text" placeholder="John Smith"
+                               class="w-full px-4 py-3 text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-cathay-green focus:border-transparent dark:bg-gray-700 dark:text-white">
+                    </div>
+                </div>
+
+                <!-- Final Price -->
+                <div class="border-t border-gray-200 dark:border-gray-600 pt-4 mt-6">
+                    <div class="flex justify-between items-center text-lg font-bold text-gray-900 dark:text-white">
+                        <span>Total Amount:</span>
+                        <span id="finalTotal">$1,247</span>
+                    </div>
+                </div>
+
+                <div class="flex space-x-4 mt-6">
+                    <button onclick="cancelBooking()" class="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-bold py-4 px-6 rounded-lg transition-colors">
+                        Cancel & Start Over
+                    </button>
+                    <button id="completeBooking" class="flex-1 bg-cathay-green hover:bg-cathay-light-green text-white font-bold py-4 px-6 rounded-lg transition-colors">
+                        Complete Booking
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Booking Confirmation -->
+        <div id="confirmationStep" class="hidden">
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 text-center">
+                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Booking Confirmed!</h2>
+                <p class="text-gray-600 dark:text-gray-400 mb-6">Your flight has been successfully booked. A confirmation email and SMS have been sent to you.</p>
+                <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 mb-6">
+                    <h3 class="font-semibold text-gray-900 dark:text-white mb-2">Booking Reference</h3>
+                    <p class="text-2xl font-mono font-bold text-cathay-green" id="bookingReference">CX7A8K9M</p>
+                </div>
+                <div class="space-y-4 text-left">
+                    <div id="bookingDetails">
+                        <!-- Booking details will be populated here -->
+                    </div>
+                </div>
+                <div class="flex space-x-4 mt-6">
+                    <button id="bookAnotherFlight" class="flex-1 bg-cathay-green hover:bg-cathay-light-green text-white font-bold py-3 px-6 rounded-lg transition-colors">
+                        Book Another Flight
+                    </button>
+                    <button onclick="closeBookingSystem()" class="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg transition-colors">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg max-w-md w-full mx-4">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Login to Your Account</h3>
+            <div class="space-y-4">
+                <input type="email" id="loginEmail" placeholder="Email address" value="test@abc.com"
+                       class="w-full px-4 py-3 text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-cathay-green focus:border-transparent dark:bg-gray-700 dark:text-white">
+                <input type="password" id="loginPassword" placeholder="Password" value="test"
+                       class="w-full px-4 py-3 text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-cathay-green focus:border-transparent dark:bg-gray-700 dark:text-white">
+                <div class="flex justify-end space-x-3">
+                    <button onclick="closeModal('loginModal')" class="px-4 py-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">Cancel</button>
+                    <button onclick="login()" class="px-4 py-2 bg-cathay-green text-white hover:bg-cathay-light-green rounded">Login</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Manage Booking Modal -->
+    <div id="manageBookingModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-2xl w-full mx-4">
+            <div class="flex justify-between items-center p-6 border-b border-gray-200 dark:border-gray-600">
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">Manage Booking</h3>
+                <button onclick="closeModal('manageBookingModal')" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="p-6">
+                <div id="manageBookingContent">
+                    <!-- Content will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- My Bookings Modal -->
+    <div id="bookingsModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-4xl w-full mx-4 max-h-[90vh] overflow-hidden">
+            <div class="flex justify-between items-center p-6 border-b border-gray-200 dark:border-gray-600">
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">My Bookings</h3>
+                <button onclick="closeModal('bookingsModal')" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
+                <div id="bookingsList">
+                    <!-- Bookings will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global state
+        let currentStep = 1;
+        let selectedFlights = {};
+        let passengers = [];
+        let selectedSeats = {};
+        let totalPrice = 0;
+        let selectedFareType = 'essential'; // Default fare type
+        
+        // User state
+        let currentUser = null;
+        let userBookings = [];
+        
+        // Idle timeout functionality
+        let idleTimer;
+        let warningTimer;
+        let idleTimeLimit = 5 * 60 * 1000; // 5 minutes in milliseconds
+        let warningTime = 4 * 60 * 1000; // Show warning at 4 minutes
+
+        // Comprehensive flight database with different routes
+        const flightDatabase = {
+            'Hong Kong (HKG)': {
+                'Los Angeles (LAX)': [
+                    {
+                        id: 'SW123',
+                        airline: 'SkyWings Airlines',
+                        departure: { time: '08:30', airport: 'HKG' },
+                        arrival: { time: '14:45', airport: 'LAX' },
+                        duration: '13h 15m',
+                        durationMinutes: 795,
+                        stops: 0,
+                        aircraft: 'Boeing 777-300ER',
+                        fares: {
+                            light: { price: 998, baggage: 'No checked bag', seatSelection: 'Not included', changes: 'Not allowed' },
+                            essential: { price: 1247, baggage: '23kg included', seatSelection: 'Standard seats included', changes: 'Fee applies' },
+                            flex: { price: 1456, baggage: '32kg included', seatSelection: 'All seats included', changes: 'Free changes' }
+                        }
+                    },
+                    {
+                        id: 'SW456',
+                        airline: 'SkyWings Airlines',
+                        departure: { time: '15:20', airport: 'HKG' },
+                        arrival: { time: '21:35', airport: 'LAX' },
+                        duration: '12h 45m',
+                        durationMinutes: 765,
+                        stops: 0,
+                        aircraft: 'Airbus A350-1000',
+                        fares: {
+                            light: { price: 1099, baggage: 'No checked bag', seatSelection: 'Not included', changes: 'Not allowed' },
+                            essential: { price: 1389, baggage: '23kg included', seatSelection: 'Standard seats included', changes: 'Fee applies' },
+                            flex: { price: 1598, baggage: '32kg included', seatSelection: 'All seats included', changes: 'Free changes' }
+                        }
+                    },
+                    {
+                        id: 'SW789',
+                        airline: 'SkyWings Airlines',
+                        departure: { time: '23:45', airport: 'HKG' },
+                        arrival: { time: '06:00+1', airport: 'LAX' },
+                        duration: '14h 30m',
+                        durationMinutes: 870,
+                        stops: 1,
+                        aircraft: 'Boeing 777-300ER',
+                        fares: {
+                            light: { price: 856, baggage: 'No checked bag', seatSelection: 'Not included', changes: 'Not allowed' },
+                            essential: { price: 1156, baggage: '23kg included', seatSelection: 'Standard seats included', changes: 'Fee applies' },
+                            flex: { price: 1345, baggage: '32kg included', seatSelection: 'All seats included', changes: 'Free changes' }
+                        }
+                    }
+                ],
+                'New York (JFK)': [
+                    {
+                        id: 'SW201',
+                        airline: 'SkyWings Airlines',
+                        departure: { time: '09:15', airport: 'HKG' },
+                        arrival: { time: '10:30', airport: 'JFK' },
+                        duration: '16h 15m',
+                        durationMinutes: 975,
+                        stops: 0,
+                        aircraft: 'Boeing 777-300ER',
+                        fares: {
+                            light: { price: 1156, baggage: 'No checked bag', seatSelection: 'Not included', changes: 'Not allowed' },
+                            essential: { price: 1445, baggage: '23kg included', seatSelection: 'Standard seats included', changes: 'Fee applies' },
+                            flex: { price: 1678, baggage: '32kg included', seatSelection: 'All seats included', changes: 'Free changes' }
+                        }
+                    },
+                    {
+                        id: 'SW202',
+                        airline: 'SkyWings Airlines',
+                        departure: { time: '16:40', airport: 'HKG' },
+                        arrival: { time: '18:15', airport: 'JFK' },
+                        duration: '16h 35m',
+                        durationMinutes: 995,
+                        stops: 0,
+                        aircraft: 'Airbus A350-1000',
+                        fares: {
+                            light: { price: 1289, baggage: 'No checked bag', seatSelection: 'Not included', changes: 'Not allowed' },
+                            essential: { price: 1589, baggage: '23kg included', seatSelection: 'Standard seats included', changes: 'Fee applies' },
+                            flex: { price: 1834, baggage: '32kg included', seatSelection: 'All seats included', changes: 'Free changes' }
+                        }
+                    }
+                ],
+                'London (LHR)': [
+                    {
+                        id: 'SW301',
+                        airline: 'SkyWings Airlines',
+                        departure: { time: '07:45', airport: 'HKG' },
+                        arrival: { time: '13:20', airport: 'LHR' },
+                        duration: '12h 35m',
+                        durationMinutes: 755,
+                        stops: 0,
+                        aircraft: 'Boeing 787-9',
+                        fares: {
+                            light: { price: 1034, baggage: 'No checked bag', seatSelection: 'Not included', changes: 'Not allowed' },
+                            essential: { price: 1298, baggage: '23kg included', seatSelection: 'Standard seats included', changes: 'Fee applies' },
+                            flex: { price: 1534, baggage: '32kg included', seatSelection: 'All seats included', changes: 'Free changes' }
+                        }
+                    },
+                    {
+                        id: 'SW302',
+                        airline: 'SkyWings Airlines',
+                        departure: { time: '14:25', airport: 'HKG' },
+                        arrival: { time: '20:10', airport: 'LHR' },
+                        duration: '12h 45m',
+                        durationMinutes: 765,
+                        stops: 0,
+                        aircraft: 'Airbus A350-900',
+                        fares: {
+                            light: { price: 1167, baggage: 'No checked bag', seatSelection: 'Not included', changes: 'Not allowed' },
+                            essential: { price: 1423, baggage: '23kg included', seatSelection: 'Standard seats included', changes: 'Fee applies' },
+                            flex: { price: 1678, baggage: '32kg included', seatSelection: 'All seats included', changes: 'Free changes' }
+                        }
+                    }
+                ]
+            },
+            'Tokyo (NRT)': {
+                'Los Angeles (LAX)': [
+                    {
+                        id: 'SW401',
+                        airline: 'SkyWings Airlines',
+                        departure: { time: '11:20', airport: 'NRT' },
+                        arrival: { time: '05:15', airport: 'LAX' },
+                        duration: '10h 55m',
+                        durationMinutes: 655,
+                        stops: 0,
+                        aircraft: 'Boeing 787-9',
+                        fares: {
+                            light: { price: 789, baggage: 'No checked bag', seatSelection: 'Not included', changes: 'Not allowed' },
+                            essential: { price: 989, baggage: '23kg included', seatSelection: 'Standard seats included', changes: 'Fee applies' },
+                            flex: { price: 1189, baggage: '32kg included', seatSelection: 'All seats included', changes: 'Free changes' }
+                        }
+                    },
+                    {
+                        id: 'SW402',
+                        airline: 'SkyWings Airlines',
+                        departure: { time: '17:30', airport: 'NRT' },
+                        arrival: { time: '11:45', airport: 'LAX' },
+                        duration: '11h 15m',
+                        durationMinutes: 675,
+                        stops: 0,
+                        aircraft: 'Airbus A350-900',
+                        fares: {
+                            light: { price: 834, baggage: 'No checked bag', seatSelection: 'Not included', changes: 'Not allowed' },
+                            essential: { price: 1045, baggage: '23kg included', seatSelection: 'Standard seats included', changes: 'Fee applies' },
+                            flex: { price: 1267, baggage: '32kg included', seatSelection: 'All seats included', changes: 'Free changes' }
+                        }
+                    }
+                ],
+                'New York (JFK)': [
+                    {
+                        id: 'SW403',
+                        airline: 'SkyWings Airlines',
+                        departure: { time: '13:45', airport: 'NRT' },
+                        arrival: { time: '08:20', airport: 'JFK' },
+                        duration: '12h 35m',
+                        durationMinutes: 755,
+                        stops: 0,
+                        aircraft: 'Boeing 777-200ER',
+                        fares: {
+                            light: { price: 923, baggage: 'No checked bag', seatSelection: 'Not included', changes: 'Not allowed' },
+                            essential: { price: 1167, baggage: '23kg included', seatSelection: 'Standard seats included', changes: 'Fee applies' },
+                            flex: { price: 1389, baggage: '32kg included', seatSelection: 'All seats included', changes: 'Free changes' }
+                        }
+                    }
+                ],
+                'London (LHR)': [
+                    {
+                        id: 'SW404',
+                        airline: 'SkyWings Airlines',
+                        departure: { time: '10:55', airport: 'NRT' },
+                        arrival: { time: '15:40', airport: 'LHR' },
+                        duration: '11h 45m',
+                        durationMinutes: 705,
+                        stops: 0,
+                        aircraft: 'Boeing 787-9',
+                        fares: {
+                            light: { price: 867, baggage: 'No checked bag', seatSelection: 'Not included', changes: 'Not allowed' },
+                            essential: { price: 1089, baggage: '23kg included', seatSelection: 'Standard seats included', changes: 'Fee applies' },
+                            flex: { price: 1298, baggage: '32kg included', seatSelection: 'All seats included', changes: 'Free changes' }
+                        }
+                    }
+                ]
+            },
+            'Singapore (SIN)': {
+                'Los Angeles (LAX)': [
+                    {
+                        id: 'SW501',
+                        airline: 'SkyWings Airlines',
+                        departure: { time: '08:45', airport: 'SIN' },
+                        arrival: { time: '06:30', airport: 'LAX' },
+                        duration: '18h 45m',
+                        durationMinutes: 1125,
+                        stops: 1,
+                        aircraft: 'Boeing 777-300ER',
+                        fares: {
+                            light: { price: 1123, baggage: 'No checked bag', seatSelection: 'Not included', changes: 'Not allowed' },
+                            essential: { price: 1398, baggage: '23kg included', seatSelection: 'Standard seats included', changes: 'Fee applies' },
+                            flex: { price: 1634, baggage: '32kg included', seatSelection: 'All seats included', changes: 'Free changes' }
+                        }
+                    }
+                ],
+                'New York (JFK)': [
+                    {
+                        id: 'SW502',
+                        airline: 'SkyWings Airlines',
+                        departure: { time: '23:35', airport: 'SIN' },
+                        arrival: { time: '05:50+1', airport: 'JFK' },
+                        duration: '18h 15m',
+                        durationMinutes: 1095,
+                        stops: 0,
+                        aircraft: 'Airbus A350-1000',
+                        fares: {
+                            light: { price: 1267, baggage: 'No checked bag', seatSelection: 'Not included', changes: 'Not allowed' },
+                            essential: { price: 1567, baggage: '23kg included', seatSelection: 'Standard seats included', changes: 'Fee applies' },
+                            flex: { price: 1834, baggage: '32kg included', seatSelection: 'All seats included', changes: 'Free changes' }
+                        }
+                    }
+                ],
+                'London (LHR)': [
+                    {
+                        id: 'SW503',
+                        airline: 'SkyWings Airlines',
+                        departure: { time: '12:20', airport: 'SIN' },
+                        arrival: { time: '18:45', airport: 'LHR' },
+                        duration: '13h 25m',
+                        durationMinutes: 805,
+                        stops: 0,
+                        aircraft: 'Boeing 787-10',
+                        fares: {
+                            light: { price: 945, baggage: 'No checked bag', seatSelection: 'Not included', changes: 'Not allowed' },
+                            essential: { price: 1189, baggage: '23kg included', seatSelection: 'Standard seats included', changes: 'Fee applies' },
+                            flex: { price: 1423, baggage: '32kg included', seatSelection: 'All seats included', changes: 'Free changes' }
+                        }
+                    },
+                    {
+                        id: 'SW504',
+                        airline: 'SkyWings Airlines',
+                        departure: { time: '19:15', airport: 'SIN' },
+                        arrival: { time: '01:30+1', airport: 'LHR' },
+                        duration: '13h 15m',
+                        durationMinutes: 795,
+                        stops: 0,
+                        aircraft: 'Airbus A350-900',
+                        fares: {
+                            light: { price: 1034, baggage: 'No checked bag', seatSelection: 'Not included', changes: 'Not allowed' },
+                            essential: { price: 1289, baggage: '23kg included', seatSelection: 'Standard seats included', changes: 'Fee applies' },
+                            flex: { price: 1534, baggage: '32kg included', seatSelection: 'All seats included', changes: 'Free changes' }
+                        }
+                    }
+                ]
+            }
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set default dates
+            const today = new Date();
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const nextWeek = new Date(today);
+            nextWeek.setDate(nextWeek.getDate() + 7);
+            
+            document.getElementById('departureDate').value = tomorrow.toISOString().split('T')[0];
+            document.getElementById('returnDate').value = nextWeek.toISOString().split('T')[0];
+            
+            // Set default airports
+            document.getElementById('departure').value = 'Hong Kong (HKG)';
+            document.getElementById('destination').value = 'Los Angeles (LAX)';
+        });
+
+        // Trip type handling
+        document.querySelectorAll('input[name="tripType"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const returnDateDiv = document.getElementById('returnDateDiv');
+                if (this.value === 'oneway' || this.value === 'multicity') {
+                    returnDateDiv.style.display = 'none';
+                } else {
+                    returnDateDiv.style.display = 'block';
+                }
+            });
+        });
+
+        // Search flights
+        document.getElementById('searchFlights').addEventListener('click', function() {
+            if (validateSearchForm()) {
+                showStep(2);
+                displayFlightResults();
+            }
+        });
+
+        function displayFlightResults() {
+            const resultsContainer = document.getElementById('flightResults');
+            const currency = document.getElementById('currency').value;
+            
+            // Get flights for selected route
+            const sampleFlights = getFlightsForRoute();
+            
+            if (sampleFlights.length === 0) {
+                resultsContainer.innerHTML = `
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 text-center">
+                        <div class="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.637 0-5.118 1.274-6.832 3.291"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">No flights available</h3>
+                        <p class="text-gray-500 dark:text-gray-400 mb-4">No flights are available for the selected route. Please try a different route or check back later.</p>
+                        <button onclick="showStep(1)" class="px-4 py-2 bg-cathay-green text-white hover:bg-cathay-light-green rounded transition-colors">
+                            Search Different Route
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+            
+            resultsContainer.innerHTML = sampleFlights.map(flight => `
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+                    <div class="flex items-center mb-4">
+                        <div class="flex-1">
+                            <div class="flex items-center space-x-4">
+                                <div class="text-center">
+                                    <div class="text-lg font-bold text-gray-900 dark:text-white">${flight.departure.time}</div>
+                                    <div class="text-sm text-gray-500">${flight.departure.airport}</div>
+                                </div>
+                                <div class="flex-1 text-center">
+                                    <div class="text-sm text-gray-500">${flight.duration}</div>
+                                    <div class="border-t border-gray-300 my-2"></div>
+                                    <div class="text-sm text-gray-500">${flight.stops === 0 ? 'Non-stop' : flight.stops + ' stop'}</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-lg font-bold text-gray-900 dark:text-white">${flight.arrival.time}</div>
+                                    <div class="text-sm text-gray-500">${flight.arrival.airport}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-4 text-sm text-gray-600 dark:text-gray-400 mb-4">
+                        <span>✈️ ${flight.aircraft}</span>
+                        <span>📍 ${flight.airline}</span>
+                    </div>
+                    
+                    <!-- Economy Fare Types -->
+                    <div class="border-t border-gray-200 dark:border-gray-600 pt-4">
+                        <h4 class="text-sm font-semibold text-gray-900 dark:text-white mb-3">Economy Fare Options</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            ${Object.entries(flight.fares).map(([fareType, fareData]) => `
+                                <div class="border border-gray-200 dark:border-gray-600 rounded-lg p-4 hover:border-cathay-green hover:shadow-md transition-all cursor-pointer" onclick="selectFlightWithFare('${flight.id}', '${fareType}')">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <h5 class="font-semibold text-gray-900 dark:text-white capitalize">${fareType}</h5>
+                                        <div class="text-right">
+                                            <div class="text-lg font-bold text-cathay-green">${currency} ${fareData.price}</div>
+                                        </div>
+                                    </div>
+                                    <div class="space-y-1 text-xs text-gray-600 dark:text-gray-400">
+                                        <div class="flex items-center">
+                                            <span class="w-2 h-2 bg-gray-400 rounded-full mr-2"></span>
+                                            <span>🧳 ${fareData.baggage}</span>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <span class="w-2 h-2 bg-gray-400 rounded-full mr-2"></span>
+                                            <span>💺 ${fareData.seatSelection}</span>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <span class="w-2 h-2 bg-gray-400 rounded-full mr-2"></span>
+                                            <span>✏️ ${fareData.changes}</span>
+                                        </div>
+                                    </div>
+                                    <button class="w-full mt-3 bg-cathay-green hover:bg-cathay-light-green text-white font-medium py-2 px-4 rounded text-sm transition-colors">
+                                        Select ${fareType.charAt(0).toUpperCase() + fareType.slice(1)}
+                                    </button>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Helper function to get flights for selected route
+        function getFlightsForRoute() {
+            const departure = document.getElementById('departure').value;
+            const destination = document.getElementById('destination').value;
+            
+            if (!departure || !destination) {
+                return [];
+            }
+            
+            // Check if route exists in database
+            if (flightDatabase[departure] && flightDatabase[departure][destination]) {
+                return flightDatabase[departure][destination];
+            }
+            
+            return []; // No flights available for this route
+        }
+        
+        function selectFlightWithFare(flightId, fareType) {
+            const sampleFlights = getFlightsForRoute();
+            const flight = sampleFlights.find(f => f.id === flightId);
+            selectedFlights.outbound = {
+                ...flight,
+                selectedFare: fareType,
+                price: flight.fares[fareType].price,
+                fareData: flight.fares[fareType]
+            };
+            selectedFareType = fareType;
+            showStep(3);
+            generatePassengerForms();
+            generateSeatMap();
+            updatePriceSummary();
+        }
+
+        function selectFlight(flightId) {
+            // Fallback for old function - use Essential fare as default
+            selectFlightWithFare(flightId, 'essential');
+        }
+
+        function generatePassengerForms() {
+            const passengerCount = parseInt(document.getElementById('passengers').value);
+            const container = document.getElementById('passengerForms');
+            
+            container.innerHTML = '';
+            passengers = [];
+            
+            for (let i = 0; i < passengerCount; i++) {
+                passengers.push({ id: i });
+                container.innerHTML += `
+                    <div class="border border-gray-200 dark:border-gray-600 rounded-lg p-4 mb-4">
+                        <h4 class="font-medium text-gray-900 dark:text-white mb-4">Passenger ${i + 1}</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">First Name *</label>
+                                <input type="text" id="firstName${i}" required
+                                       class="w-full px-4 py-3 text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-cathay-green focus:border-transparent dark:bg-gray-700 dark:text-white">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Last Name *</label>
+                                <input type="text" id="lastName${i}" required
+                                       class="w-full px-4 py-3 text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-cathay-green focus:border-transparent dark:bg-gray-700 dark:text-white">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Date of Birth *</label>
+                                <input type="date" id="dob${i}" required
+                                       class="w-full px-4 py-3 text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-cathay-green focus:border-transparent dark:bg-gray-700 dark:text-white">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Passport Number *</label>
+                                <input type="text" id="passport${i}" required
+                                       class="w-full px-4 py-3 text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-cathay-green focus:border-transparent dark:bg-gray-700 dark:text-white">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email *</label>
+                                <input type="email" id="email${i}" required
+                                       class="w-full px-4 py-3 text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-cathay-green focus:border-transparent dark:bg-gray-700 dark:text-white">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Phone Number *</label>
+                                <input type="tel" id="phone${i}" required
+                                       class="w-full px-4 py-3 text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-cathay-green focus:border-transparent dark:bg-gray-700 dark:text-white">
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function generateSeatMap() {
+            const seatMap = document.getElementById('seatMap');
+            const rows = 30;
+            const seatsPerRow = 6;
+            
+            let seatMapHTML = '<div class="max-w-md mx-auto">';
+            
+            for (let row = 1; row <= rows; row++) {
+                seatMapHTML += `<div class="flex justify-center items-center mb-1">`;
+                seatMapHTML += `<span class="w-8 text-xs text-gray-500 text-center">${row}</span>`;
+                
+                for (let seat = 0; seat < seatsPerRow; seat++) {
+                    const seatLetter = String.fromCharCode(65 + seat);
+                    const seatId = `${row}${seatLetter}`;
+                    const isOccupied = Math.random() < 0.3;
+                    const isPremium = row <= 5;
+                    
+                    let seatClass = 'seat available';
+                    if (isOccupied) seatClass = 'seat occupied';
+                    else if (isPremium) seatClass = 'seat premium';
+                    
+                    seatMapHTML += `<div class="${seatClass}" data-seat="${seatId}" onclick="selectSeat('${seatId}')"></div>`;
+                    
+                    if (seat === 2) seatMapHTML += '<div class="w-4"></div>'; // Aisle space
+                }
+                
+                seatMapHTML += `</div>`;
+            }
+            
+            seatMapHTML += '</div>';
+            seatMap.innerHTML = seatMapHTML;
+        }
+
+        function selectSeat(seatId) {
+            const seatElement = document.querySelector(`[data-seat="${seatId}"]`);
+            
+            if (seatElement.classList.contains('occupied')) return;
+            
+            // Check if maximum seats selected
+            const selectedCount = Object.keys(selectedSeats).length;
+            const passengerCount = parseInt(document.getElementById('passengers').value);
+            
+            if (seatElement.classList.contains('selected')) {
+                seatElement.classList.remove('selected');
+                seatElement.classList.add('available');
+                delete selectedSeats[seatId];
+            } else if (selectedCount < passengerCount) {
+                seatElement.classList.remove('available', 'premium');
+                seatElement.classList.add('selected');
+                selectedSeats[seatId] = true;
+            } else {
+                showCustomAlert('You have already selected the maximum number of seats');
+            }
+            
+            updatePriceSummary();
+        }
+
+        function updatePriceSummary() {
+            const baseFare = selectedFlights.outbound ? selectedFlights.outbound.price : 0;
+            const passengerCount = parseInt(document.getElementById('passengers').value);
+            const fareType = selectedFlights.outbound ? selectedFlights.outbound.selectedFare : 'essential';
+            let additionalCosts = 0;
+            
+            // Calculate seat premiums
+            Object.keys(selectedSeats).forEach(seatId => {
+                const row = parseInt(seatId);
+                if (row <= 5) additionalCosts += 50; // Premium seat
+            });
+            
+            // Calculate baggage
+            document.querySelectorAll('input[name="baggage"]:checked').forEach(checkbox => {
+                if (checkbox.value === '23kg') additionalCosts += 75;
+                if (checkbox.value === '32kg') additionalCosts += 120;
+            });
+            
+            // Calculate insurance
+            document.querySelectorAll('input[name="insurance"]:checked').forEach(checkbox => {
+                if (checkbox.value === 'basic') additionalCosts += 25;
+                if (checkbox.value === 'comprehensive') additionalCosts += 65;
+            });
+            
+            const subtotal = (baseFare * passengerCount) + additionalCosts;
+            const taxes = Math.round(subtotal * 0.12);
+            totalPrice = subtotal + taxes;
+            
+            const currency = document.getElementById('currency').value;
+            
+            document.getElementById('priceSummary').innerHTML = `
+                <div class="flex justify-between">
+                    <span class="text-gray-700 dark:text-gray-300">Economy ${fareType.charAt(0).toUpperCase() + fareType.slice(1)} fare (${passengerCount} passenger${passengerCount > 1 ? 's' : ''})</span>
+                    <span class="text-gray-900 dark:text-white">${currency} ${baseFare * passengerCount}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-gray-700 dark:text-gray-300">Additional services</span>
+                    <span class="text-gray-900 dark:text-white">${currency} ${additionalCosts}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-gray-700 dark:text-gray-300">Taxes & fees</span>
+                    <span class="text-gray-900 dark:text-white">${currency} ${taxes}</span>
+                </div>
+                <div class="border-t border-gray-200 dark:border-gray-600 pt-2 mt-2">
+                    <div class="flex justify-between text-lg font-bold">
+                        <span class="text-gray-900 dark:text-white">Total</span>
+                        <span class="text-cathay-green">${currency} ${totalPrice}</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        document.getElementById('proceedToPayment').addEventListener('click', function() {
+            if (validatePassengerDetails()) {
+                const currency = document.getElementById('currency').value;
+                document.getElementById('finalTotal').textContent = `${currency} ${totalPrice}`;
+                showStep(4);
+            }
+        });
+
+        document.getElementById('completeBooking').addEventListener('click', function() {
+            if (validatePaymentDetails()) {
+                // Simulate booking process
+                showLoadingState('Processing your booking...');
+                
+                setTimeout(() => {
+                    hideLoadingState();
+                    generateBookingConfirmation();
+                    showStep(5);
+                }, 3000);
+            }
+        });
+
+        function generateBookingConfirmation() {
+            const bookingRef = 'CX' + Math.random().toString(36).substr(2, 6).toUpperCase();
+            document.getElementById('bookingReference').textContent = bookingRef;
+            
+            const flight = selectedFlights.outbound;
+            const departure = document.getElementById('departure').value;
+            const destination = document.getElementById('destination').value;
+            const departureDate = document.getElementById('departureDate').value;
+            const passengerCount = parseInt(document.getElementById('passengers').value);
+            const currency = document.getElementById('currency').value;
+            
+            // Save booking to user's bookings if logged in
+            if (currentUser) {
+                const newBooking = {
+                    id: bookingRef,
+                    bookingDate: new Date(),
+                    flight: flight,
+                    route: `${departure} → ${destination}`,
+                    departureDate: departureDate,
+                    passengers: passengerCount,
+                    totalPrice: totalPrice,
+                    currency: currency,
+                    status: 'Confirmed',
+                    seats: Object.keys(selectedSeats).length > 0 ? Object.keys(selectedSeats) : ['Auto-assigned'],
+                    fareType: selectedFareType
+                };
+                
+                userBookings.unshift(newBooking); // Add to beginning of array
+            }
+            
+            document.getElementById('bookingDetails').innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <h4 class="font-semibold text-gray-900 dark:text-white mb-2">Flight Details</h4>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">Flight: ${flight.id}</p>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">Route: ${departure} → ${destination}</p>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">Date: ${new Date(departureDate).toLocaleDateString()}</p>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">Time: ${flight.departure.time} - ${flight.arrival.time}</p>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-900 dark:text-white mb-2">Booking Summary</h4>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">Passengers: ${passengerCount}</p>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">Fare Type: ${selectedFareType.charAt(0).toUpperCase() + selectedFareType.slice(1)}</p>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">Total Paid: ${currency} ${totalPrice}</p>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">Selected Seats: ${Object.keys(selectedSeats).join(', ') || 'Auto-assigned'}</p>
+                        ${currentUser ? `<p class="text-sm text-green-600 dark:text-green-400 mt-2">✓ Booking saved to your account</p>` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        function showStep(step) {
+            // Hide all steps
+            document.querySelectorAll('[id$="Step"]').forEach(el => el.classList.add('hidden'));
+            
+            // Show current step
+            const steps = ['searchStep', 'resultsStep', 'detailsStep', 'paymentStep', 'confirmationStep'];
+            document.getElementById(steps[step - 1]).classList.remove('hidden');
+            
+            // Update step indicator
+            for (let i = 1; i <= 4; i++) {
+                const stepEl = document.getElementById(`step${i}`);
+                const circle = stepEl.querySelector('div');
+                const text = stepEl.querySelector('span');
+                
+                if (i <= step) {
+                    circle.className = 'w-8 h-8 bg-cathay-green text-white rounded-full flex items-center justify-center text-sm font-bold';
+                    text.className = 'ml-2 text-sm font-medium text-cathay-green';
+                } else {
+                    circle.className = 'w-8 h-8 bg-gray-300 text-gray-600 rounded-full flex items-center justify-center text-sm font-bold';
+                    text.className = 'ml-2 text-sm font-medium text-gray-500';
+                }
+            }
+            
+            currentStep = step;
+            
+            // Apply current language to newly visible step content
+            const t = translations[currentLanguage];
+            if (step === 2) {
+                // Flight results step - update filter section and any existing results
+                updateFilterSection(t);
+                updateFlightResultsLanguage(t);
+                updateCancelButtons(t);
+            } else if (step === 3) {
+                // Details step - update passenger forms, seat map, and services
+                updateDetailsStep(t);
+                updatePassengerFormsLanguage(t);
+                updatePriceSummaryLanguage(t);
+            } else if (step === 4) {
+                // Payment step
+                updatePaymentStep(t);
+            } else if (step === 5) {
+                // Confirmation step
+                updateConfirmationStep(t);
+                updateBookingDetailsLanguage(t);
+            }
+        }
+        
+        function updatePriceSummaryLanguage(t) {
+            // Update price summary section when language changes
+            const priceSummary = document.getElementById('priceSummary');
+            if (priceSummary && priceSummary.innerHTML) {
+                // Update the price breakdown text
+                const summaryItems = priceSummary.querySelectorAll('.flex.justify-between');
+                summaryItems.forEach(item => {
+                    const label = item.querySelector('span:first-child');
+                    const text = label.textContent.trim();
+                    
+                    if (text.includes('Economy') && text.includes('fare')) {
+                        const fareType = selectedFlights.outbound ? selectedFlights.outbound.selectedFare : 'essential';
+                        const passengerCount = parseInt(document.getElementById('passengers').value);
+                        const fareText = currentLanguage === 'zh' ? 
+                            `经济舱${fareType === 'light' ? '基础' : fareType === 'essential' ? '标准' : '灵活'}票价 (${passengerCount}位乘客${passengerCount > 1 ? '' : ''})` :
+                            currentLanguage === 'ja' ?
+                            `エコノミー${fareType === 'light' ? 'ライト' : fareType === 'essential' ? 'エッセンシャル' : 'フレックス'}運賃 (${passengerCount}名の乗客)` :
+                            `Economy ${fareType.charAt(0).toUpperCase() + fareType.slice(1)} fare (${passengerCount} passenger${passengerCount > 1 ? 's' : ''})`;
+                        label.textContent = fareText;
+                    } else if (text.includes('Additional') || text.includes('附加') || text.includes('追加')) {
+                        label.textContent = t.additionalServicesPrice || t.additionalServices;
+                    } else if (text.includes('Taxes') || text.includes('税') || text.includes('税費')) {
+                        label.textContent = t.taxesAndFees || 'Taxes & fees';
+                    } else if (text.includes('Total') || text.includes('总计') || text.includes('合計')) {
+                        label.textContent = t.total || 'Total';
+                    }
+                });
+            }
+        }
+        
+        function updateBookingDetailsLanguage(t) {
+            // Update booking confirmation details when language changes
+            const bookingDetails = document.getElementById('bookingDetails');
+            if (bookingDetails && bookingDetails.innerHTML) {
+                const detailHeadings = bookingDetails.querySelectorAll('h4');
+                detailHeadings.forEach(heading => {
+                    const text = heading.textContent.trim();
+                    if (text.includes('Flight') || text.includes('航班') || text.includes('フライト')) {
+                        heading.textContent = t.flightDetails;
+                    } else if (text.includes('Booking') || text.includes('Summary') || text.includes('预订') || text.includes('摘要') || text.includes('予約') || text.includes('概要')) {
+                        heading.textContent = t.bookingSummary;
+                    }
+                });
+                
+                // Update detail labels
+                const detailLabels = bookingDetails.querySelectorAll('p, span');
+                detailLabels.forEach(label => {
+                    const text = label.textContent.trim();
+                    if (text.startsWith('Flight:') || text.startsWith('航班:') || text.startsWith('フライト:')) {
+                        const flightId = text.split(':')[1];
+                        label.textContent = `${t.flight}: ${flightId}`;
+                    } else if (text.startsWith('Route:') || text.startsWith('航线:') || text.startsWith('ルート:')) {
+                        const route = text.split(':')[1];
+                        label.textContent = `${t.route}: ${route}`;
+                    } else if (text.startsWith('Date:') || text.startsWith('日期:') || text.startsWith('日付:')) {
+                        const date = text.split(':')[1];
+                        label.textContent = `${t.date}: ${date}`;
+                    } else if (text.startsWith('Time:') || text.startsWith('时间:') || text.startsWith('時刻:')) {
+                        const time = text.split(':')[1];
+                        label.textContent = `${t.time}: ${time}`;
+                    } else if (text.startsWith('Passengers:') || text.startsWith('乘客:') || text.startsWith('乗客:')) {
+                        const passengers = text.split(':')[1];
+                        label.textContent = `${t.passengers}: ${passengers}`;
+                    } else if (text.startsWith('Total Paid:') || text.startsWith('已付总额:') || text.startsWith('支払済み総額:')) {
+                        const total = text.split(':')[1];
+                        label.textContent = `${t.totalPaid}: ${total}`;
+                    } else if (text.startsWith('Selected Seats:') || text.startsWith('选定座位:') || text.startsWith('選択済み座席:')) {
+                        const seats = text.split(':')[1];
+                        label.textContent = `${t.seats}: ${seats}`;
+                    }
+                });
+            }
+        }
+
+        // Login functionality
+        document.getElementById('loginBtn').addEventListener('click', function() {
+            document.getElementById('loginModal').classList.remove('hidden');
+        });
+        
+        // User menu dropdown toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('userMenuBtn').addEventListener('click', function() {
+                document.getElementById('userDropdown').classList.toggle('hidden');
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                const userMenu = document.getElementById('userMenu');
+                const userDropdown = document.getElementById('userDropdown');
+                if (userMenu && !userMenu.contains(e.target)) {
+                    userDropdown.classList.add('hidden');
+                }
+            });
+        });
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+        }
+
+        function login() {
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+            
+            if (!email || !password) {
+                showCustomAlert('Please enter both email and password');
+                return;
+            }
+            
+            // Simulate login
+            showLoadingState('Logging in...');
+            setTimeout(() => {
+                hideLoadingState();
+                
+                // Extract name from email (simple simulation)
+                const name = email.split('@')[0].replace(/[^a-zA-Z]/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                
+                // Set user state
+                currentUser = {
+                    email: email,
+                    name: name,
+                    loginTime: new Date()
+                };
+                
+                // Update UI
+                updateUserInterface();
+                closeModal('loginModal');
+                showCustomAlert(`Welcome back, ${currentUser.name}!`);
+                
+                // Load user bookings (simulate)
+                loadUserBookings();
+            }, 2000);
+        }
+        
+        function logout() {
+            showConfirmDialog('Are you sure you want to logout?', () => {
+                currentUser = null;
+                userBookings = [];
+                updateUserInterface();
+                showCustomAlert('You have been logged out successfully');
+            });
+        }
+        
+        function updateUserInterface() {
+            const loginBtn = document.getElementById('loginBtn');
+            const userMenu = document.getElementById('userMenu');
+            const userName = document.getElementById('userName');
+            
+            if (currentUser) {
+                // Show user menu, hide login button
+                loginBtn.classList.add('hidden');
+                userMenu.classList.remove('hidden');
+                userName.textContent = currentUser.name;
+            } else {
+                // Show login button, hide user menu
+                loginBtn.classList.remove('hidden');
+                userMenu.classList.add('hidden');
+                // Close user dropdown if open
+                document.getElementById('userDropdown').classList.add('hidden');
+            }
+        }
+        
+        function loadUserBookings() {
+            // Simulate loading existing bookings for this user
+            if (currentUser.email === 'john@example.com') {
+                userBookings = [
+                    {
+                        id: 'CX9K3M2L',
+                        bookingDate: new Date('2024-01-15'),
+                        flight: {
+                            id: 'CX456',
+                            airline: 'Cathay Pacific',
+                            departure: { time: '15:20', airport: 'HKG' },
+                            arrival: { time: '21:35', airport: 'LAX' },
+                            duration: '13h 15m'
+                        },
+                        route: 'Hong Kong (HKG) → Los Angeles (LAX)',
+                        departureDate: '2024-02-20',
+                        passengers: 2,
+                        totalPrice: 2500,
+                        currency: 'USD',
+                        status: 'Confirmed',
+                        seats: ['12A', '12B']
+                    }
+                ];
+            }
+        }
+        
+        function showMyBookings() {
+            const bookingsList = document.getElementById('bookingsList');
+            
+            if (userBookings.length === 0) {
+                bookingsList.innerHTML = `
+                    <div class="text-center py-8">
+                        <div class="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">No bookings yet</h3>
+                        <p class="text-gray-500 dark:text-gray-400">Your flight bookings will appear here once you make a reservation.</p>
+                    </div>
+                `;
+            } else {
+                bookingsList.innerHTML = userBookings.map(booking => `
+                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-6 mb-4">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h4 class="text-lg font-semibold text-gray-900 dark:text-white">Booking ${booking.id}</h4>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">Booked on ${booking.bookingDate.toLocaleDateString()}</p>
+                            </div>
+                            <span class="px-3 py-1 rounded-full text-xs font-medium ${
+                                booking.status === 'Confirmed' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
+                                booking.status === 'Cancelled' ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200' :
+                                'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
+                            }">${booking.status}</span>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <h5 class="font-medium text-gray-900 dark:text-white mb-3">Flight Details</h5>
+                                <div class="space-y-2 text-sm">
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-500 dark:text-gray-400">Flight:</span>
+                                        <span class="text-gray-900 dark:text-white">${booking.flight.id}</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-500 dark:text-gray-400">Route:</span>
+                                        <span class="text-gray-900 dark:text-white">${booking.route}</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-500 dark:text-gray-400">Date:</span>
+                                        <span class="text-gray-900 dark:text-white">${new Date(booking.departureDate).toLocaleDateString()}</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-500 dark:text-gray-400">Time:</span>
+                                        <span class="text-gray-900 dark:text-white">${booking.flight.departure.time} - ${booking.flight.arrival.time}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h5 class="font-medium text-gray-900 dark:text-white mb-3">Booking Summary</h5>
+                                <div class="space-y-2 text-sm">
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-500 dark:text-gray-400">Passengers:</span>
+                                        <span class="text-gray-900 dark:text-white">${booking.passengers}</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-500 dark:text-gray-400">Seats:</span>
+                                        <span class="text-gray-900 dark:text-white">${booking.seats.join(', ')}</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-500 dark:text-gray-400">Total Paid:</span>
+                                        <span class="text-gray-900 dark:text-white font-semibold">${booking.currency} ${booking.totalPrice}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex space-x-3 mt-4">
+                            <button class="px-4 py-2 bg-cathay-green text-white hover:bg-cathay-light-green rounded text-sm font-medium transition-colors">
+                                View E-ticket
+                            </button>
+                            <button onclick="manageBooking('${booking.id}', '${booking.status}')" class="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 rounded text-sm font-medium transition-colors">
+                                Manage Booking
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            document.getElementById('bookingsModal').classList.remove('hidden');
+            // Close user dropdown
+            document.getElementById('userDropdown').classList.add('hidden');
+        }
+
+        // Utility functions
+        function showCustomAlert(message) {
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+            modal.innerHTML = `
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg max-w-lg w-full mx-4">
+                    <div class="text-gray-700 dark:text-gray-300 mb-4">${message}</div>
+                    <div class="flex justify-end">
+                        <button class="px-4 py-2 bg-cathay-green text-white hover:bg-cathay-light-green rounded" onclick="this.closest('.fixed').remove()">OK</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function showLoadingState(message) {
+            const modal = document.createElement('div');
+            modal.id = 'loadingModal';
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+            modal.innerHTML = `
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg max-w-sm w-full mx-4 text-center">
+                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-cathay-green mx-auto mb-4"></div>
+                    <p class="text-gray-700 dark:text-gray-300">${message}</p>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function hideLoadingState() {
+            const modal = document.getElementById('loadingModal');
+            if (modal) modal.remove();
+        }
+
+        // Add event listeners for filters and sorting
+        document.getElementById('stopsFilter').addEventListener('change', filterAndSortFlights);
+        document.getElementById('priceFilter').addEventListener('change', filterAndSortFlights);
+        document.getElementById('timeFilter').addEventListener('change', filterAndSortFlights);
+        document.getElementById('fareTypeFilter').addEventListener('change', filterAndSortFlights);
+        document.getElementById('sortBy').addEventListener('change', filterAndSortFlights);
+
+        function filterAndSortFlights() {
+            // Get filter values
+            const stopsFilter = document.getElementById('stopsFilter').value;
+            const priceFilter = document.getElementById('priceFilter').value;
+            const timeFilter = document.getElementById('timeFilter').value;
+            const fareTypeFilter = document.getElementById('fareTypeFilter').value;
+            const sortBy = document.getElementById('sortBy').value;
+            
+            // Start with flights for selected route
+            let filteredFlights = [...getFlightsForRoute()];
+            
+            // Apply stops filter
+            if (stopsFilter === 'nonstop') {
+                filteredFlights = filteredFlights.filter(flight => flight.stops === 0);
+            } else if (stopsFilter === '1stop') {
+                filteredFlights = filteredFlights.filter(flight => flight.stops <= 1);
+            }
+            
+            // Apply price filter (using essential fare for comparison)
+            if (priceFilter === 'low') {
+                filteredFlights = filteredFlights.filter(flight => flight.fares.essential.price < 500);
+            } else if (priceFilter === 'medium') {
+                filteredFlights = filteredFlights.filter(flight => 
+                    flight.fares.essential.price >= 500 && flight.fares.essential.price <= 1000);
+            } else if (priceFilter === 'high') {
+                filteredFlights = filteredFlights.filter(flight => flight.fares.essential.price > 1000);
+            }
+            
+            // Apply time filter
+            if (timeFilter === 'morning') {
+                filteredFlights = filteredFlights.filter(flight => {
+                    const hour = parseInt(flight.departure.time.split(':')[0]);
+                    return hour >= 6 && hour < 12;
+                });
+            } else if (timeFilter === 'afternoon') {
+                filteredFlights = filteredFlights.filter(flight => {
+                    const hour = parseInt(flight.departure.time.split(':')[0]);
+                    return hour >= 12 && hour < 18;
+                });
+            } else if (timeFilter === 'evening') {
+                filteredFlights = filteredFlights.filter(flight => {
+                    const hour = parseInt(flight.departure.time.split(':')[0]);
+                    return hour >= 18 || hour < 6;
+                });
+            }
+            
+            // Apply fare type filter
+            if (fareTypeFilter) {
+                // Note: This filter only shows flights that have the selected fare type available
+                // Since all our sample flights have all fare types, this will show all flights
+                // In a real system, some flights might not have certain fare types
+                filteredFlights = filteredFlights.filter(flight => flight.fares[fareTypeFilter]);
+            }
+            
+            // Apply sorting
+            if (sortBy === 'price') {
+                filteredFlights.sort((a, b) => a.fares.essential.price - b.fares.essential.price);
+            } else if (sortBy === 'duration') {
+                filteredFlights.sort((a, b) => a.durationMinutes - b.durationMinutes);
+            } else if (sortBy === 'departure') {
+                filteredFlights.sort((a, b) => {
+                    const timeA = a.departure.time.replace(':', '');
+                    const timeB = b.departure.time.replace(':', '');
+                    return timeA.localeCompare(timeB);
+                });
+            }
+            
+            // Display filtered and sorted results
+            displayFilteredFlightResults(filteredFlights);
+        }
+        
+        function displayFilteredFlightResults(flights) {
+            const resultsContainer = document.getElementById('flightResults');
+            const currency = document.getElementById('currency').value;
+            
+            if (flights.length === 0) {
+                resultsContainer.innerHTML = `
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 text-center">
+                        <div class="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.637 0-5.118 1.274-6.832 3.291"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">No flights found</h3>
+                        <p class="text-gray-500 dark:text-gray-400 mb-4">No flights match your current filter criteria. Try adjusting your filters.</p>
+                        <button onclick="clearAllFilters()" class="px-4 py-2 bg-cathay-green text-white hover:bg-cathay-light-green rounded transition-colors">
+                            Clear All Filters
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+            
+            resultsContainer.innerHTML = flights.map(flight => `
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+                    <div class="flex items-center mb-4">
+                        <div class="flex-1">
+                            <div class="flex items-center space-x-4">
+                                <div class="text-center">
+                                    <div class="text-lg font-bold text-gray-900 dark:text-white">${flight.departure.time}</div>
+                                    <div class="text-sm text-gray-500">${flight.departure.airport}</div>
+                                </div>
+                                <div class="flex-1 text-center">
+                                    <div class="text-sm text-gray-500">${flight.duration}</div>
+                                    <div class="border-t border-gray-300 my-2"></div>
+                                    <div class="text-sm text-gray-500">${flight.stops === 0 ? 'Non-stop' : flight.stops + ' stop'}</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-lg font-bold text-gray-900 dark:text-white">${flight.arrival.time}</div>
+                                    <div class="text-sm text-gray-500">${flight.arrival.airport}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-4 text-sm text-gray-600 dark:text-gray-400 mb-4">
+                        <span>✈️ ${flight.aircraft}</span>
+                        <span>📍 ${flight.airline}</span>
+                    </div>
+                    
+                    <!-- Economy Fare Types -->
+                    <div class="border-t border-gray-200 dark:border-gray-600 pt-4">
+                        <h4 class="text-sm font-semibold text-gray-900 dark:text-white mb-3">Economy Fare Options</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            ${Object.entries(flight.fares).map(([fareType, fareData]) => `
+                                <div class="border border-gray-200 dark:border-gray-600 rounded-lg p-4 hover:border-cathay-green hover:shadow-md transition-all cursor-pointer" onclick="selectFlightWithFare('${flight.id}', '${fareType}')">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <h5 class="font-semibold text-gray-900 dark:text-white capitalize">${fareType}</h5>
+                                        <div class="text-right">
+                                            <div class="text-lg font-bold text-cathay-green">${currency} ${fareData.price}</div>
+                                        </div>
+                                    </div>
+                                    <div class="space-y-1 text-xs text-gray-600 dark:text-gray-400">
+                                        <div class="flex items-center">
+                                            <span class="w-2 h-2 bg-gray-400 rounded-full mr-2"></span>
+                                            <span>🧳 ${fareData.baggage}</span>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <span class="w-2 h-2 bg-gray-400 rounded-full mr-2"></span>
+                                            <span>💺 ${fareData.seatSelection}</span>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <span class="w-2 h-2 bg-gray-400 rounded-full mr-2"></span>
+                                            <span>✏️ ${fareData.changes}</span>
+                                        </div>
+                                    </div>
+                                    <button class="w-full mt-3 bg-cathay-green hover:bg-cathay-light-green text-white font-medium py-2 px-4 rounded text-sm transition-colors">
+                                        Select ${fareType.charAt(0).toUpperCase() + fareType.slice(1)}
+                                    </button>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function clearAllFilters() {
+            document.getElementById('stopsFilter').value = '';
+            document.getElementById('priceFilter').value = '';
+            document.getElementById('timeFilter').value = '';
+            document.getElementById('fareTypeFilter').value = '';
+            document.getElementById('sortBy').value = 'price';
+            displayFlightResults();
+        }
+
+        // Language switching
+        document.getElementById('languageSelect').addEventListener('change', function() {
+            const language = this.value;
+            changeLanguage(language);
+            const t = translations[language];
+            const message = t.languageChanged || `Language changed to: ${language === 'en' ? 'English' : language === 'zh' ? 'Chinese' : 'Japanese'}`;
+            showCustomAlert(message);
+        });
+
+        // Cancel booking and start over
+        function cancelBooking() {
+            showConfirmDialog('Are you sure you want to cancel your current booking and start over? All entered information will be lost.', () => {
+                resetBookingState();
+                showStep(1);
+                showCustomAlert('Booking cancelled. You can start a new search.');
+            });
+        }
+
+        // Reset all booking state
+        function resetBookingState() {
+            currentStep = 1;
+            selectedFlights = {};
+            passengers = [];
+            selectedSeats = {};
+            totalPrice = 0;
+            
+            // Clear form fields
+            document.getElementById('departure').value = 'Hong Kong (HKG)';
+            document.getElementById('destination').value = 'Los Angeles (LAX)';
+            document.getElementById('passengers').value = '1';
+            document.getElementById('cabinClass').value = 'economy';
+            document.getElementById('currency').value = 'HKD';
+            
+            // Reset dates
+            const today = new Date();
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const nextWeek = new Date(today);
+            nextWeek.setDate(nextWeek.getDate() + 7);
+            
+            document.getElementById('departureDate').value = tomorrow.toISOString().split('T')[0];
+            document.getElementById('returnDate').value = nextWeek.toISOString().split('T')[0];
+            
+            // Reset trip type
+            document.querySelector('input[name="tripType"][value="roundtrip"]').checked = true;
+            document.getElementById('returnDateDiv').style.display = 'block';
+            
+            // Clear any dynamic content
+            document.getElementById('flightResults').innerHTML = '';
+            document.getElementById('passengerForms').innerHTML = '';
+            document.getElementById('seatMap').innerHTML = '';
+            document.getElementById('priceSummary').innerHTML = '';
+        }
+
+        // Book another flight after completion
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add event listener for book another flight button
+            document.addEventListener('click', function(e) {
+                if (e.target && e.target.id === 'bookAnotherFlight') {
+                    resetBookingState();
+                    showStep(1);
+                    showCustomAlert('Ready to book another flight!');
+                }
+            });
+        });
+
+        // Close booking system
+        function closeBookingSystem() {
+            showConfirmDialog('Are you sure you want to close the booking system?', () => {
+                resetBookingState();
+                showStep(1);
+                showCustomAlert('Thank you for using SkyWings Airlines booking system!');
+            });
+        }
+
+        // Global variable to store the current confirmation callback
+        let pendingConfirmCallback = null;
+
+        // Custom confirm dialog
+        function showConfirmDialog(message, onConfirm) {
+            // Store the callback globally
+            pendingConfirmCallback = onConfirm;
+            
+            const modal = document.createElement('div');
+            modal.id = 'confirmModal';
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+            modal.innerHTML = `
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg max-w-sm w-full mx-4">
+                    <p class="text-gray-700 dark:text-gray-300 mb-4">${message}</p>
+                    <div class="flex justify-end space-x-3">
+                        <button class="px-4 py-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded" onclick="cancelConfirmDialog()">Cancel</button>
+                        <button class="px-4 py-2 bg-red-500 text-white hover:bg-red-600 rounded" onclick="executeConfirmCallback()">Confirm</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+        
+        function cancelConfirmDialog() {
+            const modal = document.getElementById('confirmModal');
+            if (modal) modal.remove();
+            pendingConfirmCallback = null;
+        }
+        
+        function executeConfirmCallback() {
+            const modal = document.getElementById('confirmModal');
+            if (modal) modal.remove();
+            
+            if (pendingConfirmCallback) {
+                pendingConfirmCallback();
+                pendingConfirmCallback = null;
+            }
+        }
+
+        // Idle timeout functionality
+        function resetIdleTimer() {
+            // Clear existing timers
+            clearTimeout(idleTimer);
+            clearTimeout(warningTimer);
+            
+            // Only start timer if not on search step or confirmation step
+            if (currentStep !== 1 && currentStep !== 5) {
+                // Set warning timer (4 minutes)
+                warningTimer = setTimeout(() => {
+                    showIdleWarning();
+                }, warningTime);
+                
+                // Set idle timeout timer (5 minutes)
+                idleTimer = setTimeout(() => {
+                    handleIdleTimeout();
+                }, idleTimeLimit);
+            }
+        }
+
+        function showIdleWarning() {
+            const modal = document.createElement('div');
+            modal.id = 'idleWarningModal';
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+            modal.innerHTML = `
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg max-w-md w-full mx-4">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center mr-4">
+                            <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.728-.833-2.598 0L4.268 15.5c-.77.833-.192 2.5 1.732 2.5z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Session Timeout Warning</h3>
+                            <p class="text-gray-600 dark:text-gray-400">Your booking will be cancelled in 1 minute due to inactivity.</p>
+                        </div>
+                    </div>
+                    <div class="flex justify-end space-x-3">
+                        <button onclick="handleIdleTimeout()" class="px-4 py-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">Cancel Booking</button>
+                        <button onclick="continueBooking()" class="px-4 py-2 bg-cathay-green text-white hover:bg-cathay-light-green rounded">Continue Booking</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function continueBooking() {
+            const modal = document.getElementById('idleWarningModal');
+            if (modal) modal.remove();
+            resetIdleTimer(); // Reset the timer
+        }
+
+        function handleIdleTimeout() {
+            // Remove warning modal if it exists
+            const modal = document.getElementById('idleWarningModal');
+            if (modal) modal.remove();
+            
+            // Reset booking state
+            resetBookingState();
+            showStep(1);
+            
+            // Show timeout message
+            showCustomAlert('Your booking session has timed out due to inactivity. Please start a new search.');
+        }
+
+        // ===============================
+        // VALIDATION FUNCTIONS
+        // ===============================
+
+        // Validation helper functions
+        function clearFieldError(fieldId) {
+            const field = document.getElementById(fieldId);
+            if (field) {
+                field.classList.remove('border-red-500');
+                field.classList.add('border-gray-300');
+            }
+        }
+
+        function setFieldError(fieldId, message = null) {
+            const field = document.getElementById(fieldId);
+            if (field) {
+                field.classList.remove('border-gray-300', 'dark:border-gray-600');
+                field.classList.add('border-red-500');
+            }
+            return message;
+        }
+
+        function validateEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        function validatePhone(phone) {
+            const phoneRegex = /^[\+]?[0-9\s\-\(\)]{8,20}$/;
+            return phoneRegex.test(phone.replace(/\s/g, ''));
+        }
+
+        function validateCardNumber(cardNumber) {
+            const cleanNumber = cardNumber.replace(/\s/g, '');
+            const cardRegex = /^[0-9]{13,19}$/;
+            return cardRegex.test(cleanNumber);
+        }
+
+        function validateExpiryDate(expiry) {
+            const expiryRegex = /^(0[1-9]|1[0-2])\/([0-9]{2})$/;
+            if (!expiryRegex.test(expiry)) return false;
+            
+            const [month, year] = expiry.split('/');
+            const now = new Date();
+            const currentYear = now.getFullYear() % 100;
+            const currentMonth = now.getMonth() + 1;
+            
+            const expYear = parseInt(year, 10);
+            const expMonth = parseInt(month, 10);
+            
+            if (expYear < currentYear || (expYear === currentYear && expMonth < currentMonth)) {
+                return false;
+            }
+            return true;
+        }
+
+        function validateCVV(cvv) {
+            const cvvRegex = /^[0-9]{3,4}$/;
+            return cvvRegex.test(cvv);
+        }
+
+        function validateName(name) {
+            const nameRegex = /^[a-zA-Z\s\-']{2,50}$/;
+            return nameRegex.test(name.trim());
+        }
+
+        function validatePassport(passport) {
+            const passportRegex = /^[A-Z0-9]{6,12}$/;
+            return passportRegex.test(passport.replace(/\s/g, '').toUpperCase());
+        }
+
+        // Step 1: Search Form Validation
+        function validateSearchForm() {
+            let isValid = true;
+            const errors = [];
+
+            // Clear previous errors
+            clearFieldError('departure');
+            clearFieldError('destination');
+            clearFieldError('departureDate');
+            clearFieldError('returnDate');
+
+            // Validate departure city
+            const departure = document.getElementById('departure').value.trim();
+            if (!departure) {
+                setFieldError('departure');
+                errors.push('Please select a departure city');
+                isValid = false;
+            }
+
+            // Validate destination city
+            const destination = document.getElementById('destination').value.trim();
+            if (!destination) {
+                setFieldError('destination');
+                errors.push('Please select a destination city');
+                isValid = false;
+            } else if (departure && destination.toLowerCase() === departure.toLowerCase()) {
+                setFieldError('destination');
+                errors.push('Departure and destination cities must be different');
+                isValid = false;
+            }
+
+            // Validate departure date
+            const departureDate = document.getElementById('departureDate').value;
+            if (!departureDate) {
+                setFieldError('departureDate');
+                errors.push('Please select a departure date');
+                isValid = false;
+            } else {
+                const depDate = new Date(departureDate);
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                
+                if (depDate < today) {
+                    setFieldError('departureDate');
+                    errors.push('Departure date cannot be in the past');
+                    isValid = false;
+                }
+                
+                // Check if date is too far in the future (more than 1 year)
+                const oneYearFromNow = new Date();
+                oneYearFromNow.setFullYear(oneYearFromNow.getFullYear() + 1);
+                if (depDate > oneYearFromNow) {
+                    setFieldError('departureDate');
+                    errors.push('Departure date cannot be more than 1 year in the future');
+                    isValid = false;
+                }
+            }
+
+            // Validate return date for round-trip
+            const tripType = document.querySelector('input[name="tripType"]:checked').value;
+            if (tripType === 'roundtrip') {
+                const returnDate = document.getElementById('returnDate').value;
+                if (!returnDate) {
+                    setFieldError('returnDate');
+                    errors.push('Please select a return date');
+                    isValid = false;
+                } else if (departureDate) {
+                    const depDate = new Date(departureDate);
+                    const retDate = new Date(returnDate);
+                    
+                    if (retDate <= depDate) {
+                        setFieldError('returnDate');
+                        errors.push('Return date must be after departure date');
+                        isValid = false;
+                    }
+                    
+                    // Check if return is too far from departure (more than 6 months)
+                    const sixMonthsFromDep = new Date(depDate);
+                    sixMonthsFromDep.setMonth(sixMonthsFromDep.getMonth() + 6);
+                    if (retDate > sixMonthsFromDep) {
+                        setFieldError('returnDate');
+                        errors.push('Return date cannot be more than 6 months after departure');
+                        isValid = false;
+                    }
+                }
+            }
+
+            if (!isValid) {
+                showCustomAlert('Please correct the following errors:<br>• ' + errors.join('<br>• '));
+            }
+
+            return isValid;
+        }
+
+        // Step 3: Passenger Details Validation
+        function validatePassengerDetails() {
+            let isValid = true;
+            const errors = [];
+            const passengerCount = parseInt(document.getElementById('passengers').value);
+
+            for (let i = 0; i < passengerCount; i++) {
+                const passengerErrors = [];
+
+                // Clear previous errors
+                clearFieldError(`firstName${i}`);
+                clearFieldError(`lastName${i}`);
+                clearFieldError(`dob${i}`);
+                clearFieldError(`passport${i}`);
+                clearFieldError(`email${i}`);
+                clearFieldError(`phone${i}`);
+
+                // Validate first name
+                const firstName = document.getElementById(`firstName${i}`).value.trim();
+                if (!firstName) {
+                    setFieldError(`firstName${i}`);
+                    passengerErrors.push('First name is required');
+                    isValid = false;
+                } else if (!validateName(firstName)) {
+                    setFieldError(`firstName${i}`);
+                    passengerErrors.push('First name contains invalid characters or is too short');
+                    isValid = false;
+                }
+
+                // Validate last name
+                const lastName = document.getElementById(`lastName${i}`).value.trim();
+                if (!lastName) {
+                    setFieldError(`lastName${i}`);
+                    passengerErrors.push('Last name is required');
+                    isValid = false;
+                } else if (!validateName(lastName)) {
+                    setFieldError(`lastName${i}`);
+                    passengerErrors.push('Last name contains invalid characters or is too short');
+                    isValid = false;
+                }
+
+                // Validate date of birth
+                const dob = document.getElementById(`dob${i}`).value;
+                if (!dob) {
+                    setFieldError(`dob${i}`);
+                    passengerErrors.push('Date of birth is required');
+                    isValid = false;
+                } else {
+                    const dobDate = new Date(dob);
+                    const today = new Date();
+                    const age = Math.floor((today - dobDate) / (365.25 * 24 * 60 * 60 * 1000));
+                    
+                    if (dobDate >= today) {
+                        setFieldError(`dob${i}`);
+                        passengerErrors.push('Date of birth cannot be in the future');
+                        isValid = false;
+                    } else if (age > 120) {
+                        setFieldError(`dob${i}`);
+                        passengerErrors.push('Date of birth seems invalid (age over 120)');
+                        isValid = false;
+                    } else if (age < 0) {
+                        setFieldError(`dob${i}`);
+                        passengerErrors.push('Invalid date of birth');
+                        isValid = false;
+                    }
+                }
+
+                // Validate passport number
+                const passport = document.getElementById(`passport${i}`).value.trim();
+                if (!passport) {
+                    setFieldError(`passport${i}`);
+                    passengerErrors.push('Passport number is required');
+                    isValid = false;
+                } else if (!validatePassport(passport)) {
+                    setFieldError(`passport${i}`);
+                    passengerErrors.push('Invalid passport number format');
+                    isValid = false;
+                }
+
+                // Validate email
+                const email = document.getElementById(`email${i}`).value.trim();
+                if (!email) {
+                    setFieldError(`email${i}`);
+                    passengerErrors.push('Email address is required');
+                    isValid = false;
+                } else if (!validateEmail(email)) {
+                    setFieldError(`email${i}`);
+                    passengerErrors.push('Invalid email address format');
+                    isValid = false;
+                }
+
+                // Validate phone number
+                const phone = document.getElementById(`phone${i}`).value.trim();
+                if (!phone) {
+                    setFieldError(`phone${i}`);
+                    passengerErrors.push('Phone number is required');
+                    isValid = false;
+                } else if (!validatePhone(phone)) {
+                    setFieldError(`phone${i}`);
+                    passengerErrors.push('Invalid phone number format');
+                    isValid = false;
+                }
+
+                if (passengerErrors.length > 0) {
+                    errors.push(`Passenger ${i + 1}: ${passengerErrors.join(', ')}`);
+                }
+            }
+
+            // Validate seat selection (optional but warn if none selected)
+            const selectedSeatCount = Object.keys(selectedSeats).length;
+            if (selectedSeatCount === 0) {
+                errors.push('Note: No seats have been selected. Seats will be automatically assigned.');
+            } else if (selectedSeatCount < passengerCount) {
+                errors.push(`Note: Only ${selectedSeatCount} out of ${passengerCount} seats selected. Remaining seats will be automatically assigned.`);
+            }
+
+            if (!isValid) {
+                const errorMessage = errors.join('<br>• ');
+                showCustomAlert('Please correct the following errors:<br>• ' + errorMessage);
+            } else if (selectedSeatCount === 0 || selectedSeatCount < passengerCount) {
+                // Show a less critical warning for seat selection
+                const warningMessage = errors.join('<br>• ');
+                showCustomAlert(warningMessage);
+                return true; // Still allow to proceed
+            }
+
+            return isValid;
+        }
+
+        // Step 4: Payment Details Validation
+        function validatePaymentDetails() {
+            let isValid = true;
+            const errors = [];
+
+            // Get selected payment method
+            const selectedPaymentMethod = document.querySelector('input[name="paymentMethod"]:checked');
+            if (!selectedPaymentMethod) {
+                errors.push('Please select a payment method');
+                isValid = false;
+            }
+
+            // If credit card is selected, validate card details
+            if (selectedPaymentMethod && selectedPaymentMethod.value === 'card') {
+                const cardDetails = document.getElementById('cardDetails');
+                const cardInputs = cardDetails.querySelectorAll('input');
+
+                // Clear previous errors for card fields
+                cardInputs.forEach(input => {
+                    input.classList.remove('border-red-500');
+                    input.classList.add('border-gray-300');
+                });
+
+                // Validate card number
+                const cardNumber = cardInputs[0].value.trim();
+                if (!cardNumber) {
+                    cardInputs[0].classList.remove('border-gray-300', 'dark:border-gray-600');
+                    cardInputs[0].classList.add('border-red-500');
+                    errors.push('Card number is required');
+                    isValid = false;
+                } else if (!validateCardNumber(cardNumber)) {
+                    cardInputs[0].classList.remove('border-gray-300', 'dark:border-gray-600');
+                    cardInputs[0].classList.add('border-red-500');
+                    errors.push('Invalid card number format');
+                    isValid = false;
+                }
+
+                // Validate expiry date
+                const expiryDate = cardInputs[1].value.trim();
+                if (!expiryDate) {
+                    cardInputs[1].classList.remove('border-gray-300', 'dark:border-gray-600');
+                    cardInputs[1].classList.add('border-red-500');
+                    errors.push('Expiry date is required');
+                    isValid = false;
+                } else if (!validateExpiryDate(expiryDate)) {
+                    cardInputs[1].classList.remove('border-gray-300', 'dark:border-gray-600');
+                    cardInputs[1].classList.add('border-red-500');
+                    errors.push('Invalid or expired card date (MM/YY format)');
+                    isValid = false;
+                }
+
+                // Validate CVV
+                const cvv = cardInputs[2].value.trim();
+                if (!cvv) {
+                    cardInputs[2].classList.remove('border-gray-300', 'dark:border-gray-600');
+                    cardInputs[2].classList.add('border-red-500');
+                    errors.push('CVV is required');
+                    isValid = false;
+                } else if (!validateCVV(cvv)) {
+                    cardInputs[2].classList.remove('border-gray-300', 'dark:border-gray-600');
+                    cardInputs[2].classList.add('border-red-500');
+                    errors.push('Invalid CVV (3-4 digits)');
+                    isValid = false;
+                }
+
+                // Validate cardholder name
+                const cardholderName = cardInputs[3].value.trim();
+                if (!cardholderName) {
+                    cardInputs[3].classList.remove('border-gray-300', 'dark:border-gray-600');
+                    cardInputs[3].classList.add('border-red-500');
+                    errors.push('Cardholder name is required');
+                    isValid = false;
+                } else if (!validateName(cardholderName)) {
+                    cardInputs[3].classList.remove('border-gray-300', 'dark:border-gray-600');
+                    cardInputs[3].classList.add('border-red-500');
+                    errors.push('Invalid cardholder name');
+                    isValid = false;
+                }
+            }
+
+            if (!isValid) {
+                showCustomAlert('Please correct the following payment errors:<br>• ' + errors.join('<br>• '));
+            }
+
+            return isValid;
+        }
+
+        // Add real-time validation for card fields
+        document.addEventListener('DOMContentLoaded', function() {
+            // Format card number input
+            document.addEventListener('input', function(e) {
+                if (e.target.placeholder === '1234 5678 9012 3456') {
+                    let value = e.target.value.replace(/\s/g, '').replace(/[^0-9]/gi, '');
+                    let formattedValue = value.match(/.{1,4}/g)?.join(' ') || '';
+                    if (formattedValue !== e.target.value) {
+                        e.target.value = formattedValue;
+                    }
+                }
+                
+                // Format expiry date input
+                if (e.target.placeholder === 'MM/YY') {
+                    let value = e.target.value.replace(/\D/g, '');
+                    if (value.length >= 2) {
+                        value = value.substring(0, 2) + '/' + value.substring(2, 4);
+                    }
+                    e.target.value = value;
+                }
+                
+                // Format CVV input
+                if (e.target.placeholder === '123') {
+                    e.target.value = e.target.value.replace(/\D/g, '').substring(0, 4);
+                }
+            });
+        });
+
+        // ===============================
+        // MANAGE BOOKING FUNCTIONALITY
+        // ===============================
+        
+        function manageBooking(bookingId, status) {
+            const booking = userBookings.find(b => b.id === bookingId);
+            if (!booking) {
+                showCustomAlert('Booking not found');
+                return;
+            }
+            
+            const content = document.getElementById('manageBookingContent');
+            content.innerHTML = `
+                <div class="space-y-6">
+                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                        <h4 class="font-semibold text-gray-900 dark:text-white mb-2">Booking ${booking.id}</h4>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">Status: ${booking.status}</p>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">${booking.route}</p>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">${new Date(booking.departureDate).toLocaleDateString()}</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <h5 class="font-medium text-gray-900 dark:text-white mb-3">Available Actions</h5>
+                            <div class="space-y-3">
+                                ${status === 'Confirmed' ? `
+                                    <button onclick="modifyBooking('${bookingId}')" class="w-full px-4 py-3 bg-blue-500 text-white hover:bg-blue-600 rounded-lg text-sm font-medium transition-colors">
+                                        Modify Booking
+                                    </button>
+                                    <button onclick="cancelBookingById('${bookingId}')" class="w-full px-4 py-3 bg-red-500 text-white hover:bg-red-600 rounded-lg text-sm font-medium transition-colors">
+                                        Cancel Booking
+                                    </button>
+                                ` : ''}
+                                <button onclick="downloadTicket('${bookingId}')" class="w-full px-4 py-3 bg-cathay-green text-white hover:bg-cathay-light-green rounded-lg text-sm font-medium transition-colors">
+                                    Download E-ticket
+                                </button>
+                                <button onclick="resendConfirmation('${bookingId}')" class="w-full px-4 py-3 bg-gray-500 text-white hover:bg-gray-600 rounded-lg text-sm font-medium transition-colors">
+                                    Resend Confirmation
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h5 class="font-medium text-gray-900 dark:text-white mb-3">Booking Information</h5>
+                            <div class="space-y-2 text-sm">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-500 dark:text-gray-400">Flight:</span>
+                                    <span class="text-gray-900 dark:text-white">${booking.flight.id}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-500 dark:text-gray-400">Passengers:</span>
+                                    <span class="text-gray-900 dark:text-white">${booking.passengers}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-500 dark:text-gray-400">Seats:</span>
+                                    <span class="text-gray-900 dark:text-white">${booking.seats.join(', ')}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-500 dark:text-gray-400">Total Paid:</span>
+                                    <span class="text-gray-900 dark:text-white font-semibold">${booking.currency} ${booking.totalPrice}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('manageBookingModal').classList.remove('hidden');
+        }
+        
+        function modifyBooking(bookingId) {
+            showLoadingState('Processing modification request...');
+            setTimeout(() => {
+                hideLoadingState();
+                showCustomAlert('Booking modification functionality would be available here. This would allow changing dates, seats, or passenger details (subject to airline policies and fees).');
+            }, 2000);
+        }
+        
+        function cancelBookingById(bookingId) {
+            showConfirmDialog('Are you sure you want to cancel this booking? This action cannot be undone and cancellation fees may apply.', () => {
+                showLoadingState('Processing cancellation...');
+                setTimeout(() => {
+                    hideLoadingState();
+                    
+                    // Update booking status
+                    const booking = userBookings.find(b => b.id === bookingId);
+                    if (booking) {
+                        booking.status = 'Cancelled';
+                    }
+                    
+                    closeModal('manageBookingModal');
+                    showCustomAlert('Booking has been successfully cancelled. A refund will be processed according to the fare rules.');
+                    
+                    // Refresh booking list if it's open
+                    if (!document.getElementById('bookingsModal').classList.contains('hidden')) {
+                        showMyBookings();
+                    }
+                }, 2000);
+            });
+        }
+        
+        function downloadTicket(bookingId) {
+            showLoadingState('Generating e-ticket...');
+            setTimeout(() => {
+                hideLoadingState();
+                showCustomAlert('E-ticket download would start here. In a real system, this would generate a PDF with barcode and flight details.');
+            }, 1500);
+        }
+        
+        function resendConfirmation(bookingId) {
+            showLoadingState('Sending confirmation...');
+            setTimeout(() => {
+                hideLoadingState();
+                showCustomAlert('Confirmation email and SMS have been resent to your registered contact details.');
+            }, 1500);
+        }
+
+        // ===============================
+        // MULTI-LANGUAGE SUPPORT
+        // ===============================
+        
+        const translations = {
+            en: {
+                // Header
+                login: 'Login',
+                myBookings: 'My Bookings',
+                logout: 'Logout',
+                
+                // Steps
+                search: 'Search',
+                select: 'Select',
+                details: 'Details',
+                payment: 'Payment',
+                
+                // Search Form
+                bookYourFlight: 'Book Your Flight',
+                roundTrip: 'Round-trip',
+                oneWay: 'One-way',
+                multiCity: 'Multi-city',
+                from: 'From',
+                to: 'To',
+                departureDate: 'Departure Date',
+                returnDate: 'Return Date',
+                passengers: 'Passengers',
+                cabinClass: 'Cabin Class',
+                currency: 'Currency',
+                searchFlights: 'Search Flights',
+                
+                // Filters
+                filterSort: 'Filter & Sort',
+                stops: 'Stops',
+                allFlights: 'All flights',
+                nonStopOnly: 'Non-stop only',
+                oneStopMax: '1 stop max',
+                priceRange: 'Price Range',
+                anyPrice: 'Any price',
+                departureTime: 'Departure Time',
+                anyTime: 'Any time',
+                fareType: 'Fare Type',
+                allFares: 'All fares',
+                sortBy: 'Sort By',
+                
+                // Flight Results
+                economyFareOptions: 'Economy Fare Options',
+                selectFare: 'Select',
+                cancelStartOver: 'Cancel & Start Over',
+                
+                // Passenger Details
+                passengerInformation: 'Passenger Information',
+                passenger: 'Passenger',
+                firstName: 'First Name',
+                lastName: 'Last Name',
+                dateOfBirth: 'Date of Birth',
+                passportNumber: 'Passport Number',
+                email: 'Email',
+                phoneNumber: 'Phone Number',
+                
+                // Seat Selection
+                seatSelection: 'Seat Selection',
+                available: 'Available',
+                selected: 'Selected',
+                occupied: 'Occupied',
+                premium: 'Premium',
+                
+                // Additional Services
+                additionalServices: 'Additional Services',
+                extraBaggage: 'Extra Baggage',
+                mealPreferences: 'Meal Preferences',
+                standardMeal: 'Standard meal',
+                vegetarian: 'Vegetarian',
+                vegan: 'Vegan',
+                halal: 'Halal',
+                kosher: 'Kosher',
+                travelInsurance: 'Travel Insurance',
+                basicCoverage: 'Basic Coverage',
+                comprehensiveCoverage: 'Comprehensive',
+                
+                // Price Summary
+                priceSummary: 'Price Summary',
+                proceedToPayment: 'Proceed to Payment',
+                
+                // Payment
+                paymentInformation: 'Payment Information',
+                creditDebitCard: 'Credit/Debit Card',
+                cardNumber: 'Card Number',
+                expiryDate: 'Expiry Date',
+                cvv: 'CVV',
+                cardholderName: 'Cardholder Name',
+                totalAmount: 'Total Amount',
+                completeBooking: 'Complete Booking',
+                
+                // Booking Confirmation
+                bookingConfirmed: 'Booking Confirmed!',
+                bookingConfirmedDesc: 'Your flight has been successfully booked. A confirmation email and SMS have been sent to you.',
+                bookingReference: 'Booking Reference',
+                flightDetails: 'Flight Details',
+                bookingSummary: 'Booking Summary',
+                bookAnotherFlight: 'Book Another Flight',
+                
+                // Login
+                loginToAccount: 'Login to Your Account',
+                emailAddress: 'Email address',
+                password: 'Password',
+                
+                // Booking Management
+                manageBooking: 'Manage Booking',
+                availableActions: 'Available Actions',
+                modifyBooking: 'Modify Booking',
+                cancelBooking: 'Cancel Booking',
+                downloadEticket: 'Download E-ticket',
+                resendConfirmation: 'Resend Confirmation',
+                bookingInformation: 'Booking Information',
+                
+                // My Bookings
+                noBookingsYet: 'No bookings yet',
+                noBookingsDesc: 'Your flight bookings will appear here once you make a reservation.',
+                bookedOn: 'Booked on',
+                flight: 'Flight',
+                route: 'Route',
+                date: 'Date',
+                time: 'Time',
+                seats: 'Seats',
+                totalPaid: 'Total Paid',
+                viewEticket: 'View E-ticket',
+                
+                // Common buttons
+                cancel: 'Cancel',
+                confirm: 'Confirm',
+                close: 'Close',
+                ok: 'OK'
+            },
+            zh: {
+                // Header
+                login: '登录',
+                myBookings: '我的预订',
+                logout: '退出登录',
+                
+                // Steps
+                search: '搜索',
+                select: '选择',
+                details: '详情',
+                payment: '付款',
+                
+                // Search Form
+                bookYourFlight: '预订您的航班',
+                roundTrip: '往返',
+                oneWay: '单程',
+                multiCity: '多程',
+                from: '出发地',
+                to: '目的地',
+                departureDate: '出发日期',
+                returnDate: '返程日期',
+                passengers: '乘客',
+                cabinClass: '舱位等级',
+                currency: '货币',
+                searchFlights: '搜索航班',
+                
+                // Filters
+                filterSort: '筛选和排序',
+                stops: '中转',
+                allFlights: '所有航班',
+                nonStopOnly: '仅直飞',
+                oneStopMax: '最多1次中转',
+                priceRange: '价格范围',
+                anyPrice: '任意价格',
+                under500: '500美元以下',
+                between500_1000: '500-1000美元',
+                over1000: '1000美元以上',
+                departureTime: '出发时间',
+                anyTime: '任意时间',
+                morning: '上午（6点-12点）',
+                afternoon: '下午（12点-18点）',
+                evening: '晚上（18点-24点）',
+                fareType: '票价类型',
+                allFares: '所有票价',
+                light: '基础',
+                essential: '标准',
+                flex: '灵活',
+                sortBy: '排序方式',
+                priceLowToHigh: '价格（低到高）',
+                duration: '飞行时间',
+                
+                // Flight Results
+                economyFareOptions: '经济舱票价选项',
+                selectFare: '选择',
+                cancelStartOver: '取消并重新开始',
+                noFlightsAvailable: '没有可用航班',
+                noFlightsDesc: '所选路线没有可用航班。请尝试其他路线或稍后查看。',
+                searchDifferentRoute: '搜索其他路线',
+                noFlightsFound: '未找到航班',
+                noFlightsMatchFilter: '没有航班符合您当前的筛选条件。请尝试调整您的筛选器。',
+                clearAllFilters: '清除所有筛选器',
+                
+                // Passenger Details
+                passengerInformation: '乘客信息',
+                passenger: '乘客',
+                firstName: '名字',
+                lastName: '姓氏',
+                dateOfBirth: '出生日期',
+                passportNumber: '护照号码',
+                email: '电子邮箱',
+                phoneNumber: '电话号码',
+                required: '必填',
+                
+                // Seat Selection
+                seatSelection: '选择座位',
+                available: '可选',
+                selected: '已选',
+                occupied: '已占用',
+                premium: '优选',
+                premiumSeat: '优选座位（+50美元）',
+                
+                // Additional Services
+                additionalServices: '附加服务',
+                extraBaggage: '额外行李',
+                mealPreferences: '餐食偏好',
+                standardMeal: '标准餐食',
+                vegetarian: '素食',
+                vegan: '纯素食',
+                halal: '清真',
+                kosher: '犹太洁食',
+                travelInsurance: '旅行保险',
+                basicCoverage: '基础保障（25美元）',
+                comprehensiveCoverage: '全面保障（65美元）',
+                extraBaggage23kg: '+23公斤（75美元）',
+                extraBaggage32kg: '+32公斤（120美元）',
+                
+                // Price Summary
+                priceSummary: '价格摘要',
+                economyFare: '经济舱票价',
+                additionalServicesPrice: '附加服务',
+                taxesAndFees: '税费',
+                total: '总计',
+                proceedToPayment: '前往付款',
+                
+                // Payment
+                paymentInformation: '付款信息',
+                creditDebitCard: '信用卡/借记卡',
+                paypal: 'PayPal',
+                alipay: '支付宝',
+                wechatPay: '微信支付',
+                cardNumber: '卡号',
+                expiryDate: '有效期',
+                cvv: '安全码',
+                cardholderName: '持卡人姓名',
+                totalAmount: '总金额',
+                completeBooking: '完成预订',
+                
+                // Booking Confirmation
+                bookingConfirmed: '预订已确认！',
+                bookingConfirmedDesc: '您的航班已成功预订。确认邮件和短信已发送给您。',
+                bookingReference: '预订编号',
+                flightDetails: '航班详情',
+                bookingSummary: '预订摘要',
+                bookAnotherFlight: '预订另一班航班',
+                
+                // Login
+                loginToAccount: '登录您的账户',
+                emailAddress: '电子邮箱地址',
+                password: '密码',
+                
+                // Booking Management
+                manageBooking: '管理预订',
+                availableActions: '可用操作',
+                modifyBooking: '修改预订',
+                cancelBooking: '取消预订',
+                downloadEticket: '下载电子机票',
+                resendConfirmation: '重发确认信息',
+                bookingInformation: '预订信息',
+                
+                // My Bookings
+                noBookingsYet: '暂无预订',
+                noBookingsDesc: '您的航班预订将在您完成预订后显示在这里。',
+                bookedOn: '预订于',
+                flight: '航班',
+                route: '航线',
+                date: '日期',
+                time: '时间',
+                seats: '座位',
+                totalPaid: '已付总额',
+                viewEticket: '查看电子机票',
+                confirmed: '已确认',
+                cancelled: '已取消',
+                
+                // Messages and alerts
+                languageChanged: '语言已更改为：中文',
+                processingBooking: '正在处理您的预订...',
+                loggingIn: '正在登录...',
+                welcomeBack: '欢迎回来',
+                logoutSuccess: '您已成功退出登录',
+                bookingCancelled: '预订已取消。您可以开始新的搜索。',
+                readyNewFlight: '准备预订另一班航班！',
+                thankYou: '感谢您使用天翼航空预订系统！',
+                sessionTimeout: '由于不活动，您的预订会话已超时。请开始新的搜索。',
+                continueBooking: '继续预订',
+                cancelBookingTimeout: '取消预订',
+                sessionTimeoutWarning: '会话超时警告',
+                sessionTimeoutDesc: '由于不活动，您的预订将在1分钟内被取消。',
+                
+                // Common buttons
+                cancel: '取消',
+                confirm: '确认',
+                close: '关闭',
+                ok: '确定'
+            },
+            ja: {
+                // Header
+                login: 'ログイン',
+                myBookings: '予約履歴',
+                logout: 'ログアウト',
+                
+                // Steps
+                search: '検索',
+                select: '選択',
+                details: '詳細',
+                payment: '支払い',
+                
+                // Search Form
+                bookYourFlight: 'フライトを予約',
+                roundTrip: '往復',
+                oneWay: '片道',
+                multiCity: '周遊',
+                from: '出発地',
+                to: '目的地',
+                departureDate: '出発日',
+                returnDate: '復路日',
+                passengers: '乗客',
+                cabinClass: 'キャビンクラス',
+                currency: '通貨',
+                searchFlights: 'フライト検索',
+                
+                // Filters
+                filterSort: 'フィルター・並び替え',
+                stops: '経由',
+                allFlights: '全フライト',
+                nonStopOnly: '直行便のみ',
+                oneStopMax: '最大1経由',
+                priceRange: '価格帯',
+                anyPrice: '全価格',
+                under500: '500ドル以下',
+                between500_1000: '500-1000ドル',
+                over1000: '1000ドル以上',
+                departureTime: '出発時刻',
+                anyTime: '全時間',
+                morning: '午前（6時-12時）',
+                afternoon: '午後（12時-18時）',
+                evening: '夜間（18時-24時）',
+                fareType: '運賃タイプ',
+                allFares: '全運賃',
+                light: 'ライト',
+                essential: 'エッセンシャル',
+                flex: 'フレックス',
+                sortBy: '並び替え',
+                priceLowToHigh: '価格（安い順）',
+                duration: '飛行時間',
+                
+                // Flight Results
+                economyFareOptions: 'エコノミー運賃オプション',
+                selectFare: '選択',
+                cancelStartOver: 'キャンセルして最初から',
+                
+                // Passenger Details
+                passengerInformation: '乗客情報',
+                passenger: '乗客',
+                firstName: '名前',
+                lastName: '姓',
+                dateOfBirth: '生年月日',
+                passportNumber: 'パスポート番号',
+                email: 'メールアドレス',
+                phoneNumber: '電話番号',
+                
+                // Seat Selection
+                seatSelection: '座席選択',
+                available: '利用可能',
+                selected: '選択済み',
+                occupied: '使用中',
+                premium: 'プレミアム',
+                
+                // Additional Services
+                additionalServices: '追加サービス',
+                extraBaggage: '追加手荷物',
+                mealPreferences: '機内食の選択',
+                standardMeal: '標準機内食',
+                vegetarian: 'ベジタリアン',
+                vegan: 'ヴィーガン',
+                halal: 'ハラル',
+                kosher: 'コーシャ',
+                travelInsurance: '旅行保険',
+                basicCoverage: '基本保障',
+                comprehensiveCoverage: '包括保障',
+                
+                // Price Summary
+                priceSummary: '料金まとめ',
+                proceedToPayment: '支払いに進む',
+                
+                // Payment
+                paymentInformation: '支払い情報',
+                creditDebitCard: 'クレジット/デビットカード',
+                paypal: 'PayPal',
+                alipay: 'Alipay',
+                wechatPay: 'WeChat Pay',
+                cardNumber: 'カード番号',
+                expiryDate: '有効期限',
+                cvv: 'セキュリティコード',
+                cardholderName: 'カード名義人',
+                totalAmount: '合計金額',
+                completeBooking: '予約完了',
+                
+                // Booking Confirmation
+                bookingConfirmed: '予約確認完了！',
+                bookingConfirmedDesc: 'フライトの予約が正常に完了しました。確認メールとSMSを送信いたしました。',
+                bookingReference: '予約番号',
+                flightDetails: 'フライト詳細',
+                bookingSummary: '予約概要',
+                bookAnotherFlight: '別のフライトを予約',
+                
+                // Login
+                loginToAccount: 'アカウントにログイン',
+                emailAddress: 'メールアドレス',
+                password: 'パスワード',
+                
+                // Booking Management
+                manageBooking: '予約管理',
+                availableActions: '利用可能な操作',
+                modifyBooking: '予約変更',
+                cancelBooking: '予約キャンセル',
+                downloadEticket: 'Eチケットダウンロード',
+                resendConfirmation: '確認メール再送',
+                bookingInformation: '予約情報',
+                
+                // My Bookings
+                noBookingsYet: '予約はまだありません',
+                noBookingsDesc: '予約を行うと、こちらにフライト予約が表示されます。',
+                bookedOn: '予約日',
+                flight: 'フライト',
+                route: 'ルート',
+                date: '日付',
+                time: '時刻',
+                seats: '座席',
+                totalPaid: '支払済み総額',
+                viewEticket: 'Eチケット表示',
+                
+                // Common buttons
+                cancel: 'キャンセル',
+                confirm: '確認',
+                close: '閉じる',
+                ok: 'OK'
+            }
+        };
+        
+        let currentLanguage = 'en';
+        
+        function changeLanguage(language) {
+            currentLanguage = language;
+            updateUILanguage();
+        }
+        
+        function updateUILanguage() {
+            const t = translations[currentLanguage];
+            
+            // Update header
+            const loginBtn = document.getElementById('loginBtn');
+            if (loginBtn) loginBtn.textContent = t.login;
+            
+            // Update user menu
+            const myBookingsBtn = document.querySelector('[onclick="showMyBookings()"]');
+            if (myBookingsBtn) myBookingsBtn.textContent = t.myBookings;
+            
+            const logoutBtn = document.querySelector('[onclick="logout()"]');
+            if (logoutBtn) logoutBtn.textContent = t.logout;
+            
+            // Update step indicators
+            document.querySelector('#step1 span').textContent = t.search;
+            document.querySelector('#step2 span').textContent = t.select;
+            document.querySelector('#step3 span').textContent = t.details;
+            document.querySelector('#step4 span').textContent = t.payment;
+            
+            // Update search form
+            const bookingTitle = document.querySelector('h2');
+            if (bookingTitle) bookingTitle.textContent = t.bookYourFlight;
+            
+            // Update trip type labels
+            const tripTypeLabels = document.querySelectorAll('input[name="tripType"] + span');
+            if (tripTypeLabels[0]) tripTypeLabels[0].textContent = t.roundTrip;
+            if (tripTypeLabels[1]) tripTypeLabels[1].textContent = t.oneWay;
+            if (tripTypeLabels[2]) tripTypeLabels[2].textContent = t.multiCity;
+            
+            // Update form labels and options
+            updateFormLabels(t);
+            updateSelectOptions(t);
+            
+            // Update search button
+            const searchBtn = document.getElementById('searchFlights');
+            if (searchBtn) searchBtn.textContent = t.searchFlights;
+            
+            // Update filter section
+            const filterTitle = document.querySelector('#resultsStep h3');
+            if (filterTitle) filterTitle.textContent = t.filterSort;
+            
+            // Update filter labels and options
+            updateFilterSection(t);
+            
+            // Update cancel buttons
+            updateCancelButtons(t);
+            
+            // Update details step sections
+            updateDetailsStep(t);
+            
+            // Update payment step
+            updatePaymentStep(t);
+            
+            // Update confirmation step
+            updateConfirmationStep(t);
+            
+            // Update login modal
+            updateLoginModal(t);
+            
+            // Update booking management modal titles
+            updateManageBookingModal(t);
+            
+            // Update My Bookings modal
+            updateMyBookingsModal(t);
+            
+            // Update common buttons text
+            updateCommonButtons(t);
+            
+            // Update hardcoded strings and placeholders
+            updateHardcodedStrings(t);
+            
+            // Refresh currently visible content if on specific steps
+            if (currentStep === 3) {
+                updatePassengerFormsLanguage(t);
+            }
+            
+            // Update any flight results if they exist
+            if (currentStep === 2) {
+                updateFlightResultsLanguage(t);
+            }
+        }
+        
+        function updateFormLabels(t) {
+            // Update main form labels by finding them more precisely
+            const labels = document.querySelectorAll('#searchStep label');
+            labels.forEach(label => {
+                const labelText = label.textContent.trim();
+                // Use endsWith to avoid partial matches
+                if (labelText.endsWith('From') || labelText === 'From') {
+                    label.textContent = t.from;
+                } else if (labelText.endsWith('To') || labelText === 'To') {
+                    label.textContent = t.to;
+                } else if (labelText.includes('Departure Date')) {
+                    label.textContent = t.departureDate;
+                } else if (labelText.includes('Return Date')) {
+                    label.textContent = t.returnDate;
+                } else if (labelText.endsWith('Passengers') || labelText === 'Passengers') {
+                    label.textContent = t.passengers;
+                } else if (labelText.includes('Cabin Class')) {
+                    label.textContent = t.cabinClass;
+                } else if (labelText.endsWith('Currency') || labelText === 'Currency') {
+                    label.textContent = t.currency;
+                }
+            });
+        }
+        
+        function updateFilterSection(t) {
+            // Update filter labels
+            const filterLabels = document.querySelectorAll('#resultsStep label');
+            filterLabels.forEach(label => {
+                const labelText = label.textContent.trim();
+                if (labelText.endsWith('Stops') || labelText === 'Stops') {
+                    label.textContent = t.stops;
+                } else if (labelText.includes('Price Range')) {
+                    label.textContent = t.priceRange;
+                } else if (labelText.includes('Departure Time')) {
+                    label.textContent = t.departureTime;
+                } else if (labelText.includes('Fare Type')) {
+                    label.textContent = t.fareType;
+                } else if (labelText.includes('Sort By')) {
+                    label.textContent = t.sortBy;
+                }
+            });
+            
+            // Update filter options by index (more reliable)
+            const stopsOptions = document.querySelectorAll('#stopsFilter option');
+            if (stopsOptions[0]) stopsOptions[0].textContent = t.allFlights;
+            if (stopsOptions[1]) stopsOptions[1].textContent = t.nonStopOnly;
+            if (stopsOptions[2]) stopsOptions[2].textContent = t.oneStopMax;
+            
+            const priceOptions = document.querySelectorAll('#priceFilter option');
+            if (priceOptions[0]) priceOptions[0].textContent = t.anyPrice;
+            if (priceOptions[1]) priceOptions[1].textContent = t.under500 || 'Under $500';
+            if (priceOptions[2]) priceOptions[2].textContent = t.between500_1000 || '$500 - $1000';
+            if (priceOptions[3]) priceOptions[3].textContent = t.over1000 || 'Over $1000';
+            
+            const timeOptions = document.querySelectorAll('#timeFilter option');
+            if (timeOptions[0]) timeOptions[0].textContent = t.anyTime;
+            if (timeOptions[1]) timeOptions[1].textContent = t.morning || 'Morning (6AM-12PM)';
+            if (timeOptions[2]) timeOptions[2].textContent = t.afternoon || 'Afternoon (12PM-6PM)';
+            if (timeOptions[3]) timeOptions[3].textContent = t.evening || 'Evening (6PM-12AM)';
+            
+            const fareOptions = document.querySelectorAll('#fareTypeFilter option');
+            if (fareOptions[0]) fareOptions[0].textContent = t.allFares;
+            if (fareOptions[1]) fareOptions[1].textContent = t.light || 'Light';
+            if (fareOptions[2]) fareOptions[2].textContent = t.essential || 'Essential';
+            if (fareOptions[3]) fareOptions[3].textContent = t.flex || 'Flex';
+            
+            const sortOptions = document.querySelectorAll('#sortBy option');
+            if (sortOptions[0]) sortOptions[0].textContent = t.priceLowToHigh || 'Price (Low to High)';
+            if (sortOptions[1]) sortOptions[1].textContent = t.duration || 'Duration';
+            if (sortOptions[2]) sortOptions[2].textContent = t.departureTime || 'Departure Time';
+        }
+        
+        function updateCancelButtons(t) {
+            const cancelBtns = document.querySelectorAll('[onclick="cancelBooking()"]');
+            cancelBtns.forEach(btn => {
+                btn.textContent = t.cancelStartOver;
+            });
+        }
+        
+        function updateDetailsStep(t) {
+            // Update section titles by finding specific headings
+            const detailsHeadings = document.querySelectorAll('#detailsStep h3');
+            detailsHeadings.forEach(heading => {
+                const headingText = heading.textContent.trim();
+                if (headingText.includes('Passenger') || headingText.includes('乘客') || headingText.includes('乗客')) {
+                    heading.textContent = t.passengerInformation;
+                } else if (headingText.includes('Seat') || headingText.includes('座位') || headingText.includes('座席')) {
+                    heading.textContent = t.seatSelection;
+                } else if (headingText.includes('Additional') || headingText.includes('Service') || headingText.includes('附加') || headingText.includes('追加')) {
+                    heading.textContent = t.additionalServices;
+                } else if (headingText.includes('Price') || headingText.includes('Summary') || headingText.includes('价格') || headingText.includes('料金')) {
+                    heading.textContent = t.priceSummary;
+                }
+            });
+            
+            // Update seat legend
+            updateSeatLegend(t);
+            
+            // Update additional services
+            updateAdditionalServices(t);
+            
+            // Update buttons in details step
+            const proceedBtn = document.getElementById('proceedToPayment');
+            if (proceedBtn) proceedBtn.textContent = t.proceedToPayment;
+        }
+        
+        function updatePaymentStep(t) {
+            // Update payment section title
+            const paymentHeading = document.querySelector('#paymentStep h3');
+            if (paymentHeading) paymentHeading.textContent = t.paymentInformation;
+            
+            // Update payment labels
+            updatePaymentLabels(t);
+            
+            // Update payment method labels by index
+            const paymentMethodLabels = document.querySelectorAll('#paymentStep label span.text-sm');
+            if (paymentMethodLabels[0]) paymentMethodLabels[0].textContent = t.creditDebitCard;
+            if (paymentMethodLabels[1]) paymentMethodLabels[1].textContent = t.paypal || 'PayPal';
+            if (paymentMethodLabels[2]) paymentMethodLabels[2].textContent = t.alipay || 'Alipay';
+            if (paymentMethodLabels[3]) paymentMethodLabels[3].textContent = t.wechatPay || 'WeChat Pay';
+            
+            const completeBtn = document.getElementById('completeBooking');
+            if (completeBtn) completeBtn.textContent = t.completeBooking;
+            
+            // Update total amount label
+            const totalAmountSpan = document.querySelector('#paymentStep .text-lg.font-bold span:first-child');
+            if (totalAmountSpan) totalAmountSpan.textContent = t.totalAmount + ':';
+        }
+        
+        function updateCommonButtons(t) {
+            // Update all buttons with common text
+            const allButtons = document.querySelectorAll('button');
+            allButtons.forEach(btn => {
+                const text = btn.textContent.trim();
+                if (text === 'Cancel') btn.textContent = t.cancel;
+                if (text === 'Confirm') btn.textContent = t.confirm;
+                if (text === 'OK') btn.textContent = t.ok;
+                if (text === 'Close') btn.textContent = t.close;
+                if (text === 'Login') btn.textContent = t.login;
+            });
+        }
+        
+        function updateLabelText(searchText, newText) {
+            const labels = document.querySelectorAll('label');
+            labels.forEach(label => {
+                if (label.textContent.trim().includes(searchText)) {
+                    label.textContent = label.textContent.replace(searchText, newText);
+                }
+            });
+        }
+        
+        function updateSectionTitle(searchText, newText) {
+            const headings = document.querySelectorAll('h3, h4');
+            headings.forEach(heading => {
+                if (heading.textContent.trim() === searchText) {
+                    heading.textContent = newText;
+                }
+            });
+        }
+        
+        function updateSeatLegend(t) {
+            const seatLegend = document.querySelectorAll('#detailsStep .text-gray-700');
+            seatLegend.forEach(span => {
+                const text = span.textContent.trim();
+                if (text === 'Available') span.textContent = t.available;
+                if (text === 'Selected') span.textContent = t.selected;
+                if (text === 'Occupied') span.textContent = t.occupied;
+                if (text.includes('Premium')) span.textContent = t.premium + ' (+$50)';
+            });
+        }
+        
+        function updateAdditionalServices(t) {
+            const serviceHeadings = document.querySelectorAll('#detailsStep h4');
+            serviceHeadings.forEach(heading => {
+                const text = heading.textContent.trim();
+                if (text === 'Extra Baggage') heading.textContent = t.extraBaggage;
+                if (text === 'Meal Preferences') heading.textContent = t.mealPreferences;
+                if (text === 'Travel Insurance') heading.textContent = t.travelInsurance;
+            });
+            
+            // Update meal options
+            const mealOptions = document.querySelectorAll('#detailsStep select option');
+            mealOptions.forEach(option => {
+                const text = option.textContent.trim();
+                if (text === 'Standard meal') option.textContent = t.standardMeal;
+                if (text === 'Vegetarian') option.textContent = t.vegetarian;
+                if (text === 'Vegan') option.textContent = t.vegan;
+                if (text === 'Halal') option.textContent = t.halal;
+                if (text === 'Kosher') option.textContent = t.kosher;
+            });
+            
+            // Update insurance options
+            const insuranceLabels = document.querySelectorAll('#detailsStep span');
+            insuranceLabels.forEach(span => {
+                const text = span.textContent.trim();
+                if (text.includes('Basic Coverage')) span.textContent = t.basicCoverage + ' ($25)';
+                if (text.includes('Comprehensive')) span.textContent = t.comprehensiveCoverage + ' ($65)';
+            });
+        }
+        
+        function updatePaymentLabels(t) {
+            updateLabelText('Card Number', t.cardNumber);
+            updateLabelText('Expiry Date', t.expiryDate);
+            updateLabelText('CVV', t.cvv);
+            updateLabelText('Cardholder Name', t.cardholderName);
+            
+            // Update payment method labels
+            const paymentMethods = document.querySelectorAll('#paymentStep span.text-sm');
+            paymentMethods.forEach(span => {
+                const text = span.textContent.trim();
+                if (text === 'Credit/Debit Card') span.textContent = t.creditDebitCard;
+            });
+            
+            // Update total amount label
+            const totalLabel = document.querySelector('#paymentStep span');
+            if (totalLabel && totalLabel.textContent.includes('Total Amount')) {
+                totalLabel.textContent = t.totalAmount + ':';
+            }
+        }
+        
+        function updateConfirmationStep(t) {
+            const confirmTitle = document.querySelector('#confirmationStep h2');
+            if (confirmTitle) confirmTitle.textContent = t.bookingConfirmed;
+            
+            const confirmDesc = document.querySelector('#confirmationStep p');
+            if (confirmDesc) confirmDesc.textContent = t.bookingConfirmedDesc;
+            
+            const refTitle = document.querySelector('#confirmationStep h3');
+            if (refTitle) refTitle.textContent = t.bookingReference;
+            
+            const anotherFlightBtn = document.getElementById('bookAnotherFlight');
+            if (anotherFlightBtn) anotherFlightBtn.textContent = t.bookAnotherFlight;
+            
+            const closeBtn = document.querySelector('[onclick="closeBookingSystem()"]');
+            if (closeBtn) closeBtn.textContent = t.close;
+        }
+        
+        function updateLoginModal(t) {
+            const loginTitle = document.querySelector('#loginModal h3');
+            if (loginTitle) loginTitle.textContent = t.loginToAccount;
+            
+            const emailInput = document.getElementById('loginEmail');
+            if (emailInput) emailInput.placeholder = t.emailAddress;
+            
+            const passwordInput = document.getElementById('loginPassword');
+            if (passwordInput) passwordInput.placeholder = t.password;
+            
+            const loginModalButtons = document.querySelectorAll('#loginModal button');
+            loginModalButtons.forEach(btn => {
+                if (btn.textContent.trim() === 'Cancel') btn.textContent = t.cancel;
+                if (btn.textContent.trim() === 'Login') btn.textContent = t.login;
+            });
+        }
+        
+        function updateManageBookingModal(t) {
+            const manageTitle = document.querySelector('#manageBookingModal h3');
+            if (manageTitle) manageTitle.textContent = t.manageBooking;
+        }
+        
+        function updateMyBookingsModal(t) {
+            const bookingsTitle = document.querySelector('#bookingsModal h3');
+            if (bookingsTitle) bookingsTitle.textContent = t.myBookings;
+        }
+        
+        function updatePassengerFormsLanguage(t) {
+            // Update passenger form labels
+            const passengerLabels = document.querySelectorAll('#passengerForms label');
+            passengerLabels.forEach(label => {
+                const text = label.textContent.trim();
+                if (text.includes('First Name')) label.textContent = label.textContent.replace('First Name', t.firstName);
+                if (text.includes('Last Name')) label.textContent = label.textContent.replace('Last Name', t.lastName);
+                if (text.includes('Date of Birth')) label.textContent = label.textContent.replace('Date of Birth', t.dateOfBirth);
+                if (text.includes('Passport Number')) label.textContent = label.textContent.replace('Passport Number', t.passportNumber);
+                if (text.includes('Email')) label.textContent = label.textContent.replace('Email', t.email);
+                if (text.includes('Phone Number')) label.textContent = label.textContent.replace('Phone Number', t.phoneNumber);
+            });
+            
+            // Update passenger headings
+            const passengerHeadings = document.querySelectorAll('#passengerForms h4');
+            passengerHeadings.forEach((heading, index) => {
+                heading.textContent = `${t.passenger} ${index + 1}`;
+            });
+        }
+
+        function updateSelectOptions(t) {
+            // Update passenger count options
+            const passengerOptions = document.querySelectorAll('#passengers option');
+            if (currentLanguage === 'zh') {
+                if (passengerOptions[0]) passengerOptions[0].textContent = '1位乘客';
+                if (passengerOptions[1]) passengerOptions[1].textContent = '2位乘客';
+                if (passengerOptions[2]) passengerOptions[2].textContent = '3位乘客';
+                if (passengerOptions[3]) passengerOptions[3].textContent = '4位乘客';
+                if (passengerOptions[4]) passengerOptions[4].textContent = '5+位乘客';
+            } else if (currentLanguage === 'ja') {
+                if (passengerOptions[0]) passengerOptions[0].textContent = '1名の乗客';
+                if (passengerOptions[1]) passengerOptions[1].textContent = '2名の乗客';
+                if (passengerOptions[2]) passengerOptions[2].textContent = '3名の乗客';
+                if (passengerOptions[3]) passengerOptions[3].textContent = '4名の乗客';
+                if (passengerOptions[4]) passengerOptions[4].textContent = '5名以上の乗客';
+            } else {
+                if (passengerOptions[0]) passengerOptions[0].textContent = '1 Passenger';
+                if (passengerOptions[1]) passengerOptions[1].textContent = '2 Passengers';
+                if (passengerOptions[2]) passengerOptions[2].textContent = '3 Passengers';
+                if (passengerOptions[3]) passengerOptions[3].textContent = '4 Passengers';
+                if (passengerOptions[4]) passengerOptions[4].textContent = '5+ Passengers';
+            }
+            
+            // Update cabin class options
+            const cabinOptions = document.querySelectorAll('#cabinClass option');
+            if (currentLanguage === 'zh') {
+                if (cabinOptions[0]) cabinOptions[0].textContent = '经济舱';
+                if (cabinOptions[1]) cabinOptions[1].textContent = '超级经济舱';
+                if (cabinOptions[2]) cabinOptions[2].textContent = '商务舱';
+                if (cabinOptions[3]) cabinOptions[3].textContent = '头等舱';
+            } else if (currentLanguage === 'ja') {
+                if (cabinOptions[0]) cabinOptions[0].textContent = 'エコノミー';
+                if (cabinOptions[1]) cabinOptions[1].textContent = 'プレミアムエコノミー';
+                if (cabinOptions[2]) cabinOptions[2].textContent = 'ビジネス';
+                if (cabinOptions[3]) cabinOptions[3].textContent = 'ファースト';
+            } else {
+                if (cabinOptions[0]) cabinOptions[0].textContent = 'Economy';
+                if (cabinOptions[1]) cabinOptions[1].textContent = 'Premium Economy';
+                if (cabinOptions[2]) cabinOptions[2].textContent = 'Business';
+                if (cabinOptions[3]) cabinOptions[3].textContent = 'First';
+            }
+            
+            // Update departure city options
+            const departureOptions = document.querySelectorAll('#departure option');
+            if (currentLanguage === 'zh') {
+                if (departureOptions[0]) departureOptions[0].textContent = '选择出发城市';
+                if (departureOptions[1]) departureOptions[1].textContent = '香港 (HKG)';
+                if (departureOptions[2]) departureOptions[2].textContent = '东京 (NRT)';
+                if (departureOptions[3]) departureOptions[3].textContent = '新加坡 (SIN)';
+            } else if (currentLanguage === 'ja') {
+                if (departureOptions[0]) departureOptions[0].textContent = '出発都市を選択';
+                if (departureOptions[1]) departureOptions[1].textContent = '香港 (HKG)';
+                if (departureOptions[2]) departureOptions[2].textContent = '東京 (NRT)';
+                if (departureOptions[3]) departureOptions[3].textContent = 'シンガポール (SIN)';
+            } else {
+                if (departureOptions[0]) departureOptions[0].textContent = 'Select departure city';
+                if (departureOptions[1]) departureOptions[1].textContent = 'Hong Kong (HKG)';
+                if (departureOptions[2]) departureOptions[2].textContent = 'Tokyo (NRT)';
+                if (departureOptions[3]) departureOptions[3].textContent = 'Singapore (SIN)';
+            }
+            
+            // Update destination city options
+            const destinationOptions = document.querySelectorAll('#destination option');
+            if (currentLanguage === 'zh') {
+                if (destinationOptions[0]) destinationOptions[0].textContent = '选择目的地城市';
+                if (destinationOptions[1]) destinationOptions[1].textContent = '洛杉矶 (LAX)';
+                if (destinationOptions[2]) destinationOptions[2].textContent = '纽约 (JFK)';
+                if (destinationOptions[3]) destinationOptions[3].textContent = '伦敦 (LHR)';
+            } else if (currentLanguage === 'ja') {
+                if (destinationOptions[0]) destinationOptions[0].textContent = '目的地都市を選択';
+                if (destinationOptions[1]) destinationOptions[1].textContent = 'ロサンゼルス (LAX)';
+                if (destinationOptions[2]) destinationOptions[2].textContent = 'ニューヨーク (JFK)';
+                if (destinationOptions[3]) destinationOptions[3].textContent = 'ロンドン (LHR)';
+            } else {
+                if (destinationOptions[0]) destinationOptions[0].textContent = 'Select destination city';
+                if (destinationOptions[1]) destinationOptions[1].textContent = 'Los Angeles (LAX)';
+                if (destinationOptions[2]) destinationOptions[2].textContent = 'New York (JFK)';
+                if (destinationOptions[3]) destinationOptions[3].textContent = 'London (LHR)';
+            }
+        }
+        
+        function updateHardcodedStrings(t) {
+            // Update any hardcoded text that might not be covered elsewhere
+            
+            // Update search step placeholder texts
+            const placeholderElements = document.querySelectorAll('input[placeholder], select option');
+            placeholderElements.forEach(el => {
+                if (el.placeholder === 'Email address') el.placeholder = t.emailAddress;
+                if (el.placeholder === 'Password') el.placeholder = t.password;
+            });
+            
+            // Update any remaining static text elements
+            const staticTexts = document.querySelectorAll('span, p, div');
+            staticTexts.forEach(el => {
+                const text = el.textContent?.trim();
+                if (text === 'Non-stop') {
+                    if (currentLanguage === 'zh') el.textContent = '直飞';
+                    else if (currentLanguage === 'ja') el.textContent = '直行便';
+                    else el.textContent = 'Non-stop';
+                }
+            });
+        }
+        
+        function updateFlightResultsLanguage(t) {
+            // Update any flight results that are currently displayed
+            const flightResults = document.getElementById('flightResults');
+            if (flightResults && flightResults.innerHTML) {
+                // Update "Economy Fare Options" headings
+                const fareOptionHeadings = flightResults.querySelectorAll('h4');
+                fareOptionHeadings.forEach(heading => {
+                    if (heading.textContent.includes('Economy') || heading.textContent.includes('经济') || heading.textContent.includes('エコノミー')) {
+                        heading.textContent = t.economyFareOptions;
+                    }
+                });
+                
+                // Update "Select" buttons in fare cards
+                const selectButtons = flightResults.querySelectorAll('button');
+                selectButtons.forEach(btn => {
+                    if (btn.textContent.includes('Select') || btn.textContent.includes('选择') || btn.textContent.includes('選択')) {
+                        const fareType = btn.textContent.match(/(Light|Essential|Flex|ライト|エッセンシャル|フレックス|基础|标准|灵活)/i);
+                        if (fareType) {
+                            const fare = fareType[0].toLowerCase();
+                            let translatedFare = fare;
+                            if (currentLanguage === 'zh') {
+                                if (fare.includes('light') || fare.includes('ライト')) translatedFare = '基础';
+                                else if (fare.includes('essential') || fare.includes('エッセンシャル')) translatedFare = '标准';
+                                else if (fare.includes('flex') || fare.includes('フレックス')) translatedFare = '灵活';
+                            } else if (currentLanguage === 'ja') {
+                                if (fare.includes('light') || fare.includes('基础')) translatedFare = 'ライト';
+                                else if (fare.includes('essential') || fare.includes('标准')) translatedFare = 'エッセンシャル';
+                                else if (fare.includes('flex') || fare.includes('灵活')) translatedFare = 'フレックス';
+                            } else {
+                                if (fare.includes('基础') || fare.includes('ライト')) translatedFare = 'Light';
+                                else if (fare.includes('标准') || fare.includes('エッセンシャル')) translatedFare = 'Essential';
+                                else if (fare.includes('灵活') || fare.includes('フレックス')) translatedFare = 'Flex';
+                            }
+                            btn.textContent = `${t.selectFare} ${translatedFare.charAt(0).toUpperCase() + translatedFare.slice(1)}`;
+                        }
+                    }
+                });
+                
+                // Update stop information
+                const stopSpans = flightResults.querySelectorAll('span');
+                stopSpans.forEach(span => {
+                    const text = span.textContent.trim();
+                    if (text === 'Non-stop') {
+                        if (currentLanguage === 'zh') span.textContent = '直飞';
+                        else if (currentLanguage === 'ja') span.textContent = '直行便';
+                        else span.textContent = 'Non-stop';
+                    } else if (text.includes('stop')) {
+                        if (currentLanguage === 'zh') span.textContent = text.replace('stop', '次中转');
+                        else if (currentLanguage === 'ja') span.textContent = text.replace('stop', '回経由');
+                    }
+                });
+            }
+        }
+
+        // Activity tracking - reset timer on user interaction
+        document.addEventListener('DOMContentLoaded', function() {
+            // Track mouse movements, clicks, keyboard input
+            const activityEvents = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'];
+            
+            activityEvents.forEach(event => {
+                document.addEventListener(event, resetIdleTimer, true);
+            });
+            
+            // Start the idle timer when moving past search step
+            const originalShowStep = showStep;
+            showStep = function(step) {
+                originalShowStep(step);
+                resetIdleTimer();
+            };
+            
+            // Add event listeners for additional services to update pricing
+            document.addEventListener('change', function(e) {
+                // Check if the changed element is an additional service
+                if (e.target.name === 'baggage' || e.target.name === 'insurance') {
+                    // Only update if we're on the details step and have a selected flight
+                    if (currentStep === 3 && selectedFlights.outbound) {
+                        updatePriceSummary();
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+
