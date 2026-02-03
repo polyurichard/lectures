@@ -37,7 +37,7 @@ Spring Boot is a Java framework for building web applications and microservices.
 **Use cases of Spring Boot**
 
 Which web frameworks developer  you use?
-<img src="image.png" alt="Alt text" width="80%"><br/>
+<img src="image.png" alt="Alt text" width="600" /><br/>
 *Reference: [Java Dev Ecosystem 2023](https://www.jetbrains.com/lp/devecosystem-2023/java/)*
 
 - **Web Applications**: 
@@ -46,17 +46,17 @@ Which web frameworks developer  you use?
   - We can implement web applications using different approaches:
     - Apps where the backend provides the fully prepared view in response to a client’s request. The browser directly interprets the data received from the backend and displays this information to the user in these apps. 
   
-  <img src="image-3.png" alt="Alt text" width="90%">
+    <img src="image-3.png" alt="Alt text" width="600" />
   
   - Apps using frontend-backend separation: The backend only serves raw data. The browser runs a separate frontend app that gets the backend responses, processes the data, and instructs the browser what to display.
   
-  <img src="image-2.png" alt="Alt text" width="90%">
+    <img src="image-2.png" alt="Alt text" width="600" />
 
 - **REST APIs**: 
     In Software Engineering, an API (Application Programming Interface) is a set of functions and procedures that allow the creation of applications that access the features of an application, or other service. 
 
     API allows programs to communicate with each other:
-    ![Alt text](image-7.png)
+    <img src="image-7.png" alt="Alt text" width="600" />
 
     REST API is a popular type of API 
     - Uses HTTP requests to perform CRUD (Create, Read, Update, Delete) operations. 
@@ -66,13 +66,13 @@ Which web frameworks developer  you use?
     - REST API should return the appropriate HTTP status codes to indicate the status of the request.
       - 200 (OK), 201 (Created), 400 (Bad Request), 404 (Not Found), 500 (Internal Server Error)...
 
-    <img src="image-4.png" alt="Alt text" width="80%">
+    <img src="image-4.png" alt="Alt text" width="600" />
 
 - **Microservices**: 
   - A microservice is a small, independently deployable service that performs a specific task. 
   - Microservices are typically used to build large applications using a collection of small services.
 
-  <img src="image-5.png" alt="Alt text" width="80%">
+    <img src="image-5.png" alt="Alt text" width="600" />
 
 ## Creating a Spring Boot Project
 
@@ -81,7 +81,7 @@ Which web frameworks developer  you use?
 -  A web-based tool for generating Spring Boot projects. It allows us to select the dependencies and build tools for our project. 
 -  Allows us to download the project as a zip file or generate a Maven project.
 
-<img src="image-1.png" alt="Alt text" width="70%"> <br/>
+<img src="image-1.png" alt="Alt text" width="600" /> <br/>
 *URL: [Spring Initializr](https://start.spring.io)*
 
 
@@ -386,7 +386,7 @@ In our previous example, we used a collection of books as the data source. Howev
 
 The following diagram illustrate the architecture of a typical Spring Boot application with a persistent data storage solution. 
 
-<img src="image-8.png" alt="Alt text" width="80%">
+<img src="image-8.png" alt="Alt text" width="600" />
 
 *Remark: In Java Spring, the *Application Context* is a container that contains all the beans (objects) in the application.*
 
@@ -669,7 +669,7 @@ We will define the followin classes:
 - The client class `NotificationService`  uses the `MessageService` interface to send messages.
 
 
-<img src="image-6.png" alt="Alt text" width="80%">
+<img src="image-6.png" alt="Alt text" width="600" />
 
 
 The `MessageService` interface defines the contract for sending messages. It includes a method to send messages to a specified recipient.

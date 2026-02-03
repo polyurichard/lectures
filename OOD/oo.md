@@ -49,7 +49,7 @@ Our RPG game may support multiple players to play in the game. We can model each
 
 In OOD, UML class diagrams can be used to visually represent the structure of the `Player` class:
 
-![Alt text](image-20.png)
+<img src="image-20.png" alt="Alt text" width="600" />
 
 Each class is represented as a rectangle divided into three sections.
 - The top section contains the name of the class (`Player` in this case). 
@@ -137,7 +137,7 @@ player1.increaseScore(10); //increases player1's score by 10
 
 Encapsulation is a fundamental principle of object-oriented programming that restricts direct access to an object's attributes. It avoids the data and code within an object from being randomly accessed by other code defined outside the object or class.
 
-![Alt text](image-9.png)
+<img src="image-9.png" alt="Alt text" width="600" />
 
 The `Monster` class represents a monster in the game. It includes attributes like `name` and `health`, and methods to manage these attributes.
 
@@ -226,7 +226,7 @@ Inheritance is a mechanism in Java that allows one class to acquire the properti
 - The class which inherits the properties of another class is known as the **subclass** (or derived class, child class)
 - The class whose properties are inherited is known as the **superclass** (or base class, parent class).
 
-![Alt text](image-8.png)
+<img src="image-8.png" alt="Alt text" width="600" />
 
 Let's create a class  `Warrior` that extends `Player`. 
 - The `Warrior` class inherits all the public and protected members (fields and methods) of the `Player` class.
@@ -319,7 +319,7 @@ public class Mage extends Player {
 
 Java does not support multiple inheritance. Multiple inheritance is a language feature that allows a class to inherit from multiple parent classes. While it can provide flexibility and code reuse, it also introduces challenges, one of which is the "Diamond Problem" or "Diamond Inheritance Problem."
 
-<img src="image-15.png" alt="Alt text" width="80%"/>
+<img src="image-15.png" alt="Alt text" width="600" />
 
 The Diamond Problem occurs when a class inherits from two or more classes that have a common base class
 - In the example above, the `MagicKnight` class inherits from both the `Warrior` and `Mage` classes, which themselves inherit from the `Character` class. This creates a diamond-shaped inheritance hierarchy.
@@ -337,7 +337,7 @@ An interface in OO defines a contract that a class agrees to follow. The purpose
   - Interfaces in Java are used to declare methods that a class must implement, not to define the state of an object.
 
 
-![Alt text](image-11.png)
+<img src="image-11.png" alt="Alt text" width="600" />
 
 Let's begin by defining a `Weapon` interface with `use` and `upgrade()` methods.
 
@@ -493,7 +493,7 @@ public class Bow extends Weapon {
 
 Here is the UML diagram.
 
-![Alt text](image-17.png)
+<img src="image-17.png" alt="Alt text" width="600" />
 
 <div style="page-break-before: always;" />
 
@@ -503,7 +503,7 @@ Here is the UML diagram.
 **Abstraction** in object-oriented design is a process of hiding the implementation details and showing only the essential functionality to the user. It lets you focus on what the object does instead of how it does it.
 
 
-<img src="image-18.png" alt="Alt text" width="80%"/>
+<img src="image-18.png" alt="Alt text" width="600" />
 
 
 ```java
@@ -532,7 +532,7 @@ In our game,
 
 **Delegation** is a core concept in composition, where an object handles a request by delegating it to a second helper object (the delegate). This allows distributing responsibilities among different classes and promotes code reuse and flexibility.
 
-![Alt text](image-5.png)
+<img src="image-5.png" alt="Alt text" width="600" />
 
 For instance, for the `Player` class,
 - It stores a reference to a `Weapon` object and has a method `useWeapon()` that calls the `use()` method on the `Weapon` object. 
@@ -642,7 +642,7 @@ In UML (Unified Modeling Language) class diagrams, the structure and relationshi
 - **Classes**: Represented by rectangles divided into three parts: the top part for the class name, the middle part for attributes, and the bottom part for methods.
 - **Relationships**: Different types of lines and arrows are used to depict various relationships like inheritance, association,  interface implementation (realization), and association.
 
-![Alt text](image-6.png)
+<img src="image-6.png" alt="Alt text" width="600" />
 
 
 Types of relationships in OO:
@@ -856,7 +856,7 @@ While inheritance is a commonly used mechanism in object-oriented programming fo
 
 Instead of using inheritance, we can define interface classes to address the limitations of inheritance. In our RPG example, we can define interfaces like `Attackable` and `Talkable` which models the behavior of different types of characters in the game.
 
-![Alt text](image-16.png)
+<img src="image-16.png" alt="Alt text" width="600" />
 
 We first define the interface to model the behavior of different types of characters.
 - `Attackable` is an interface with the method `attack(Character target)`, which defines the behavior to attack other characters.
@@ -1012,7 +1012,7 @@ You have to modify the `GameSaver` class every time you want to change the type 
 
 A "dependency" here  refers to an object that can be used as a service. In this example, the GameServer depends on the concrete implementation of the databases (e.g. MySQLDatabase or MongoDB).
 
-![Alt text](image-13.png)
+<img src="image-13.png" alt="Alt text" width="600" />
 
 <div style="page-break-before: always;" />
 
@@ -1021,7 +1021,7 @@ A "dependency" here  refers to an object that can be used as a service. In this 
 The DIP states that high-level modules should not depend on low-level modules. Both should depend on abstractions.
 
 
-![Alt text](image-14.png)
+<img src="image-14.png" alt="Alt text" width="600" />
 
 In the context of the `GameSaver` example, GameSaver is a high-level module and Database (`MySQLDatabase` and `MongoDB` classes) are  a low-level module. 
 - By having `GameSaver` depend on the Database interface (an abstraction), rather than on concrete Database implementations (MySQLDatabase or MongoDB), we are adhering to the Dependency Inversion Principle. 

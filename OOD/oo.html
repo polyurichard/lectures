@@ -481,7 +481,7 @@ Player player2 = <span class="hljs-keyword">new</span> Player(<span class="hljs-
 player1.increaseScore(<span class="hljs-number">10</span>); <span class="hljs-comment">//increases player1's score by 10</span>
 </div></code></pre>
 <h2 id="uml-diagram">UML Diagram</h2>
-<p><img src="image-20.png" alt="Alt text">
+<p><img src="image-20.png" alt="Alt text" width="600" />
 The UML diagram visually represents the structure of the <code>Player</code> class, including its attributes, constructor, methods, and their signatures. The class is represented as a rectangle divided into three sections.</p>
 <ul>
 <li>The top section contains the name of the class (<code>Player</code> in this case).</li>
@@ -504,7 +504,7 @@ The UML diagram visually represents the structure of the <code>Player</code> cla
 <h1 id="fundamental-oo-concepts">Fundamental OO Concepts</h1>
 <h2 id="encapsulation">Encapsulation</h2>
 <p>Encapsulation is a fundamental principle of object-oriented programming that restricts direct access to an object's attributes. It avoids  the data and code being tied together within an object from being randomly accessed by other code defined outside the object or class.</p>
-<p><img src="image-9.png" alt="Alt text">
+<p><img src="image-9.png" alt="Alt text" width="600" />
 The <code>Monster</code> class represents a monster in the game. It  includes attributes like <code>name</code> and <code>health</code>, and methods to manage these attributes.</p>
 <pre class="hljs"><code><div><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Monster</span> </span>{
     <span class="hljs-keyword">private</span> String name;
@@ -566,7 +566,7 @@ Monster orc1 = <span class="hljs-keyword">new</span> Monster(<span class="hljs-s
 <li>The class which inherits the properties of another class is known as the <strong>subclass</strong> (or derived class, child class)</li>
 <li>The class whose properties are inherited is known as the <strong>superclass</strong> (or base class, parent class).</li>
 </ul>
-<p><img src="image-8.png" alt="Alt text"></p>
+<p><img src="image-8.png" alt="Alt text" width="600" /></p>
 <p>Let's Create a new class named <code>Warrior</code> that extends <code>Player</code>.</p>
 <ul>
 <li>The <code>Warrior</code> class inherits all the public and protected members (fields and methods) of the <code>Player</code> class.</li>
@@ -653,7 +653,7 @@ public class Mage extends Player {
 </ul>
 </li>
 </ul>
-<p><img src="image-11.png" alt="Alt text">
+<p><img src="image-11.png" alt="Alt text" width="600" />
 Let's begin by defining a  <code>Weapon</code> interface with <code>use</code> and <code>upgrade()</code> methods.</p>
 <pre class="hljs"><code><div><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">Weapon</span> </span>{
     <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">use</span><span class="hljs-params">()</span></span>;
@@ -759,7 +759,7 @@ bow.upgrade();
 </ul>
 <h2 id="abstraction">Abstraction</h2>
 <p><strong>Abstraction</strong> in object-oriented design is a process of hiding the implementation details and showing only the essential functionality to the user. It lets you focus on what the object does instead of how it does it.</p>
-<p><img src="image-18.png" alt="Alt text"></p>
+<p><img src="image-18.png" alt="Alt text" width="600" /></p>
 <pre class="hljs"><code><div><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Player</span> </span>{
     <span class="hljs-keyword">private</span> Weapon weapon;
 
@@ -828,7 +828,7 @@ player.setWeapon(hammer);
 <li><strong>Classes</strong>: Represented by rectangles divided into three parts: the top part for the class name, the middle part for attributes, and the bottom part for methods.</li>
 <li><strong>Relationships</strong>: Different types of lines and arrows are used to depict various relationships like inheritance, association,  interface implementation (realization), and association.</li>
 </ul>
-<p><img src="image-6.png" alt="Alt text"></p>
+<p><img src="image-6.png" alt="Alt text" width="600" /></p>
 <p>Types of relationship in OO:</p>
 <ol>
 <li><strong>Is-a Relationship</strong> (Inheritance/Generalization):</li>
@@ -880,7 +880,7 @@ player.setWeapon(hammer);
 }
 </div></code></pre>
 <p>Here is the UML diagram.</p>
-<p><img src="image-17.png" alt="Alt text"></p>
+<p><img src="image-17.png" alt="Alt text" width="600" /></p>
 <h1 id="the-solid-principle">The SOLID Principle</h1>
 <p>SOLID is an acronym representing five key design principles intended to make software designs more understandable, flexible, and maintainable.</p>
 <ol>
@@ -1012,10 +1012,10 @@ gameSaver.saveGame(gameState);
 </div></code></pre>
 <p>You have to modify the <code>GameSaver</code> class every time you want to change the type of database used by the class. A better approach would be to decouple <code>GameSaver</code> from the specific database classes using the &quot;Dependency Inversion Principle&quot;.</p>
 <p>A &quot;dependency&quot; here here refers to an object that can be used as a service. In this example, the GameServer depends on the concrete implementation of the databases (e.g. MySQLDatabase or MongoDB).</p>
-<p><img src="image-13.png" alt="Alt text"></p>
+<p><img src="image-13.png" alt="Alt text" width="600" /></p>
 <h3 id="dependency-inversion-principle-dip">Dependency Inversion Principle (DIP)</h3>
 <p>The DIP states that high-level modules should not depend on low-level modules. Both should depend on abstractions.</p>
-<p><img src="image-14.png" alt="Alt text"></p>
+<p><img src="image-14.png" alt="Alt text" width="600" /></p>
 <p>In the context of the <code>GameSaver</code> example, GameSaver is a high-level module and Database (<code>MySQLDatabase</code> and <code>MongoDB</code> classes) are  a low-level module.</p>
 <ul>
 <li>By having <code>GameSaver</code> depend on the Database interface (an abstraction), rather than on concrete Database implementations (MySQLDatabase or MongoDB), we are adhering to the Dependency Inversion Principle.</li>
@@ -1113,7 +1113,7 @@ gameSaver.setDatabase(mySqlDatabase);
 <h1 id="additional-topics-related-to-oo">Additional topics related to OO</h1>
 <h2 id="multiple-inheritance">Multiple Inheritance</h2>
 <p>Java does not support multiple inheritance. Multiple inheritance is a language feature that allows a class to inherit from multiple parent classes. While it can provide flexibility and code reuse, it also introduces challenges, one of which is the &quot;Diamond Problem&quot; or &quot;Diamond Inheritance Problem.&quot;</p>
-<p><img src="image-15.png" alt="Alt text"></p>
+<p><img src="image-15.png" alt="Alt text" width="600" /></p>
 <p>The Diamond Problem occurs when a class inherits from two or more classes that have a common base class</p>
 <ul>
 <li>In the example above, the <code>MagicKnight</code> class inherits from both the <code>Warrior</code> and <code>Mage</code> classes, which themselves inherit from the <code>Character</code> class. This creates a diamond-shaped inheritance hierarchy.</li>
@@ -1196,14 +1196,14 @@ This is the base class representing a general character in the RPG game.</p>
 <ol start="4">
 <li><strong>Reusability Issues</strong>: The need to inherit from a base class to reuse behavior can limit the reusability of code. Subclasses are forced to inherit all behaviors, even if they only need a subset, which can lead to inefficient and unnecessary code duplication.</li>
 </ol>
-<p><img src="image-19.png" alt="Alt text"></p>
+<p><img src="image-19.png" alt="Alt text" width="600" /></p>
 <h2 id="using-interface-to-model-behaviors">Using Interface to model behaviors</h2>
 <p>We can define interface classes o address the limitations of inheritance</p>
 <ul>
 <li>An interface in Java is a contract that defines a set of methods without implementing them. Implementing an interface allows a class to become more formal about the behavior it promises to provide.</li>
 <li>In our RPG example, we can define interfaces like <code>Attackable</code> and <code>Talkable</code> instead of using a base <code>Character</code> class.</li>
 </ul>
-<p><img src="image-16.png" alt="Alt text"></p>
+<p><img src="image-16.png" alt="Alt text" width="600" /></p>
 <p>We first define the interface to model the behavior of different types of characters.</p>
 <ul>
 <li><code>Attackable</code> is an interface with the method <code>attack(Character target)</code>, which define the behavior to attack other characters.</li>

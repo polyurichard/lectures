@@ -51,7 +51,7 @@ With procedural code and exposed data structures, there's **no way to guarantee*
 
 This is where object-oriented programming begins to shine.
 
-![alt text](image-23.png)
+<img src="image-23.png" alt="alt text" width="600" />
 
 ---
 
@@ -68,7 +68,7 @@ In OO design, our note becomes a class—a blueprint that defines:
 
 This seemingly simple shift has profound implications for code organization, maintainability, and reliability.
 
-![alt text](image-15.png)
+<img src="image-15.png" alt="alt text" width="600" />
 
 ---
 ## 3. Encapsulation: Data and Rules Together
@@ -97,7 +97,7 @@ class Note:
 
 **This changes everything.** Now there's only one way to modify the title: through the `rename()` method. The validation logic lives in exactly one place, and it's **impossible** to bypass it. Every time the title changes—whether during initialization or later updates—the rule is enforced automatically.
 
-![alt text](image-1.png)
+<img src="image-1.png" alt="alt text" width="600" />
 
 ### Understanding Visibility: Private vs. Public
 
@@ -133,7 +133,7 @@ This interface makes a promise: **any class that claims to be a Note must provid
 
 This guarantees consistency across your codebase. Whether you're working with a text note, audio note, or some future note type you haven't invented yet, you know with certainty that it will have a `rename()` method. This makes the rest of your code simpler, more predictable, and less error-prone.
 
-![alt text](image-24.png)
+<img src="image-24.png" alt="alt text" width="600" />
 
 ---
 ## 5. Inheritance: Growing Flexible Note Types
@@ -163,7 +163,7 @@ class VideoNote(Note):
 
 The title validation "just works" for every kind of note. Add a video note with a 30-character title? The validation will catch it, even though `VideoNote` itself doesn't contain any validation code. This is the power of inheritance: **write once, benefit everywhere.**
 
-![alt text](image-2.png)
+<img src="image-2.png" alt="alt text" width="600" />
 
 Inheritance creates an **"is-a"** relationship: an AudioNote **is a** Note (with extra features). This relationship isn't just philosophical—it has real implications for how we can use these objects, as we'll see next.
 
@@ -206,9 +206,9 @@ for note in notes:
 
 This makes our code incredibly flexible. Want to add a new playable note type—say, a podcast note? Just implement the `Playable` interface, and all existing code that works with playable notes will automatically work with your new type. No modifications needed.
 
-![alt text](image-3.png)
+<img src="image-3.png" alt="alt text" width="600" />
 
-![alt text](image-19.png)
+<img src="image-19.png" alt="alt text" width="600" />
 
 Polymorphism transforms rigid, type-specific code into flexible, extensible systems that gracefully accommodate new types without modification.
 
@@ -239,7 +239,7 @@ When each component has a clear, singular purpose, the code becomes easier to un
 
 The magic formula: **high cohesion + loose coupling = robust, adaptable, easy-to-change systems.** This isn't just theory—it's the difference between systems that evolve gracefully and those that collapse under their own complexity.
 
-![alt text](image-25.png)
+<img src="image-25.png" alt="alt text" width="600" />
 
 
 ---
@@ -266,7 +266,7 @@ If playback requirements change, we modify `Playable`. If storage requirements c
 
 Want to add a new note type? Create a subclass. Need a new database backend? Implement the repository interface. The existing, tested code remains untouched—we extend through inheritance and interfaces rather than modifying working code.
 
-![alt text](image-46.png)
+<img src="image-46.png" alt="alt text" width="600" />
 
 #### Liskov Substitution Principle (LSP)
 **"Subtypes must be substitutable for their base types."**
@@ -304,7 +304,7 @@ class NoteService:
 - Need to test without a database? Good luck!
 - Cloud provider offers a managed MongoDB service? Major refactoring ahead
 
-![alt text](image-21.png)
+<img src="image-21.png" alt="alt text" width="600" />
 
 The issue is that **high-level business logic** (NoteService) depends directly on **low-level implementation details** (MySQL). This is backwards—it should be the other way around.
 
@@ -314,7 +314,7 @@ The issue is that **high-level business logic** (NoteService) depends directly o
 
 Here's what we want:
 
-![alt text](image-26.png)
+<img src="image-26.png" alt="alt text" width="600" />
 
 Now let's implement this architecture step by step.
 
@@ -414,11 +414,11 @@ service.save_note(note)  # "Saving note to PostgreSQL..."
 
 Everywhere else in your code stays the same! The business logic in `NoteService` never changes. This is true dependency inversion—putting power, flexibility, and testability at the heart of your architecture.
 
-![alt text](image-6.png)
+<img src="image-6.png" alt="alt text" width="600" />
 
-![alt text](image-13.png)
+<img src="image-13.png" alt="alt text" width="600" />
 
-![alt text](image-27.png)
+<img src="image-27.png" alt="alt text" width="600" />
 
 ---
 
@@ -447,9 +447,9 @@ Controllers are the gatekeepers of your application. They:
 
 Controllers delegate the real work to services. They're thin layers that translate between the HTTP world and your application's business logic.
 
-![alt text](image-20.png)
+<img src="image-20.png" alt="alt text" width="600" />
 
-![alt text](image-44.png)
+<img src="image-44.png" alt="alt text" width="600" />
 
 ### Service Layer: The Brain
 
@@ -464,7 +464,7 @@ Services are where the real work happens. They:
 
 **Example:** A `NoteService` might implement logic like "users can only edit their own notes" or "shared notes must have at least one owner." These rules live in the service layer, not in controllers or repositories.
 
-![alt text](image-45.png)
+<img src="image-45.png" alt="alt text" width="600" />
 
 ### Repository Layer: The Data Guardian
 
@@ -478,13 +478,13 @@ Repositories provide a clean interface to your data store. They:
 
 **The key insight:** Upper layers don't know (or care) whether data comes from MySQL, MongoDB, an API, or a cache. The repository abstracts those details away.
 
-![alt text](image-17.png)
+<img src="image-17.png" alt="alt text" width="600" />
 
 **Coding to Contract:**
 
 Just as we saw with `NoteRepository`, repositories in CSR architectures program to interfaces. This makes them swappable and testable.
 
-![alt text](image-18.png)
+<img src="image-18.png" alt="alt text" width="600" />
 
 ### Model/Entity: The Data Structure
 
@@ -497,9 +497,9 @@ Models (also called entities or domain objects) represent your application's dat
 
 Repositories interact with these models to perform CRUD operations, keeping the data access layer cleanly abstracted from the rest of the application.
 
-![alt text](image-22.png)
+<img src="image-22.png" alt="alt text" width="600" />
 
-![alt text](image-43.png)
+<img src="image-43.png" alt="alt text" width="600" />
 
 ### Putting It All Together: Request Flow
 
@@ -518,21 +518,21 @@ Let's trace a typical request through the CSR architecture:
 
 Each layer has a clear responsibility, and dependencies flow in one direction: Controller → Service → Repository. This makes the system testable, maintainable, and flexible.
 
-![alt text](image-28.png)
+<img src="image-28.png" alt="alt text" width="600" />
 
-![alt text](image-14.png)
+<img src="image-14.png" alt="alt text" width="600" />
 
-![alt text](image-42.png)
+<img src="image-42.png" alt="alt text" width="600" />
 
-![alt text](image-12.png)
+<img src="image-12.png" alt="alt text" width="600" />
 
-![alt text](image-29.png)
+<img src="image-29.png" alt="alt text" width="600" />
 
-![alt text](image-16.png)
+<img src="image-16.png" alt="alt text" width="600" />
 
-![alt text](image-30.png)
+<img src="image-30.png" alt="alt text" width="600" />
 
-![alt text](image-31.png)
+<img src="image-31.png" alt="alt text" width="600" />
 
 ---
 
@@ -546,13 +546,13 @@ Let's see how dependency inversion plays out in a complete CSR architecture. Thi
 
 Dependency Inversion means both high-level and low-level modules depend on abstractions (interfaces), not on each other directly:
 
-![alt text](image-32.png)
+<img src="image-32.png" alt="alt text" width="600" />
 
 ### Defining the Contract
 
 The interface (contract) sits at the center, defining what operations are available without specifying how they're implemented:
 
-![alt text](image-33.png)
+<img src="image-33.png" alt="alt text" width="600" />
 
 This contract becomes the stable foundation that the rest of your system builds upon. High-level code depends on this contract, and low-level implementations fulfill it.
 
@@ -560,11 +560,11 @@ This contract becomes the stable foundation that the rest of your system builds 
 
 **Adapters** (also called concrete implementations) fulfill the contract in specific ways. Each adapter knows how to work with a particular technology:
 
-![alt text](image-34.png)
+<img src="image-34.png" alt="alt text" width="600" />
 
-![alt text](image-35.png)
+<img src="image-35.png" alt="alt text" width="600" />
 
-![alt text](image-36.png)
+<img src="image-36.png" alt="alt text" width="600" />
 
 Think of adapters as interchangeable parts. They all fit the same socket (the interface), but each one does something different internally.
 
@@ -572,7 +572,7 @@ Think of adapters as interchangeable parts. They all fit the same socket (the in
 
 At runtime, you wire up the system by injecting concrete implementations where abstractions are expected:
 
-![alt text](image-37.png)
+<img src="image-37.png" alt="alt text" width="600" />
 
 This is typically done at application startup, often through a dependency injection framework (like Spring in Java or FastAPI's Depends in Python) or through manual configuration.
 
@@ -584,7 +584,7 @@ Why go through all this trouble? Because dependency inversion delivers three gam
 
 Need to switch databases? Change cloud providers? Upgrade your messaging system? With dependency inversion, these changes are configuration-level decisions, not code-rewriting projects.
 
-![alt text](image-38.png)
+<img src="image-38.png" alt="alt text" width="600" />
 
 You swap out one adapter for another. The rest of your application doesn't need to know or care.
 
@@ -592,7 +592,7 @@ You swap out one adapter for another. The rest of your application doesn't need 
 
 Testing becomes dramatically easier. Instead of requiring a real database for every test, inject mock implementations:
 
-![alt text](image-39.png)
+<img src="image-39.png" alt="alt text" width="600" />
 
 Your tests run in milliseconds instead of seconds, require no setup or teardown, and are completely isolated from external dependencies. This makes Test-Driven Development (TDD) practical and even enjoyable.
 
@@ -600,9 +600,9 @@ Your tests run in milliseconds instead of seconds, require no setup or teardown,
 
 When dependencies are inverted and injected, the boundaries between components become crystal clear:
 
-![alt text](image-40.png)
+<img src="image-40.png" alt="alt text" width="600" />
 
-![alt text](image-41.png)
+<img src="image-41.png" alt="alt text" width="600" />
 
 Each component has a well-defined interface. Teams can work on different components independently. New developers can understand one piece at a time without untangling a web of hidden dependencies.
 
@@ -616,7 +616,7 @@ Throughout this article, we've used UML (Unified Modeling Language) diagrams to 
 
 ### Basic Class Notation
 
-![alt text](image-5.png)
+<img src="image-5.png" alt="alt text" width="600" />
 
 UML class diagrams show classes as boxes divided into three sections:
 - **Top**: Class name
@@ -632,7 +632,7 @@ Symbols indicate visibility:
 
 **Composition** (filled/solid diamond) represents a strong "owns-a" relationship where the contained object cannot exist independently:
 
-![alt text](image-7.png)
+<img src="image-7.png" alt="alt text" width="600" />
 
 **Example:** A Car **owns** an Engine. If the Car is destroyed, the Engine is destroyed too. The Engine has no independent existence outside the Car.
 
@@ -642,7 +642,7 @@ Symbols indicate visibility:
 
 **Aggregation** (open/hollow diamond) represents a weaker "has-a" relationship where the contained object can exist independently:
 
-![alt text](image-9.png)
+<img src="image-9.png" alt="alt text" width="600" />
 
 **Example:** A University **has** Students. If the University closes, the Students continue to exist independently.
 
