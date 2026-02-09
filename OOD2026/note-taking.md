@@ -3,15 +3,15 @@
 ```mermaid
 classDiagram
     class Note {
-        - id: int
-        - title: str
-        - content: str
-        - created_at: datetime
-        - updated_at: datetime
-        + rename(new_title: str)
-        + edit(new_content: str)
-        + delete()
-        + get_summary(): str
+    - id
+    - title
+    - content
+    - created_at
+    - updated_at
+    + rename(new_title)
+    + edit(new_content)
+    + delete()
+    + get_summary()
     }
 ```
 
