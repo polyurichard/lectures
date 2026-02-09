@@ -260,45 +260,56 @@ Refactor your code to use dependency injection for all external services. This i
 ## 7. Visualizing the Difference: Class Diagram
 
 
-Below is a Mermaid class diagram showing the difference between example1.py and example2.py:
+
+Below is a Mermaid class diagram showing the difference between tightly coupled and dependency-inverted designs:
 
 ```mermaid
 classDiagram
-    class Document1 {
-        -text
-        -filename
-        -uploaded_time
-        -llm : LLMService
-        Document1(text, filename)
-        summarize(lang)
-    }
-    class LLMService
-    Document1 --> LLMService : creates
+        class Document1 {
+                -text
+                -filename
+                -uploaded_time
+                -llm : LLMService
+                Document1(text, filename)
+                summarize(lang)
+        }
+        class LLMService
+        Document1 --> LLMService : creates
 
-    class Document2 {
-        -text
-        -filename
-        -uploaded_time
-        -llm : LLMService
-        Document2(text, llm_service, filename)
-        summarize(lang)
-    }
-    Document2 --> LLMService : injected
+        class Document2 {
+                -text
+                -filename
+                -uploaded_time
+                -llm : LLMService
+                Document2(text, llm_service, filename)
+                summarize(lang)
+        }
+        Document2 --> LLMService : injected
 ```
 
 ---
 
-### Diagram Explanation
+### Diagram Explanation and Dependency Inversion
 
 - **Document1 (example1.py):**
-  - Directly creates an instance of LLMService inside its constructor.
-  - This means Document1 is tightly coupled to LLMService and cannot easily be tested with a mock.
+    - Directly creates an instance of LLMService inside its constructor.
+    - This tightly couples Document1 to LLMService, violating dependency inversion.
+    - You cannot easily substitute a mock or alternative implementation for testing or extension.
+    - Any change in LLMService requires changes in Document1.
 
 - **Document2 (example2.py):**
-  - Receives LLMService as a constructor parameter (dependency injection).
-  - This makes Document2 flexible and testable, as you can inject a mock or real service as needed.
+    - Receives LLMService as a constructor parameter (dependency injection).
+    - This follows dependency inversion: Document2 depends on an abstraction (the interface or contract of LLMService), not a concrete implementation.
+    - You can inject a mock, stub, or any compatible service for testing, extension, or production.
+    - Document2 is decoupled from the details of LLMService, making it more flexible, testable, and maintainable.
 
-The diagram visually highlights how dependency injection (Document2) decouples your business logic from external services, making unit testing easier and more reliable.
+#### Why Dependency Inversion Matters
+- **Testability:** You can easily inject mocks for unit tests, avoiding real API calls and making tests fast and reliable.
+- **Extensibility:** You can swap LLMService for another provider (e.g., Gemini, local LLM) without changing Document2.
+- **Maintainability:** Changes in LLMService do not require changes in Document2, as long as the interface remains consistent.
+- **Isolation:** Business logic is isolated from external dependencies, reducing risk and complexity.
+
+The mermaid diagram visually highlights how dependency inversion (Document2) decouples your business logic from external services, making unit testing easier and more reliable. By designing your classes to depend on abstractions and injecting dependencies, you achieve a robust, modular, and future-proof codebase.
 
 ---
 
