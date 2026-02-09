@@ -259,9 +259,10 @@ Refactor your code to use dependency injection for all external services. This i
 
 ## 7. Visualizing the Difference: Class Diagram
 
+
 Below is a Mermaid class diagram showing the difference between example1.py and example2.py:
 
-```
+```mermaid
 classDiagram
     class Document1 {
         -text
