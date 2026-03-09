@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI vs Human Writing Classifier</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/2.1.0/chartjs-plugin-annotation.min.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .chart-and-explanation {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+        .chart-and-slider {
+            display: flex;
+            flex-direction: column;
+        }
+        #chart-container {
+            width: 100%;
+            height: 400px;
+            position: relative;
+        }
+        .explanation-panel {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            padding: 20px;
+            height: 480px;
+            overflow-y: auto;
+            box-sizing: border-box;
+        }
+        .explanation-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        .explanation-section {
+            margin-bottom: 15px;
+        }
+        .explanation-section h4 {
+            font-weight: bold;
+            color: #2c3e50;
+            margin: 0 0 8px 0;
+            font-size: 0.95em;
+        }
+        .explanation-section p {
+            margin: 0 0 8px 0;
+            color: #555;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+        .explanation-section ul {
+            margin: 5px 0;
+            padding-left: 20px;
+            color: #555;
+            font-size: 0.9em;
+        }
+        .explanation-section li {
+            margin-bottom: 4px;
+            line-height: 1.3;
+        }
+        .color-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 6px;
+            vertical-align: middle;
+        }
+        .red-indicator { background-color: rgba(255, 99, 132, 0.8); }
+        .blue-indicator { background-color: rgba(54, 162, 235, 0.8); }
+        #slider-container {
+            margin-top: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            padding: 15px 0;
+        }
+        .slider-content {
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            margin-bottom: 10px;
+        }
+        #threshold {
+            width: 100%;
+            height: 8px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: #ddd;
+            border-radius: 5px;
+            outline: none;
+            margin: 0;
+        }
+        
+        /* Webkit browsers (Chrome, Safari) */
+        #threshold::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #5D5CDE;
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+        
+        #threshold::-webkit-slider-thumb:hover {
+            background: #4A49C8;
+            transform: scale(1.1);
+        }
+        
+        /* Firefox */
+        #threshold::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #5D5CDE;
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+        
+        #threshold::-moz-range-thumb:hover {
+            background: #4A49C8;
+            transform: scale(1.1);
+        }
+        
+        /* Track styling */
+        #threshold::-webkit-slider-track {
+            background: #ddd;
+            height: 8px;
+            border-radius: 5px;
+        }
+        
+        #threshold::-moz-range-track {
+            background: #ddd;
+            height: 8px;
+            border-radius: 5px;
+            border: none;
+        }
+        
+        .slider-label {
+            font-weight: bold;
+            color: #2c3e50;
+            white-space: nowrap;
+            min-width: 120px;
+        }
+        #prediction-stats {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+        .stats-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 15px;
+        }
+        .stats-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .metric-card {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .metric-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+        .metric-formula {
+            font-size: 0.9em;
+            color: #666;
+            line-height: 1.4;
+        }
+        .metric-calculation {
+            font-family: monospace;
+            background: #f5f5f5;
+            padding: 4px 8px;
+            border-radius: 3px;
+            margin-top: 5px;
+        }
+        .overview-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: white;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+        }
+        .correct { color: #27ae60; font-weight: bold; }
+        .incorrect { color: #e74c3c; font-weight: bold; }
+        .confusion-matrix-container {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .confusion-matrix-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        #confusion-matrix-inner {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px;
+        }
+        .matrix-cell {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .matrix-header {
+            font-weight: bold;
+            background-color: #f0f0f0;
+        }
+        .wrong-prediction {
+            background-color: #ffcccc;
+        }
+        .matrix-row-header {
+            text-align: right;
+            padding-right: 10px;
+        }
+        /* Maximum specificity overrides for specific cells */
+        #true-positive-cell.numerator,
+        #true-positive-cell.denominator,
+        #false-positive-cell.numerator,
+        #false-positive-cell.denominator,
+        #true-negative-cell.numerator,
+        #true-negative-cell.denominator,
+        #false-negative-cell.numerator,
+        #false-negative-cell.denominator {
+            background-color: #e3f2fd !important;
+        }
+        
+        /* General fallback with high specificity */
+        .matrix-cell.numerator,
+        .matrix-cell.denominator {
+            background-color: #e3f2fd !important;
+        }
+        
+        /* Numerator specific styling */
+        .matrix-cell.numerator {
+            font-weight: 900 !important;
+            color: #3E2723 !important;
+            font-size: 1.1em !important;
+        }
+        
+        /* Denominator border styling */
+        .matrix-cell.denominator {
+            border: 2px solid #1976d2 !important;
+        }
+        
+        /* Inactive cells (not part of calculation) */
+        .matrix-cell.inactive {
+            background-color: white !important;
+            opacity: 0.6;
+        }
+        .metric-card {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .metric-card:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            transform: translateY(-1px);
+        }
+        .metric-card.active {
+            border: 2px solid #5D5CDE;
+            box-shadow: 0 4px 12px rgba(93, 92, 222, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <h1>AI vs Human Writing Classifier</h1>
+    <div class="chart-and-explanation">
+        <div class="chart-and-slider">
+            <div id="chart-container">
+                <canvas id="scatterChart"></canvas>
+            </div>
+            <div id="slider-container">
+                <div class="slider-content">
+                    <label for="threshold" class="slider-label">Threshold: <span id="threshold-value"></span></label>
+                </div>
+                <div style="padding: 0 15px;">
+                    <input type="range" id="threshold" min="0" max="20" step="1" value="10">
+                </div>
+            </div>
+        </div>
+        <div class="explanation-panel">
+            
+            <div class="explanation-section">
+                <h4>Data Points</h4>
+                <ul>
+                    <li>Each point = one paper</li>
+                    <li><span class="color-indicator red-indicator"></span><strong>Red points:</strong> AI-generated papers</li>
+                    <li><span class="color-indicator blue-indicator"></span><strong>Blue points:</strong> Human-written papers</li>
+                    <li>Y-axis: Number of GenAI words</li>
+                </ul>
+            </div>
+
+            <div class="explanation-section">
+                <h4>Classification Logic</h4>
+                <ul>
+                    <li>Above threshold → Classified as AI</li>
+                    <li>Below threshold → Classified as Human</li>
+                </ul>
+            </div>
+
+            <div class="explanation-section">
+                <h4>Shaded Areas</h4>
+                <ul>
+                    <li><strong>Light red:</strong> AI classification zone</li>
+                    <li><strong>Light blue:</strong> Human classification zone</li>
+                </ul>
+            </div>
+
+            <div class="explanation-section">
+                <h4>Classification Results</h4>
+                <ul>
+                    <li><strong>Correct:</strong> Red in red area, blue in blue area</li>
+                    <li><strong>Incorrect:</strong> Red in blue area, blue in red area</li>
+                </ul>
+            </div>
+
+            <div class="explanation-section">
+                <h4>Interactive Features</h4>
+                <ul>
+                    <li>Black line = adjustable threshold</li>
+                    <li>Move slider to see classification changes</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div id="prediction-stats"></div>
+
+    <script>
+        // Generate random data with more realistic distribution
+        const data = [];
+        for (let i = 0; i < 100; i++) {
+            const isAI = Math.random() < 0.5;
+            let genAIWords;
+            if (isAI) {
+                // AI papers: mostly high, but some low
+                genAIWords = Math.random() < 0.8 ? 
+                    Math.random() * 8 + 12 : // 12-20 range (80% chance)
+                    Math.random() * 12;      // 0-12 range (20% chance)
+            } else {
+                // Human papers: mostly low, but some high
+                genAIWords = Math.random() < 0.8 ?
+                    Math.random() * 12 :     // 0-12 range (80% chance)
+                    Math.random() * 8 + 12;  // 12-20 range (20% chance)
+            }
+            // Round down to integer
+            genAIWords = Math.floor(genAIWords);
+            data.push({
+                x: i + 1, // Paper ID
+                y: genAIWords, // GenAI words count
+                type: isAI ? 'AI' : 'Human'
+            });
+        }
+
+        // Create scatter plot
+        const ctx = document.getElementById('scatterChart').getContext('2d');
+        const scatterChart = new Chart(ctx, {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: 'AI Generated',
+                    data: data.filter(d => d.type === 'AI'),
+                    backgroundColor: 'rgba(255, 99, 132, 0.8)',
+                    pointRadius: 6,
+                    pointHoverRadius: 8,
+                }, {
+                    label: 'Human Written',
+                    data: data.filter(d => d.type === 'Human'),
+                    backgroundColor: 'rgba(54, 162, 235, 0.8)',
+                    pointRadius: 6,
+                    pointHoverRadius: 8,
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        type: 'linear',
+                        position: 'bottom',
+                        title: {
+                            display: true,
+                            text: 'Paper ID'
+                        },
+                        ticks: {
+                            stepSize: 10
+                        }
+                    },
+                    y: {
+                        type: 'linear',
+                        title: {
+                            display: true,
+                            text: 'Number of common GenAI words'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    annotation: {
+                        annotations: {
+                            line1: {
+                                type: 'line',
+                                yMin: 10,
+                                yMax: 10,
+                                xMin: 0,
+                                xMax: 100,
+                                borderColor: 'rgb(0, 0, 0)',
+                                borderWidth: 2,
+                            },
+                            box1: {
+                                type: 'box',
+                                yMin: 10,
+                                yMax: 20,
+                                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                            },
+                            box2: {
+                                type: 'box',
+                                yMin: 0,
+                                yMax: 10,
+                                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const point = context.raw;
+                                return `Paper ${point.x}: ${point.type} (${point.y} GenAI words)`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Slider functionality
+        const slider = d3.select("#threshold");
+        const thresholdValue = d3.select("#threshold-value");
+        const predictionStats = d3.select("#prediction-stats");
+
+        function updateChart(threshold) {
+            thresholdValue.text(threshold);
+            
+            // Update chart annotation
+            scatterChart.options.plugins.annotation.annotations.line1.yMin = threshold;
+            scatterChart.options.plugins.annotation.annotations.line1.yMax = threshold;
+            
+            // Update shaded regions
+            scatterChart.options.plugins.annotation.annotations.box1.yMin = threshold;
+            scatterChart.options.plugins.annotation.annotations.box1.yMax = 20;
+            scatterChart.options.plugins.annotation.annotations.box2.yMin = 0;
+            scatterChart.options.plugins.annotation.annotations.box2.yMax = threshold;
+            
+            scatterChart.update();
+
+            // Update confusion matrix
+            const confusionMatrix = {
+                truePositive: 0,
+                falsePositive: 0,
+                trueNegative: 0,
+                falseNegative: 0
+            };
+
+            data.forEach(d => {
+                if (d.y >= threshold && d.type === 'AI') confusionMatrix.truePositive++;
+                if (d.y >= threshold && d.type === 'Human') confusionMatrix.falsePositive++;
+                if (d.y < threshold && d.type === 'Human') confusionMatrix.trueNegative++;
+                if (d.y < threshold && d.type === 'AI') confusionMatrix.falseNegative++;
+            });
+
+            d3.select("#true-positive").html(`<div>True Positive</div><div>${confusionMatrix.truePositive}</div>`);
+            d3.select("#false-positive").html(`<div>False Positive</div><div>${confusionMatrix.falsePositive}</div>`);
+            d3.select("#true-negative").html(`<div>True Negative</div><div>${confusionMatrix.trueNegative}</div>`);
+            d3.select("#false-negative").html(`<div>False Negative</div><div>${confusionMatrix.falseNegative}</div>`);
+
+            // Calculate precision, recall, and accuracy
+            const precisionDenominator = confusionMatrix.truePositive + confusionMatrix.falsePositive;
+            const precision = precisionDenominator > 0 ? 
+                confusionMatrix.truePositive / precisionDenominator : null;
+            const recallDenominator = confusionMatrix.truePositive + confusionMatrix.falseNegative;
+            const recall = recallDenominator > 0 ? 
+                confusionMatrix.truePositive / recallDenominator : null;
+            
+            // Update prediction stats
+            const correctPredictions = confusionMatrix.truePositive + confusionMatrix.trueNegative;
+            const incorrectPredictions = confusionMatrix.falsePositive + confusionMatrix.falseNegative;
+            const totalPredictions = correctPredictions + incorrectPredictions;
+            const accuracy = totalPredictions > 0 ? correctPredictions / totalPredictions : 0;
+            
+            predictionStats.html(`
+                <div class="overview-stats">
+                    <span class="correct">✓ Correct: ${correctPredictions}</span>
+                    <span class="incorrect">✗ Incorrect: ${incorrectPredictions}</span>
+                    <span>Total: ${totalPredictions}</span>
+                </div>
+                
+                <div class="stats-layout">
+                    <div class="stats-grid">
+                        <div class="metric-card" id="accuracy-card">
+                            <div class="metric-value">Accuracy: ${(accuracy * 100).toFixed(1)}%</div>
+                            <div class="metric-formula">
+                                Overall correctness of predictions<br>
+                                <strong>Formula:</strong> (TP + TN) ÷ Total
+                            </div>
+                            <div class="metric-calculation">${correctPredictions} ÷ ${totalPredictions} = ${accuracy.toFixed(3)}</div>
+                        </div>
+                        
+                        <div class="metric-card" id="precision-card">
+                            <div class="metric-value">Precision: ${precision !== null ? (precision * 100).toFixed(1) + '%' : 'N/A'}</div>
+                            <div class="metric-formula">
+                                Of all AI predictions, how many were correct?<br>
+                                <strong>Formula:</strong> TP ÷ (TP + FP)
+                            </div>
+                            <div class="metric-calculation">
+                                ${confusionMatrix.truePositive} ÷ (${confusionMatrix.truePositive} + ${confusionMatrix.falsePositive}) 
+                                ${precision !== null ? `= ${precision.toFixed(3)}` : '(undefined - no positive predictions)'}
+                            </div>
+                        </div>
+                        
+                        <div class="metric-card" id="recall-card">
+                            <div class="metric-value">Recall: ${recall !== null ? (recall * 100).toFixed(1) + '%' : 'N/A'}</div>
+                            <div class="metric-formula">
+                                Of all actual AI texts, how many did we catch?<br>
+                                <strong>Formula:</strong> TP ÷ (TP + FN)
+                            </div>
+                            <div class="metric-calculation">
+                                ${confusionMatrix.truePositive} ÷ (${confusionMatrix.truePositive} + ${confusionMatrix.falseNegative})
+                                ${recall !== null ? `= ${recall.toFixed(3)}` : '(undefined - no actual positives)'}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="confusion-matrix-container">
+                        <div class="confusion-matrix-title">
+                            Confusion Matrix 
+                            <button id="reset-matrix-btn" style="margin-left: 10px; padding: 4px 8px; font-size: 0.8em; background: #f44336; color: white; border: none; border-radius: 3px; cursor: pointer;">Reset</button>
+                        </div>
+                        <div id="confusion-matrix-inner">
+                            <div class="matrix-cell matrix-header"></div>
+                            <div class="matrix-cell matrix-header">Predicted AI</div>
+                            <div class="matrix-cell matrix-header">Predicted Human</div>
+                            <div class="matrix-cell matrix-header matrix-row-header">AI generated text</div>
+                            <div class="matrix-cell" id="true-positive-cell"><div>True Positive</div><div>${confusionMatrix.truePositive}</div></div>
+                            <div class="matrix-cell wrong-prediction" id="false-negative-cell"><div>False Negative</div><div>${confusionMatrix.falseNegative}</div></div>
+                            <div class="matrix-cell matrix-header matrix-row-header">Human written text</div>
+                            <div class="matrix-cell wrong-prediction" id="false-positive-cell"><div>False Positive</div><div>${confusionMatrix.falsePositive}</div></div>
+                            <div class="matrix-cell" id="true-negative-cell"><div>True Negative</div><div>${confusionMatrix.trueNegative}</div></div>
+                        </div>
+                        <div id="matrix-explanation" style="margin-top: 15px; font-size: 0.85em; color: #666; line-height: 1.4;">
+                            <div style="margin-bottom: 8px;">
+                                <strong>Positive class:</strong> AI-generated text (what we're trying to detect)<br>
+                                <strong>Negative class:</strong> Human-written text
+                            </div>
+                            <ul style="margin: 0; padding-left: 20px;">
+                                <li><strong>True Positive:</strong> Correctly identified AI text</li>
+                                <li><strong>True Negative:</strong> Correctly identified human text</li>
+                                <li><strong>False Positive:</strong> Human text incorrectly labeled as AI</li>
+                                <li><strong>False Negative:</strong> AI text incorrectly labeled as human</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `);
+            
+            // Add click event listeners for metric cards
+            setupMetricClickHandlers();
+        }
+
+        slider.on("input", function() {
+            updateChart(+this.value);
+        });
+
+        // Function to set up click handlers for metric cards
+        function setupMetricClickHandlers() {
+            // Clear all highlights and active states
+            function clearHighlights() {
+                document.querySelectorAll('.matrix-cell').forEach(cell => {
+                    cell.classList.remove('numerator', 'denominator', 'inactive');
+                });
+                document.querySelectorAll('.metric-card').forEach(card => {
+                    card.classList.remove('active');
+                });
+                updateMatrixExplanation('default');
+            }
+            
+            // Helper function to mark cells as inactive
+            function markInactiveCells(activeCellIds) {
+                const allCellIds = ['true-positive-cell', 'false-positive-cell', 'true-negative-cell', 'false-negative-cell'];
+                allCellIds.forEach(cellId => {
+                    if (!activeCellIds.includes(cellId)) {
+                        document.getElementById(cellId)?.classList.add('inactive');
+                    }
+                });
+            }
+            
+            // Function to update matrix explanation text
+            function updateMatrixExplanation(metricType) {
+                const explanationDiv = document.getElementById('matrix-explanation');
+                let content = '';
+                
+                switch(metricType) {
+                    case 'accuracy':
+                        content = `
+                            <div style="margin-bottom: 8px;">
+                                <strong>Accuracy:</strong> Overall correctness of the classifier
+                            </div>
+                            <ul style="margin: 0; padding-left: 20px;">
+                                <li><strong>What it means:</strong> "Out of all 100 papers, how many did we classify correctly?"</li>
+                                <li><strong>Calculation:</strong> (Correct predictions) ÷ (Total predictions)</li>
+                                <li><strong>Focus:</strong> Gives overall performance but can be misleading if classes are unbalanced</li>
+                            </ul>
+                        `;
+                        break;
+                    case 'precision':
+                        content = `
+                            <div style="margin-bottom: 8px;">
+                                <strong>Precision:</strong> Accuracy of positive predictions
+                            </div>
+                            <ul style="margin: 0; padding-left: 20px;">
+                                <li><strong>What it means:</strong> "When we predict AI text, how often are we right?"</li>
+                                <li><strong>Calculation:</strong> (True Positives) ÷ (True Positives + False Positives)</li>
+                                <li><strong>Focus:</strong> Minimizes false alarms - important when false positives are costly</li>
+                            </ul>
+                        `;
+                        break;
+                    case 'recall':
+                        content = `
+                            <div style="margin-bottom: 8px;">
+                                <strong>Recall:</strong> Ability to find all positive cases
+                            </div>
+                            <ul style="margin: 0; padding-left: 20px;">
+                                <li><strong>What it means:</strong> "Of all actual AI text, how much did we successfully detect?"</li>
+                                <li><strong>Calculation:</strong> (True Positives) ÷ (True Positives + False Negatives)</li>
+                                <li><strong>Focus:</strong> Minimizes missed detections - important when missing positives is costly</li>
+                            </ul>
+                        `;
+                        break;
+                    default:
+                        content = `
+                            <div style="margin-bottom: 8px;">
+                                <strong>Positive class:</strong> AI-generated text (what we're trying to detect)<br>
+                                <strong>Negative class:</strong> Human-written text
+                            </div>
+                            <ul style="margin: 0; padding-left: 20px;">
+                                <li><strong>True Positive:</strong> Correctly identified AI text</li>
+                                <li><strong>True Negative:</strong> Correctly identified human text</li>
+                                <li><strong>False Positive:</strong> Human text incorrectly labeled as AI</li>
+                                <li><strong>False Negative:</strong> AI text incorrectly labeled as human</li>
+                            </ul>
+                        `;
+                }
+                
+                if (explanationDiv) {
+                    explanationDiv.innerHTML = content;
+                }
+            }
+            
+            // Accuracy card click handler
+            document.getElementById('accuracy-card')?.addEventListener('click', function() {
+                clearHighlights();
+                this.classList.add('active');
+                // Numerator: TP + TN (bold)
+                document.getElementById('true-positive-cell')?.classList.add('numerator');
+                document.getElementById('true-negative-cell')?.classList.add('numerator');
+                // Denominator: All cells (background highlight)
+                document.getElementById('true-positive-cell')?.classList.add('denominator');
+                document.getElementById('true-negative-cell')?.classList.add('denominator');
+                document.getElementById('false-positive-cell')?.classList.add('denominator');
+                document.getElementById('false-negative-cell')?.classList.add('denominator');
+                // No inactive cells for accuracy since all cells are used
+                updateMatrixExplanation('accuracy');
+            });
+            
+            // Precision card click handler
+            document.getElementById('precision-card')?.addEventListener('click', function() {
+                clearHighlights();
+                this.classList.add('active');
+                // Numerator: TP (bold)
+                document.getElementById('true-positive-cell')?.classList.add('numerator');
+                // Denominator: TP + FP (background highlight)
+                document.getElementById('true-positive-cell')?.classList.add('denominator');
+                document.getElementById('false-positive-cell')?.classList.add('denominator');
+                // Mark unused cells as inactive
+                markInactiveCells(['true-positive-cell', 'false-positive-cell']);
+                updateMatrixExplanation('precision');
+            });
+            
+            // Recall card click handler
+            document.getElementById('recall-card')?.addEventListener('click', function() {
+                clearHighlights();
+                this.classList.add('active');
+                // Numerator: TP (bold)
+                document.getElementById('true-positive-cell')?.classList.add('numerator');
+                // Denominator: TP + FN (background highlight)
+                document.getElementById('true-positive-cell')?.classList.add('denominator');
+                document.getElementById('false-negative-cell')?.classList.add('denominator');
+                // Mark unused cells as inactive
+                markInactiveCells(['true-positive-cell', 'false-negative-cell']);
+                updateMatrixExplanation('recall');
+            });
+            
+            // Reset button click handler
+            document.getElementById('reset-matrix-btn')?.addEventListener('click', function(event) {
+                event.stopPropagation();
+                clearHighlights();
+            });
+            
+            // Click anywhere else to clear highlights
+            document.addEventListener('click', function(event) {
+                if (!event.target.closest('.metric-card') && !event.target.closest('.confusion-matrix-container')) {
+                    clearHighlights();
+                }
+            });
+        }
+
+        // Initial update
+        updateChart(10);
+    </script>
+</body>
+</html>
+
+
